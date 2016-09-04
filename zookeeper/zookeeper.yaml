@@ -85,6 +85,8 @@ spec:
       - name: zk
         image: java:openjdk-8-jre
         ports:
+        - containerPort: 2181
+          name: client
         - containerPort: 2888
           name: peer
         - containerPort: 3888
