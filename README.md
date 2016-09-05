@@ -64,7 +64,7 @@ See `./test/test.sh` for some sample commands.
 
 This is WIP, but topic creation has been automated. Note that as a [Job](http://kubernetes.io/docs/user-guide/jobs/), it will restart if the command fails, including if the topic exists :(
 ```
-kubectl create -f test/10topic-create-test1.yml
+kubectl create -f test/11topic-create-test1.yml
 ```
 
 ## Teardown & cleanup
