@@ -8,6 +8,13 @@ To get consistent service DNS names `kafka-N.broker.kafka`(`.svc.cluster.local`)
 kubectl create -f 00namespace.yml
 ```
 
+A typical Kafka install (see `docker-images` branch) comes with more config files than the server needs.
+The PetSet mounts instead a [ConfigMap](http://kubernetes.io/docs/user-guide/configmap/) with a minimal set of files.
+Load `./config/` into Kubernetes using:
+```
+./bootstrap/config.sh
+```
+
 ## Set up volume claims
 
 This step can be skipped in clusters that support automatic volume provisioning, such as GKE.
