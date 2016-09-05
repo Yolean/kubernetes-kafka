@@ -19,10 +19,10 @@ spec:
         image: solsson/kafka:0.10.0.1
         ports:
         - containerPort: 9092
-        args:
-        - config/server.properties
-        - --override
-        - "broker.id=$(hostname | awk -F'-' '{print $2}')"
+        command:
+        - sh
+        - -c
+        - "./bin/kafka-server-start.sh config/server.properties --override broker.id=$(hostname | awk -F'-' '{print $2}')"
         volumeMounts:
         - name: datadir
           mountPath: /opt/kafka/data
