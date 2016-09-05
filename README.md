@@ -3,6 +3,11 @@
 
 Example of three Kafka brokers depending on three Zookeeper instances.
 
+To get consistent service DNS names `kafka-N.broker.kafka`(`.svc.cluster.local`), run everything in a namespace:
+```
+kubectl create -f 00namespace.yml
+```
+
 ## Set up volume claims
 
 This step can be skipped in clusters that support automatic volume provisioning, such as GKE.
