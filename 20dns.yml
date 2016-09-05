@@ -8,6 +8,7 @@ metadata:
   name: broker
 spec:
   ports:
+  - port: 9092
   # [podname].broker.default.svc.cluster.local
   clusterIP: None
   selector:
