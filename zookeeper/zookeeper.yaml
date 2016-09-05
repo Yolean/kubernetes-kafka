@@ -38,7 +38,7 @@ spec:
                 "name": "install",
                 "image": "gcr.io/google_containers/zookeeper-install:0.1",
                 "imagePullPolicy": "Always",
-                "args": ["--version=3.4.9", "--install-into=/opt", "--work-dir=/work-dir"],
+                "args": ["--version=3.5.2-alpha", "--install-into=/opt", "--work-dir=/work-dir"],
                 "volumeMounts": [
                     {
                         "name": "opt",
