@@ -5,6 +5,7 @@ metadata:
   annotations:
     service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
   name: zk
+  namespace: kafka
   labels:
     app: zk
 spec:
@@ -22,6 +23,7 @@ apiVersion: apps/v1alpha1
 kind: PetSet
 metadata:
   name: zoo
+  namespace: kafka
 spec:
   serviceName: "zk"
   replicas: 3
@@ -116,6 +118,7 @@ spec:
   volumeClaimTemplates:
   - metadata:
       name: datadir
+      namespace: kafka
       annotations:
         volume.alpha.kubernetes.io/storage-class: anything
     spec:

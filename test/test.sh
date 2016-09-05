@@ -7,7 +7,7 @@ kubectl exec -ti testclient -- ./bin/kafka-console-consumer.sh --zookeeper zooke
 
 # Go ahead and produce topics, haven't found a way to do this directly through kubectl exec
 kubectl exec -ti testclient -- /bin/bash
-echo "Test $(date)" | ./bin/kafka-console-producer.sh --broker-list kafka-0.broker:9092 --topic test1
+echo "Test $(date)" | ./bin/kafka-console-producer.sh --broker-list kafka-0.broker.kafka.svc.cluster.local:9092 --topic test1
 echo "Test $(date)" | ./bin/kafka-console-producer.sh --broker-list kafka-1.broker:9092,kafka-2.broker:9092 --topic test1
 # "WARN Removing server from bootstrap.servers as DNS resolution failed: kafka-X.broker:9092"
 echo "Test $(date)" | ./bin/kafka-console-producer.sh --broker-list kafka-0.broker:9092,kafka-1.broker:9092,kafka-2.broker:9092,kafka-X.broker:9092 --topic test1

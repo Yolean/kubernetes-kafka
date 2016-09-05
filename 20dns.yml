@@ -6,6 +6,7 @@ metadata:
   annotations:
     service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
   name: broker
+  namespace: kafka
 spec:
   ports:
   - port: 9092
