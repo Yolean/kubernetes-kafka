@@ -67,11 +67,11 @@ This is WIP, but topic creation has been automated. Note that as a [Job](http://
 kubectl create -f test/10topic-create-test1.yml
 ```
 
-## Cleanup
+## Teardown & cleanup
 
-Using a namespace you can simply delete it. PVs are outside namespaces so delete them too.
+Testing and retesting... delete the namespace. PVs are outside namespaces so delete them too.
 ```
 kubectl delete namespace kafka
-kubectl delete pv datadir-zoo-0 datadir-zoo-1 datadir-zoo-2
-kubectl delete pv datadir-kafka-0 datadir-kafka-1 datadir-kafka-2
+rm -R ./data/ && kubectl delete pv datadir-zoo-0 datadir-zoo-1 datadir-zoo-2
+rm -R ./data/ && kubectl delete pv datadir-kafka-0 datadir-kafka-1 datadir-kafka-2
 ```
