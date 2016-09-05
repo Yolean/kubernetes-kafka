@@ -1,0 +1,14 @@
+# Kafka image without the service, so you can run ./bin/ stuff
+# kubectl exec -ti anythingclient -- /bin/bash
+apiVersion: v1
+kind: Pod
+metadata:
+  name: testclient
+spec:
+  containers:
+  - name: kafka
+    image: solsson/kafka:0.10.0.1
+    command:
+      - sh
+      - -c
+      - "exec tail -f /dev/null"
