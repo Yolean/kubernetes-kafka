@@ -1,5 +1,5 @@
 # Kafka image without the service, so you can run ./bin/ stuff
-# kubectl exec -ti anythingclient -- /bin/bash
+# kubectl exec -ti testclient -- /bin/bash
 apiVersion: v1
 kind: Pod
 metadata:

@@ -11,3 +11,15 @@ echo "Test $(date)" | ./bin/kafka-console-producer.sh --broker-list kafka-0.brok
 echo "Test $(date)" | ./bin/kafka-console-producer.sh --broker-list kafka-1.broker:9092,kafka-2.broker:9092 --topic test1
 # "WARN Removing server from bootstrap.servers as DNS resolution failed: kafka-X.broker:9092"
 echo "Test $(date)" | ./bin/kafka-console-producer.sh --broker-list kafka-0.broker:9092,kafka-1.broker:9092,kafka-2.broker:9092,kafka-X.broker:9092 --topic test1
+
+# Topic 2, replicated
+./bin/kafka-topics.sh --zookeeper zookeeper:2181 --describe --topic topic2
+
+./bin/kafka-verifiable-consumer.sh \
+  --broker-list=kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092 \
+  --topic=topic2 --group-id=A --verbose
+
+./bin/kafka-verifiable-producer.sh \
+  --broker-list=kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092 \
+  --value-prefix=1 --topic=test2 \
+  --acks=1 --throughput=1 --max-messages=10

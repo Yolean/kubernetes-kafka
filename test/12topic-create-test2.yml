@@ -1,0 +1,25 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: topic-create-test2
+  namespace: kafka
+spec:
+  template:
+    metadata:
+      name: topic-create-test2
+    spec:
+      containers:
+      - name: kafka
+        image: solsson/kafka:0.10.0.1
+        command:
+        - ./bin/kafka-topics.sh
+        - --zookeeper
+        - zookeeper:2181
+        - --create
+        - --topic
+        - test2
+        - --partitions
+        - "1"
+        - --replication-factor
+        - "3"
+      restartPolicy: Never
