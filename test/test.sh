@@ -1,7 +1,4 @@
 
-# Run ls ./bin here to see the toolbox
-kubectl exec -ti testclient -- /bin/bash
-
 # List topics
 kubectl exec testclient -- ./bin/kafka-topics.sh --zookeeper zookeeper:2181 --list
 
@@ -18,13 +15,19 @@ kubectl exec -ti testclient -- ./bin/kafka-console-producer.sh --broker-list kaf
 # Bootstrap even if two nodes are down (shorter name requires same namespace)
 kubectl exec -ti testclient -- ./bin/kafka-console-producer.sh --broker-list kafka-0.broker:9092,kafka-1.broker:9092,kafka-2.broker:9092 --topic test1
 
+# The following commands run in the pod
+kubectl exec -ti testclient -- /bin/bash
+
 # Topic 2, replicated
-./bin/kafka-topics.sh --zookeeper zookeeper:2181 --describe --topic topic2
+./bin/kafka-topics.sh --zookeeper zookeeper:2181 --describe --topic test2
 
 ./bin/kafka-verifiable-consumer.sh \
   --broker-list=kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092 \
-  --topic=topic2 --group-id=A --verbose
+  --topic=test2 --group-id=A --verbose
 
+# If a topic isn't available this producer will tell you
+# WARN Error while fetching metadata with correlation id X : {topicname=LEADER_NOT_AVAILABLE}
+# ... but with current config Kafka will auto-create the topic
 ./bin/kafka-verifiable-producer.sh \
   --broker-list=kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092 \
   --value-prefix=1 --topic=test2 \
