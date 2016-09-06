@@ -67,6 +67,11 @@ This is WIP, but topic creation has been automated. Note that as a [Job](http://
 kubectl create -f test/11topic-create-test1.yml
 ```
 
+Pods that keep consuming messages (but they won't exit on cluster failures)
+```
+kubectl create -f test/21consumer-test1.yml
+```
+
 ## Teardown & cleanup
 
 Testing and retesting... delete the namespace. PVs are outside namespaces so delete them too.
