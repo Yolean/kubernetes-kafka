@@ -1,0 +1,46 @@
+apiVersion: extensions/v1beta1
+kind: ReplicaSet
+metadata:
+  name: zoo-1
+  namespace: kafka
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+    spec:
+      containers:
+        - name: zookeeper
+          image: zookeeper
+          env:
+            - name: ZOO_MY_ID
+              value: "1"
+            - name: ZOO_SERVERS
+              value: server.1=zoo1:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888
+          ports:
+            - containerPort: 2181
+              name: client
+            - containerPort: 2888
+              name: peer
+            - containerPort: 3888
+              name: leader-election
+          readinessProbe:
+            exec:
+              command:
+              - sh
+              - -c
+              - "/opt/zookeeper/bin/zkCli.sh ls /"
+            initialDelaySeconds: 15
+            timeoutSeconds: 5
+          volumeMounts:
+            - name: datadir
+              mountPath: /tmp/zookeeper
+            - name: opt
+              mountPath: /opt/
+      volumes:
+        - name: opt
+          emptyDir: {}
+        - name: datadir
+          persistentVolumeClaim:
+            claimName: datadir-zoo-0
