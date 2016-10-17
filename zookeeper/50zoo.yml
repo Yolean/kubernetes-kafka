@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: ReplicaSet
 metadata:
-  name: zoo-1
+  name: zoo-0
   namespace: kafka
 spec:
   replicas: 1
@@ -9,14 +9,14 @@ spec:
     metadata:
       labels:
         app: zookeeper
-        petindex: "1"
+        petindex: "0"
     spec:
       containers:
         - name: zookeeper
           image: zookeeper
           env:
             - name: ZOO_MY_ID
-              value: "1"
+              value: "0"
             - name: ZOO_SERVERS
               value: server.0=zoo-0:2888:3888 server.1=zoo-1:2888:3888 server.2=zoo-2:2888:3888
           ports:
@@ -26,14 +26,14 @@ spec:
               name: peer
             - containerPort: 3888
               name: leader-election
-          readinessProbe:
-            exec:
-              command:
-              - sh
-              - -c
-              - "/opt/zookeeper/bin/zkCli.sh ls /"
-            initialDelaySeconds: 15
-            timeoutSeconds: 5
+          #readinessProbe:
+          #  exec:
+          #    command:
+          #    - sh
+          #    - -c
+          #    - "/opt/zookeeper/bin/zkCli.sh ls /"
+          #  initialDelaySeconds: 15
+          #  timeoutSeconds: 5
           volumeMounts:
             - name: datadir
               mountPath: /tmp/zookeeper
@@ -44,4 +44,4 @@ spec:
           emptyDir: {}
         - name: datadir
           persistentVolumeClaim:
-            claimName: datadir-zoo-1
+            claimName: datadir-zoo-0
