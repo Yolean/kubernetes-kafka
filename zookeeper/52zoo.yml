@@ -29,9 +29,9 @@ spec:
           readinessProbe:
             exec:
               command:
-              - sh
-              - -c
-              - "/opt/zookeeper/bin/zkCli.sh ls /"
+                - zkCli.sh
+                - ls
+                - /
             initialDelaySeconds: 15
             timeoutSeconds: 5
           volumeMounts:

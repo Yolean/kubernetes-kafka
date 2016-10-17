@@ -18,7 +18,7 @@ spec:
             - name: ZOO_MY_ID
               value: "0"
             - name: ZOO_SERVERS
-              value: server.0=zoo-0:2888:3888 server.1=zoo-1:2888:3888 server.2=zoo-2:2888:3888
+              value: server.0=zoo-0:2888:3888
           ports:
             - containerPort: 2181
               name: client
@@ -26,14 +26,14 @@ spec:
               name: peer
             - containerPort: 3888
               name: leader-election
-          #readinessProbe:
-          #  exec:
-          #    command:
-          #    - sh
-          #    - -c
-          #    - "/opt/zookeeper/bin/zkCli.sh ls /"
-          #  initialDelaySeconds: 15
-          #  timeoutSeconds: 5
+          readinessProbe:
+            exec:
+              command:
+                - zkCli.sh
+                - ls
+                - /
+            initialDelaySeconds: 15
+            timeoutSeconds: 5
           volumeMounts:
             - name: datadir
               mountPath: /tmp/zookeeper
