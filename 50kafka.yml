@@ -23,7 +23,7 @@ spec:
         command:
           - sh
           - -c
-          - "./bin/kafka-server-start.sh config/server.properties --override broker.id=0"
+          - "./bin/kafka-server-start.sh config/server.properties --override broker.id=0 --override listeners=PLAINTEXT://broker-0.kafka.svc.cluster.local:9092 --override advertised.listeners=PLAINTEXT://kafka.kafka.svc.cluster.local:9092"
         volumeMounts:
           - name: datadir
             mountPath: /opt/kafka/data
