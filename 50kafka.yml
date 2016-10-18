@@ -1,40 +1,38 @@
-apiVersion: apps/v1alpha1
-kind: PetSet
+apiVersion: extensions/v1beta1
+kind: ReplicaSet
 metadata:
-  name: kafka
+  name: kafka-0
   namespace: kafka
 spec:
-  serviceName: "broker"
-  replicas: 3
+  replicas: 1
   template:
     metadata:
       labels:
         app: kafka
-      annotations:
-        pod.alpha.kubernetes.io/initialized: "true"
-        pod.alpha.kubernetes.io/init-containers: '[
-        ]'
+        petindex: "0"
     spec:
       containers:
       - name: broker
         image: solsson/kafka-persistent:0.10.1
+        #resources:
+        #  requests:
+        #    cpu: 100m
+        #    memory: 100Mi
         ports:
-        - containerPort: 9092
+          - containerPort: 9092
         command:
-        - sh
-        - -c
-        - "./bin/kafka-server-start.sh config/server.properties --override broker.id=$(hostname | awk -F'-' '{print $2}')"
+          - sh
+          - -c
+          - "./bin/kafka-server-start.sh config/server.properties --override broker.id=$(hostname | awk -F'-' '{print $2}')"
         volumeMounts:
+          - name: datadir
+            mountPath: /opt/kafka/data
+      #    - name: conf
+      #      mountPath: /opt/kafka/config/server.properties
+      volumes:
         - name: datadir
-          mountPath: /opt/kafka/data
-  volumeClaimTemplates:
-  - metadata:
-      name: datadir
-      namespace: kafka
-      annotations:
-        volume.alpha.kubernetes.io/storage-class: anything
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 100Mi
+          persistentVolumeClaim:
+            claimName: datadir-kafka-0
+      #  - name: conf
+      #    configMap:
+      #      name: conf-d
