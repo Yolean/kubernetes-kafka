@@ -13,7 +13,8 @@ spec:
       name: peer
     - port: 3888
       name: leader-election
-  type: NodePort
+    - port: 8080
+      name: admin
 ---
 apiVersion: v1
 kind: Service
@@ -29,7 +30,8 @@ spec:
       name: peer
     - port: 3888
       name: leader-election
-  type: NodePort
+    - port: 8080
+      name: admin
 ---
 apiVersion: v1
 kind: Service
@@ -45,4 +47,5 @@ spec:
       name: peer
     - port: 3888
       name: leader-election
-  type: NodePort
+    - port: 8080
+      name: admin

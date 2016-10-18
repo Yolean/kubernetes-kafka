@@ -30,6 +30,8 @@ spec:
               name: peer
             - containerPort: 3888
               name: leader-election
+            - containerPort: 8080
+              name: admin
           readinessProbe:
             exec:
               command:
