@@ -30,14 +30,6 @@ spec:
               name: peer
             - containerPort: 3888
               name: leader-election
-          readinessProbe:
-            exec:
-              command:
-                - zkCli.sh
-                - ls
-                - /
-            initialDelaySeconds: 15
-            timeoutSeconds: 5
           volumeMounts:
             - name: datadir
               mountPath: /tmp/zookeeper

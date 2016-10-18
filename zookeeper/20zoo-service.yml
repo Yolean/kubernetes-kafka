@@ -2,6 +2,8 @@
 apiVersion: v1
 kind: Service
 metadata:
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
   name: zoo-0
   namespace: kafka
 spec:
@@ -17,6 +19,8 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
   name: zoo-1
   namespace: kafka
 spec:
@@ -32,6 +36,8 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
   name: zoo-2
   namespace: kafka
 spec:
