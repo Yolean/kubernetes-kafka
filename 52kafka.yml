@@ -23,7 +23,7 @@ spec:
         command:
           - sh
           - -c
-          - "./bin/kafka-server-start.sh config/server.properties --override broker.id=2 --override listeners=PLAINTEXT://broker-2.kafka.svc.cluster.local:9092 --override advertised.listeners=PLAINTEXT://kafka.kafka.svc.cluster.local:9092"
+          - "./bin/kafka-server-start.sh config/server.properties --override broker.id=2 --override advertised.listeners=PLAINTEXT://broker-2.kafka.svc.cluster.local:9092"
         volumeMounts:
           - name: datadir
             mountPath: /opt/kafka/data
