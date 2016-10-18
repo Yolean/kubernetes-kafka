@@ -13,12 +13,12 @@ spec:
     spec:
       containers:
         - name: zookeeper
-          image: zookeeper:3.5
+          image: zookeeper:3.4
           env:
             - name: ZOO_MY_ID
               value: "3"
             - name: ZOO_SERVERS
-              value: server.1=zoo-0.kafka.svc.cluster.local:2888:3888:participant;0.0.0.0:2181 server.2=zoo-1.kafka.svc.cluster.local:2888:3888:participant;0.0.0.0:2181 server.3=0.0.0.0:2888:3888:participant;0.0.0.0:2181
+              value: server.1=zoo-0.kafka.svc.cluster.local:2888:3888:participant server.2=zoo-1.kafka.svc.cluster.local:2888:3888:participant server.3=0.0.0.0:2888:3888:participant
             - name: ZOO_INIT_LIMIT
               value: "10"
             - name: ZOO_SYNC_LIMIT
@@ -30,8 +30,6 @@ spec:
               name: peer
             - containerPort: 3888
               name: leader-election
-            - containerPort: 8080
-              name: admin
           readinessProbe:
             exec:
               command:
