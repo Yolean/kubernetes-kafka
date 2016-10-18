@@ -16,9 +16,9 @@ spec:
           image: zookeeper
           env:
             - name: ZOO_MY_ID
-              value: "2"
+              value: "3"
             - name: ZOO_SERVERS
-              value: server.0=zoo-0:2888:3888 server.1=zoo-1:2888:3888 server.2=zoo-2:2888:3888
+              value: server.1=zoo-0.kafka.svc.cluster.local:2888:3888:participant;0.0.0.0:2181 server.2=zoo-1.kafka.svc.cluster.local:2888:3888:participant;0.0.0.0:2181 server.3=zoo-2.kafka.svc.cluster.local:2888:3888:participant;0.0.0.0:2181
           ports:
             - containerPort: 2181
               name: client
