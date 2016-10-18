@@ -43,5 +43,4 @@ spec:
         - name: opt
           emptyDir: {}
         - name: datadir
-          persistentVolumeClaim:
-            claimName: datadir-zoo-1
+          emptyDir: {}
