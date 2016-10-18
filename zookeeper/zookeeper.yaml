@@ -14,7 +14,7 @@ spec:
     name: peer
   - port: 3888
     name: leader-election
-  # *.zk.default.svc.cluster.local
+  # *.zk.kafka.svc.cluster.local
   clusterIP: None
   selector:
     app: zk
