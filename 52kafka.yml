@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: ReplicaSet
+metadata:
+  name: kafka-2
+  namespace: kafka
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kafka
+        petindex: "2"
+    spec:
+      containers:
+      - name: broker
+        image: solsson/kafka:0.10.0.1
+        #resources:
+        #  requests:
+        #    cpu: 100m
+        #    memory: 100Mi
+        ports:
+          - containerPort: 9092
+        command:
+          - sh
+          - -c
+          - "./bin/kafka-server-start.sh config/server.properties --override broker.id=2"
+        volumeMounts:
+          - name: datadir
+            mountPath: /opt/kafka/data
+      #    - name: conf
+      #      mountPath: /opt/kafka/config/server.properties
+      volumes:
+        - name: datadir
+          persistentVolumeClaim:
+            claimName: datadir-kafka-2
+      #  - name: conf
+      #    configMap:
+      #      name: conf-d
