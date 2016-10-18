@@ -13,12 +13,16 @@ spec:
     spec:
       containers:
         - name: zookeeper
-          image: zookeeper
+          image: zookeeper:3.5
           env:
             - name: ZOO_MY_ID
               value: "1"
             - name: ZOO_SERVERS
-              value: server.1=zoo-0.kafka.svc.cluster.local:2888:3888:participant;0.0.0.0:2181
+              value: server.1=0.0.0.0:2888:3888:participant;0.0.0.0:2181 server.2=zoo-1.kafka.svc.cluster.local:2888:3888:participant;0.0.0.0:2181 server.3=zoo-2.kafka.svc.cluster.local:2888:3888:participant;0.0.0.0:2181
+            - name: ZOO_INIT_LIMIT
+              value: "10"
+            - name: ZOO_SYNC_LIMIT
+              value: "5"
           ports:
             - containerPort: 2181
               name: client
