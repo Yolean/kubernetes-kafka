@@ -15,12 +15,12 @@ Once you have all 3 nodes in Running, you can run the "test.sh" script in this d
 
 You can test failover by killing the leader. Insert a key:
 ```console
-$ kubectl exec zoo-0 -- /opt/zookeeper/bin/zkCli.sh create /foo bar;
-$ kubectl exec zoo-2 -- /opt/zookeeper/bin/zkCli.sh get /foo;
+$ kubectl -n kafka exec zoo-0 -- /opt/zookeeper/bin/zkCli.sh create /foo bar;
+$ kubectl -n kafka exec zoo-2 -- /opt/zookeeper/bin/zkCli.sh get /foo;
 
 Watch existing members:
 ```console
-$ kubectl run --attach bbox --image=busybox --restart=Never -- sh -c 'while true; do for i in 0 1 2; do echo zoo-$i $(echo stats | nc zoo-$i.zk:2181 | grep Mode); sleep 1; done; done';
+$ kubectl -n kafka run --attach bbox --image=busybox --restart=Never -- sh -c 'while true; do for i in 0 1 2; do echo zoo-$i $(echo stats | nc zoo-$i.zk:2181 | grep Mode); sleep 1; done; done';
 zoo-2 Mode: follower
 zoo-0 Mode: follower
 zoo-1 Mode: leader
@@ -29,8 +29,8 @@ zoo-2 Mode: follower
 
 Delete pets and wait for the petset controller to bring the back up:
 ```console
-$ kubectl delete po -l app=zk
-$ kubectl get po --watch-only
+$ kubectl -n kafka delete po -l app=zk
+$ kubectl -n kafka get po --watch-only
 NAME      READY     STATUS     RESTARTS   AGE
 zoo-0     0/1       Init:0/2   0          16s
 zoo-0     0/1       Init:0/2   0         21s
@@ -56,7 +56,7 @@ zoo-2 Mode: follower
 
 Check the previously inserted key:
 ```console
-$ kubectl exec zoo-1 -- /opt/zookeeper/bin/zkCli.sh get /foo
+$ kubectl -n kafka exec zoo-1 -- /opt/zookeeper/bin/zkCli.sh get /foo
 ionid = 0x354887858e80035, negotiated timeout = 30000
 
 WATCHER::
