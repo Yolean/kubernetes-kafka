@@ -1,5 +1,5 @@
 
-FROM java:openjdk-8-jre
+FROM openjdk:8u102-jre
 
 ENV kafka_version=0.10.1.0
 ENV scala_version=2.11.8
