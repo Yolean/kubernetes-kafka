@@ -16,5 +16,4 @@ ENTRYPOINT ["bin/kafka-server-start.sh"]
 
 ADD config/server.properties config/
 
-RUN sed -i 's/zookeeper.connect=localhost:2181/zookeeper.connect=zookeeper:2181/' config/server.properties
 CMD ["config/server.properties"]
