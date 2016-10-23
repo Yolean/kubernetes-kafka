@@ -27,12 +27,6 @@ spec:
         volumeMounts:
         - name: datadir
           mountPath: /opt/kafka/data
-      #  - name: conf
-      #    mountPath: /opt/kafka/config/server.properties
-      #volumes:
-      #- name: conf
-      #  configMap:
-      #    name: conf-d
   volumeClaimTemplates:
   - metadata:
       name: datadir
