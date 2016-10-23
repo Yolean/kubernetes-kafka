@@ -8,7 +8,7 @@ ENV kafka_bin_version=2.11-$kafka_version
 RUN curl -SLs "http://www.scala-lang.org/files/archive/scala-$scala_version.deb" -o scala.deb \
 	&& dpkg -i scala.deb \
 	&& rm scala.deb \
-	&& curl -SLs "http://www-eu.apache.org/dist/kafka/$kafka_version/kafka_$kafka_bin_version.tgz" | tar -xzf - -C /opt \
+	&& curl -SLs "http://www.apache.org/dist/kafka/$kafka_version/kafka_$kafka_bin_version.tgz" | tar -xzf - -C /opt \
 	&& mv /opt/kafka_$kafka_bin_version /opt/kafka
 
 WORKDIR /opt/kafka
