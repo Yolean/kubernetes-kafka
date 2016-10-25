@@ -11,8 +11,9 @@ spec:
   - ReadWriteOnce
   capacity:
     storage: 200Gi
-  hostPath:
-    path: /tmp/k8s-data/datadir-kafka-0
+  gcePersistentDisk:
+    pdName: datadir-kafka-0
+    fsType: ext4
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -26,8 +27,9 @@ spec:
   - ReadWriteOnce
   capacity:
     storage: 200Gi
-  hostPath:
-    path: /tmp/k8s-data/datadir-kafka-1
+  gcePersistentDisk:
+    pdName: datadir-kafka-1
+    fsType: ext4
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -41,5 +43,6 @@ spec:
   - ReadWriteOnce
   capacity:
     storage: 200Gi
-  hostPath:
-    path: /tmp/k8s-data/datadir-kafka-2
+  gcePersistentDisk:
+    pdName: datadir-kafka-2
+    fsType: ext4
