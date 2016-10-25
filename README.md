@@ -15,7 +15,7 @@ This step can be skipped in clusters that support automatic volume provisioning,
 You need this step in Minikube.
 
 ```
-./zookeeper/bootstrap/pv.sh
+kubectl create -f ./zookeeper/bootstrap/pv-template.yml
 kubectl create -f ./zookeeper/bootstrap/pvc.yml
 ```
 

@@ -1,3 +1,6 @@
+#gcloud compute disks create --size=200GB --type=pd-standard datadir-kafka-0
+#gcloud compute disks create --size=200GB --type=pd-standard datadir-kafka-1
+#gcloud compute disks create --size=200GB --type=pd-standard datadir-kafka-2
 ---
 apiVersion: v1
 kind: PersistentVolume
