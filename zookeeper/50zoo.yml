@@ -18,7 +18,7 @@ spec:
             - name: ZOO_MY_ID
               value: "1"
             - name: ZOO_SERVERS
-              value: server.1=0.0.0.0:2888:3888:participant server.2=zoo-1.kafka.svc.cluster.local:2888:3888:participant server.3=zoo-2.kafka.svc.cluster.local:2888:3888:participant
+              value: server.1=0.0.0.0:2888:3888:participant server.2=zoo-1.kafka.svc.cluster.local:2888:3888:participant server.3=zoo-2.kafka.svc.cluster.local:2888:3888:participant server.4=zoo-3.kafka.svc.cluster.local:2888:3888:participant server.5=zoo-4.kafka.svc.cluster.local:2888:3888:participant
           ports:
             - containerPort: 2181
               name: client
