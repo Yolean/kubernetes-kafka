@@ -38,6 +38,13 @@ kubectl create -f ./zookeeper/
 
 ## Start Kafka
 
+Set up persistent volumes:
+```
+./bootstrap/pv.sh
+kubectl create -f bootstrap/pvc.yml
+```
+
+Set up kafka:
 ```
 kubectl create -f ./
 ```
