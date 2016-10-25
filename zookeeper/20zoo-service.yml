@@ -49,3 +49,37 @@ spec:
       name: peer
     - port: 3888
       name: leader-election
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+  name: zoo-3
+  namespace: kafka
+spec:
+  selector:
+    app: zookeeper
+    petindex: "3"
+  ports:
+    - port: 2888
+      name: peer
+    - port: 3888
+      name: leader-election
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+  name: zoo-4
+  namespace: kafka
+spec:
+  selector:
+    app: zookeeper
+    petindex: "4"
+  ports:
+    - port: 2888
+      name: peer
+    - port: 3888
+      name: leader-election
