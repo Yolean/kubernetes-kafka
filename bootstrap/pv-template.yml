@@ -10,7 +10,7 @@ spec:
   accessModes:
   - ReadWriteOnce
   capacity:
-    storage: 100Mi
+    storage: 200Gi
   hostPath:
     path: /tmp/k8s-data/datadir-kafka-0
 ---
@@ -25,7 +25,7 @@ spec:
   accessModes:
   - ReadWriteOnce
   capacity:
-    storage: 100Mi
+    storage: 200Gi
   hostPath:
     path: /tmp/k8s-data/datadir-kafka-1
 ---
@@ -40,6 +40,6 @@ spec:
   accessModes:
   - ReadWriteOnce
   capacity:
-    storage: 100Mi
+    storage: 200Gi
   hostPath:
     path: /tmp/k8s-data/datadir-kafka-2
