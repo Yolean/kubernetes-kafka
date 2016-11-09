@@ -1,10 +1,12 @@
 apiVersion: extensions/v1beta1
-kind: ReplicaSet
+kind: Deployment
 metadata:
   name: kafka-2
   namespace: kafka
 spec:
   replicas: 1
+  strategy:
+      type: Recreate
   template:
     metadata:
       labels:
