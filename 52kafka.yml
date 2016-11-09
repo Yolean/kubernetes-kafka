@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: kafka-0
+  name: kafka-2
   namespace: kafka
 spec:
   replicas: 1
@@ -11,7 +11,7 @@ spec:
     metadata:
       labels:
         app: kafka
-        petindex: "0"
+        petindex: "2"
     spec:
       containers:
       - name: broker
@@ -26,13 +26,13 @@ spec:
           - ./bin/kafka-server-start.sh
           - config/server.properties
           - --override
-          - broker.id=0
+          - broker.id=2
           - --override
-          - advertised.listeners=PLAINTEXT://broker-0.kafka.svc.cluster.local:9092
+          - advertised.listeners=PLAINTEXT://broker-2.kafka.svc.cluster.local:9092
         volumeMounts:
           - name: datadir
             mountPath: /opt/kafka/data
       volumes:
         - name: datadir
           persistentVolumeClaim:
-            claimName: datadir-kafka-0
+            claimName: datadir-kafka-2

@@ -30,17 +30,21 @@ The volume size in the example is very small. The numbers don't really matter as
 
 ## Set up Zookeeper
 
-This module contains a copy of `pets/zookeeper/` from https://github.com/kubernetes/contrib.
+With [nopetset](https://github.com/Yolean/kubernetes-kafka/pull/9) we also discarded persistent storage, so there is no zookeeper bootstrap or [README](https://github.com/Yolean/kubernetes-kafka/blob/master/zookeeper/README.md). Just run:
 
-See the `./zookeeper` folder and follow the README there.
-
-An additional service has been added here, create using:
 ```
-kubectl create -f ./zookeeper/service.yml
+kubectl create -f ./zookeeper/
 ```
 
 ## Start Kafka
 
+Set up persistent volumes:
+```
+./bootstrap/pv.sh
+kubectl create -f bootstrap/pvc.yml
+```
+
+Set up kafka:
 ```
 kubectl create -f ./
 ```

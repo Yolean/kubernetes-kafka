@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: ReplicaSet
+metadata:
+  name: zoo-4
+  namespace: kafka
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+        petindex: "4"
+    spec:
+      containers:
+        - name: zookeeper
+          image: zookeeper@sha256:bb1a12a2168fc5e508ee019aea2d45bf846e99ea87d6bcaf2ede5c59fd439368
+          env:
+            - name: ZOO_MY_ID
+              value: "5"
+            - name: ZOO_SERVERS
+              value: server.1=zoo-0.kafka.svc.cluster.local:2888:3888:participant server.2=zoo-1.kafka.svc.cluster.local:2888:3888:participant server.3=zoo-2.kafka.svc.cluster.local:2888:3888:participant server.4=zoo-3.kafka.svc.cluster.local:2888:3888:participant server.5=0.0.0.0:2888:3888:participant
+          ports:
+            - containerPort: 2181
+              name: client
+            - containerPort: 2888
+              name: peer
+            - containerPort: 3888
+              name: leader-election
+          volumeMounts:
+            - name: datadir
+              mountPath: /tmp/zookeeper
+            - name: opt
+              mountPath: /opt/
+      volumes:
+        - name: opt
+          emptyDir: {}
+        - name: datadir
+          emptyDir: {}
