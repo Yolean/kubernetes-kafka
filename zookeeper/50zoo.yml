@@ -1,0 +1,52 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: zoo
+  namespace: kafka
+spec:
+  serviceName: "zoo"
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+      annotations:
+        pod.beta.kubernetes.io/init-containers: '[
+            {
+                "name": "install",
+                "image": "alpine:3.4",
+                "command": ["sh", "-c", "echo $(($(hostname | sed s/zoo-//) + 1)) > /data/myid" ],
+                "volumeMounts": [
+                    {
+                        "name": "datadir",
+                        "mountPath": "/data"
+                    }
+                ]
+            }
+        ]'
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: zookeeper
+          image: zookeeper:3.4.9@sha256:50cfe2c77fe203ab528ffb808f1a8b505db73b1f85aedbc52e4fdde69e2ebfe8
+          env:
+            - name: ZOO_SERVERS
+              value: server.1=zoo-0.zoo:2888:3888:participant server.2=zoo-1.zoo:2888:3888:participant server.3=zoo-2.zoo:2888:3888:participant server.4=zoo-3.zoo:2888:3888:participant server.5=zoo-4.zoo:2888:3888:participant
+          ports:
+            - containerPort: 2181
+              name: client
+            - containerPort: 2888
+              name: peer
+            - containerPort: 3888
+              name: leader-election
+          volumeMounts:
+            - name: datadir
+              mountPath: /data
+            # There's defaults in this folder, such as logging config
+            #- name: conf
+            #  mountPath: /conf
+      volumes:
+        #- name: conf
+        #  emptyDir: {}
+        - name: datadir
+          emptyDir: {}
