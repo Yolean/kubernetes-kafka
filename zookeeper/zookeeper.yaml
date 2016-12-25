@@ -3,6 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: zk-headless
+  namespace: kafka
   labels:
     app: zk-headless
 spec:
@@ -19,6 +20,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: zk-config
+  namespace: kafka
 data:
   jvm.heap: "2G"
   tick: "2000"
@@ -32,6 +34,7 @@ apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
   name: zk-budget
+  namespace: kafka
 spec:
   selector:
     matchLabels:
@@ -42,6 +45,7 @@ apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
   name: zk
+  namespace: kafka
 spec:
   serviceName: zk-headless
   replicas: 3
