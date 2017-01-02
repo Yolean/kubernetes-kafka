@@ -13,7 +13,7 @@ spec:
   selector:
     matchLabels:
       app: kafka
-      petindex: "0"
+      podindex: "0"
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -29,7 +29,7 @@ spec:
   selector:
     matchLabels:
       app: kafka
-      petindex: "1"
+      podindex: "1"
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -45,4 +45,4 @@ spec:
   selector:
     matchLabels:
       app: kafka
-      petindex: "2"
+      podindex: "2"
