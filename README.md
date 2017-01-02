@@ -1,23 +1,19 @@
 
 # Kafka as Kubernetes PetSet
 
-Example of three Kafka brokers depending on three Zookeeper instances.
+Example of three Kafka brokers depending on five Zookeeper instances.
 
-To get consistent service DNS names `kafka-N.broker.kafka`(`.svc.cluster.local`), run everything in a namespace:
+To get consistent service DNS names `kafka-N.broker.kafka`(`.svc.cluster.local`), run everything in a [namespace](http://kubernetes.io/docs/admin/namespaces/walkthrough/):
 ```
 kubectl create -f 00namespace.yml
 ```
 
 ## Set up volume claims
 
-This step can be skipped in clusters that support automatic volume provisioning, such as GKE.
+You may add [storage class](http://kubernetes.io/docs/user-guide/persistent-volumes/#storageclasses)
+to the kafka StatefulSet declaration to enable automatic volume provisioning.
 
-You need this step in Minikube.
-
-```
-./zookeeper/bootstrap/pv.sh
-kubectl create -f ./zookeeper/bootstrap/pvc.yml
-```
+Alternatively create [PV](http://kubernetes.io/docs/user-guide/persistent-volumes/#persistent-volumes)s and [PVC](http://kubernetes.io/docs/user-guide/persistent-volumes/#persistentvolumeclaims)s manually. For example in Minikube.
 
 ```
 ./bootstrap/pv.sh
@@ -26,20 +22,26 @@ kubectl create -f ./bootstrap/pvc.yml
 kubectl get pvc
 ```
 
-The volume size in the example is very small. The numbers don't really matter as long as they match. Minimal size on GKE is 1 GB.
-
 ## Set up Zookeeper
 
-This module contains a copy of `pets/zookeeper/` from https://github.com/kubernetes/contrib.
+There is a Zookeeper+StatefulSet [blog post](http://blog.kubernetes.io/2016/12/statefulset-run-scale-stateful-applications-in-kubernetes.html) and [example](https://github.com/kubernetes/contrib/tree/master/statefulsets/zookeeper),
+but it appears tuned for workloads heavier than Kafka topic metadata.
 
-See the `./zookeeper` folder and follow the README there.
+The Kafka book (Definitive Guide, O'Reilly 2016) recommends that Kafka has its own Zookeeper cluster,
+so we use the [official docker image](https://hub.docker.com/_/zookeeper/)
+but with a [startup script change to guess node id from hostname](https://github.com/solsson/zookeeper-docker/commit/df9474f858ad548be8a365cb000a4dd2d2e3a217).
 
-An additional service has been added here, create using:
+Zookeeper runs as a [Deployment](http://kubernetes.io/docs/user-guide/deployments/) without persistent storage:
 ```
-kubectl create -f ./zookeeper/service.yml
+kubectl create -f ./zookeeper/
 ```
+
+If you lose your zookeeper cluster, kafka will be unaware that persisted topics exist.
+The data is still there, but you need to re-create topics.
 
 ## Start Kafka
+
+Assuming you have your PVCs `Bound`, or enabled automatic provisioning (see above), go ahead and:
 
 ```
 kubectl create -f ./

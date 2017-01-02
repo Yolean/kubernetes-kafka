@@ -5,7 +5,7 @@ metadata:
   name: datadir-kafka-0
   labels:
     app: kafka
-    petindex: "0"
+    podindex: "0"
 spec:
   accessModes:
   - ReadWriteOnce
@@ -20,7 +20,7 @@ metadata:
   name: datadir-kafka-1
   labels:
     app: kafka
-    petindex: "1"
+    podindex: "1"
 spec:
   accessModes:
   - ReadWriteOnce
@@ -35,7 +35,7 @@ metadata:
   name: datadir-kafka-2
   labels:
     app: kafka
-    petindex: "2"
+    podindex: "2"
 spec:
   accessModes:
   - ReadWriteOnce
