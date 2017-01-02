@@ -1,5 +1,5 @@
 
-# Kafka as Kubernetes PetSet
+# Kafka as Kubernetes StatefulSet
 
 Example of three Kafka brokers depending on five Zookeeper instances.
 
@@ -79,6 +79,5 @@ kubectl create -f test/21consumer-test1.yml
 Testing and retesting... delete the namespace. PVs are outside namespaces so delete them too.
 ```
 kubectl delete namespace kafka
-rm -R ./data/ && kubectl delete pv datadir-zoo-0 datadir-zoo-1 datadir-zoo-2
 rm -R ./data/ && kubectl delete pv datadir-kafka-0 datadir-kafka-1 datadir-kafka-2
 ```
