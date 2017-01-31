@@ -4,6 +4,7 @@ metadata:
   name: zoo
   labels:
     app: zookeeper
+  namespace: kafka
 spec:
   ports:
   - port: 2888
