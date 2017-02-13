@@ -2,8 +2,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: zoo
-  labels:
-    app: zookeeper
   namespace: kafka
 spec:
   ports:
