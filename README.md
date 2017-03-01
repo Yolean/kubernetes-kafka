@@ -17,7 +17,7 @@ Alternatively create [PV](http://kubernetes.io/docs/user-guide/persistent-volume
 
 ```
 ./bootstrap/pv.sh
-kubectl create -f ./bootstrap/pvc.yml
+kubectl create -f ./10pvc.yml
 # check that claims are bound
 kubectl -n kafka get pvc
 ```
