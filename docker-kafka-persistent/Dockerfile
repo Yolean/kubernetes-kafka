@@ -2,8 +2,8 @@
 FROM openjdk:8u121-jre
 
 ENV kafka_version=0.10.2.0
-ENV scala_version=2.11.8
-ENV kafka_bin_version=2.11-$kafka_version
+ENV scala_version=2.12.1
+ENV kafka_bin_version=2.12-$kafka_version
 
 RUN curl -SLs "http://www.scala-lang.org/files/archive/scala-$scala_version.deb" -o scala.deb \
 	&& dpkg -i scala.deb \
