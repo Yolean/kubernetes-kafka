@@ -1,7 +1,7 @@
 
 FROM openjdk:8u121-jre
 
-ENV kafka_version=0.10.1.1
+ENV kafka_version=0.10.2.0
 ENV scala_version=2.11.8
 ENV kafka_bin_version=2.11-$kafka_version
 
