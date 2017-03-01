@@ -17,8 +17,8 @@ spec:
         image: solsson/kafka:0.10.0.1
         command:
         - ./bin/kafka-console-consumer.sh
-        - --zookeeper
-        - zookeeper:2181
+        - --bootstrap-server
+        - kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
         - --topic
         - test1
         - --from-beginning
