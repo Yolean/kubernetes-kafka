@@ -19,7 +19,7 @@ Alternatively create [PV](http://kubernetes.io/docs/user-guide/persistent-volume
 ./bootstrap/pv.sh
 kubectl create -f ./bootstrap/pvc.yml
 # check that claims are bound
-kubectl get pvc
+kubectl -n kafka get pvc
 ```
 
 ## Set up Zookeeper
@@ -49,7 +49,7 @@ kubectl create -f ./
 
 You might want to verify in logs that Kafka found its own DNS name(s) correctly. Look for records like:
 ```
-kubectl logs kafka-0 | grep "Registered broker"
+kubectl -n kafka logs kafka-0 | grep "Registered broker"
 # INFO Registered broker 0 at path /brokers/ids/0 with addresses: PLAINTEXT -> EndPoint(kafka-0.broker.kafka.svc.cluster.local,9092,PLAINTEXT)
 ```
 
@@ -79,5 +79,5 @@ kubectl create -f test/21consumer-test1.yml
 Testing and retesting... delete the namespace. PVs are outside namespaces so delete them too.
 ```
 kubectl delete namespace kafka
-rm -R ./data/ && kubectl delete pv datadir-kafka-0 datadir-kafka-1 datadir-kafka-2
+rm -R ./data/ && kubectl -n kafka delete pv datadir-kafka-0 datadir-kafka-1 datadir-kafka-2
 ```
