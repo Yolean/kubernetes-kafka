@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Note that in for example GKE a PetSet will have PersistentVolume(s) and PersistentVolumeClaim(s) created for it automatically"
+echo "Note that in for example GKE a StatefulSet will have PersistentVolume(s) and PersistentVolumeClaim(s) created for it automatically"
 
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 path="$dir/data"
