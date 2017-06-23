@@ -14,7 +14,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: broker
-        image: solsson/kafka:0.10.2.0-alpine@sha256:a5256a1026750b5cad5a127dfe685f8b4b8053d06443392150c208ad84deaf48
+        image: solsson/kafka:0.11.0.0-rc2@sha256:713869ff8d04840f3dfd6d002463124dbad0a5b7182fcdb5f15b200b35dbe65d
         ports:
         - containerPort: 9092
         command:
