@@ -14,13 +14,13 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: broker
-        image: solsson/kafka-persistent:0.10.1@sha256:0719b4688b666490abf4b32a3cc5c5da7bb2d6276b47377b35de5429f783e9c2
+        image: solsson/kafka:0.10.2.0-alpine@sha256:a5256a1026750b5cad5a127dfe685f8b4b8053d06443392150c208ad84deaf48
         ports:
         - containerPort: 9092
         command:
         - sh
         - -c
-        - "./bin/kafka-server-start.sh config/server.properties --override broker.id=$(hostname | awk -F'-' '{print $2}')"
+        - "./bin/kafka-server-start.sh config/server.properties --override log.retention.hours=-1 --override broker.id=$(hostname | awk -F'-' '{print $2}')"
         volumeMounts:
         - name: datadir
           mountPath: /opt/kafka/data
