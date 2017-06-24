@@ -20,7 +20,7 @@ spec:
         command:
         - sh
         - -c
-        - "./bin/kafka-server-start.sh config/server.properties --override log.retention.hours=-1 --override broker.id=$(hostname | awk -F'-' '{print $2}')"
+        - "./bin/kafka-server-start.sh config/server.properties --override log.retention.hours=-1 --override broker.id=${HOSTNAME##*-}"
         volumeMounts:
         - name: datadir
           mountPath: /opt/kafka/data
