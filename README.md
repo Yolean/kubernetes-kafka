@@ -78,3 +78,11 @@ Testing and retesting... delete the namespace. PVs are outside namespaces so del
 kubectl delete namespace kafka
 rm -R ./data/ && kubectl -n kafka delete pv datadir-kafka-0 datadir-kafka-1 datadir-kafka-2
 ```
+
+## Metrics, Prometheus style
+
+Is the metrics system up and running?
+```
+kubectl logs -c metrics kafka-0
+kubectl exec -c broker kafka-0 -- /bin/sh -c 'apk add --no-cache curl && curl http://localhost:5556/metrics'
+```
