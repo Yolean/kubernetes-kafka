@@ -35,11 +35,19 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /usr/local/kafka/config
-        - name: datadir
+        - name: data
           mountPath: /var/lib/zookeeper/data
       volumes:
       - name: config
         configMap:
           name: zookeeper-config
-      - name: datadir
-        emptyDir: {}
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      annotations:
+        volume.beta.kubernetes.io/storage-class: kafka-zookeeper
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
