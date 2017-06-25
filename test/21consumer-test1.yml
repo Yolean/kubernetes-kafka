@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
       - name: kafka
-        image: solsson/kafka:0.10.0.1
+        image: solsson/kafka
+        imagePullPolicy: Never
         command:
         - ./bin/kafka-console-consumer.sh
         - --bootstrap-server
