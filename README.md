@@ -24,18 +24,15 @@ kubectl -n kafka get pvc
 
 ## Set up Zookeeper
 
-There is a Zookeeper+StatefulSet [blog post](http://blog.kubernetes.io/2016/12/statefulset-run-scale-stateful-applications-in-kubernetes.html) and [example](https://github.com/kubernetes/contrib/tree/master/statefulsets/zookeeper),
-but it appears tuned for workloads heavier than Kafka topic metadata.
-
-The Kafka book (Definitive Guide, O'Reilly 2016) recommends that Kafka has its own Zookeeper cluster,
+The Kafka book (Definitive Guide, O'Reilly 2016) recommends that Kafka has its own Zookeeper cluster with at least 5 instances,
 so we use the [official docker image](https://hub.docker.com/_/zookeeper/)
 but with a [startup script change to guess node id from hostname](https://github.com/solsson/zookeeper-docker/commit/df9474f858ad548be8a365cb000a4dd2d2e3a217).
 
-Zookeeper runs as a [Deployment](http://kubernetes.io/docs/user-guide/deployments/) without persistent storage:
 ```
 kubectl create -f ./zookeeper/
 ```
 
+Despite being a StatefulSet, there is no persistent volume by default.
 If you lose your zookeeper cluster, kafka will be unaware that persisted topics exist.
 The data is still there, but you need to re-create topics.
 
