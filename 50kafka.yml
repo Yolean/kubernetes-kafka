@@ -34,11 +34,11 @@ spec:
           ./bin/kafka-server-start.sh
           config/server.properties
           --override log.retention.hours=-1
-          --override log.dirs=/opt/kafka/data/topics
+          --override log.dirs=/var/lib/kafka/data/topics
           --override broker.id=${HOSTNAME##*-}
         volumeMounts:
         - name: datadir
-          mountPath: /opt/kafka/data
+          mountPath: /var/lib/kafka/data
   volumeClaimTemplates:
   - metadata:
       name: datadir
