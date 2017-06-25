@@ -14,10 +14,17 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: zookeeper
-        image: solsson/zookeeper-statefulset:3.4.10@sha256:0ad93c98d5165b4eb747c4b0dd04a7a448a5c4b4cbcaa4bffc15018b76b81bb5
-        env:
-        - name: ZOO_SERVERS
-          value: server.1=zoo-0.zoo:2888:3888:participant server.2=zoo-1.zoo:2888:3888:participant server.3=zoo-2.zoo:2888:3888:participant server.4=zoo-3.zoo:2888:3888:participant server.5=zoo-4.zoo:2888:3888:participant
+        image: solsson/kafka:0.11.0.0-rc2@sha256:c1316e0131f4ec83bc645ca2141e4fda94e0d28f4fb5f836e15e37a5e054bdf1
+        command:
+        - sh
+        - -c
+        - >
+          set -e;
+          export ZOOKEEPER_SERVER_ID=$((${HOSTNAME##*-} + 1));
+          echo "${ZOOKEEPER_SERVER_ID:-1}" | tee /var/lib/zookeeper/data/myid;
+          sed -i "s/server\.$ZOOKEEPER_SERVER_ID\=[a-z0-9.-]*/server.$ZOOKEEPER_SERVER_ID=0.0.0.0/" config/zookeeper.properties;
+          cat config/zookeeper.properties;
+          ./bin/zookeeper-server-start.sh config/zookeeper.properties
         ports:
         - containerPort: 2181
           name: client
@@ -26,13 +33,13 @@ spec:
         - containerPort: 3888
           name: leader-election
         volumeMounts:
+        - name: config
+          mountPath: /usr/local/kafka/config
         - name: datadir
-          mountPath: /data
-        # There's defaults in this folder, such as logging config
-        #- name: conf
-        #  mountPath: /conf
+          mountPath: /var/lib/zookeeper/data
       volumes:
-      #- name: conf
-      #  emptyDir: {}
+      - name: config
+        configMap:
+          name: zookeeper-config
       - name: datadir
         emptyDir: {}
