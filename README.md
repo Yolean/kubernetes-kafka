@@ -8,6 +8,12 @@ To get consistent service DNS names `kafka-N.broker.kafka`(`.svc.cluster.local`)
 kubectl create -f 00namespace.yml
 ```
 
+## Prepare your cluster
+
+For Minikube run `kubectl create -f configure-minikube/`.
+
+There's a similar setup for gke, in `configure-gke` of course. You might want to tweak it before creating.
+
 ## Set up volume claims
 
 You may add [storage class](http://kubernetes.io/docs/user-guide/persistent-volumes/#storageclasses)
@@ -24,17 +30,12 @@ kubectl -n kafka get pvc
 
 ## Set up Zookeeper
 
-The Kafka book (Definitive Guide, O'Reilly 2016) recommends that Kafka has its own Zookeeper cluster with at least 5 instances,
-so we use the [official docker image](https://hub.docker.com/_/zookeeper/)
-but with a [startup script change to guess node id from hostname](https://github.com/solsson/zookeeper-docker/commit/df9474f858ad548be8a365cb000a4dd2d2e3a217).
+The Kafka book (Definitive Guide, O'Reilly 2016) recommends that Kafka has its own Zookeeper cluster with at least 5 instances.
+We use the zookeeper build that comes with the Kafka distribution, and tweak the startup command to support StatefulSet.
 
 ```
 kubectl create -f ./zookeeper/
 ```
-
-Despite being a StatefulSet, there is no persistent volume by default.
-If you lose your zookeeper cluster, kafka will be unaware that persisted topics exist.
-The data is still there, but you need to re-create topics.
 
 ## Start Kafka
 
