@@ -86,4 +86,6 @@ Is the metrics system up and running?
 ```
 kubectl logs -c metrics kafka-0
 kubectl exec -c broker kafka-0 -- /bin/sh -c 'apk add --no-cache curl && curl http://localhost:5556/metrics'
+kubectl logs -c metrics zoo-0
+kubectl exec -c zookeeper zoo-0 -- /bin/sh -c 'apk add --no-cache curl && curl http://localhost:5556/metrics'
 ```
