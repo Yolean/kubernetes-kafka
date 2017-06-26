@@ -1,15 +1,16 @@
 apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
-  name: zoo
+  name: pzoo
   namespace: kafka
 spec:
-  serviceName: "zoo"
-  replicas: 5
+  serviceName: "pzoo"
+  replicas: 3
   template:
     metadata:
       labels:
         app: zookeeper
+        storage: persistent
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "5556"

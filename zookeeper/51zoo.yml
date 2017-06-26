@@ -1,0 +1,62 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: zoo
+  namespace: kafka
+spec:
+  serviceName: "zoo"
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+        storage: ephemeral
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "5556"
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: metrics
+        image: solsson/kafka-prometheus-jmx-exporter@sha256:1f7c96c287a2dbec1d909cd8f96c0656310239b55a9a90d7fd12c81f384f1f7d
+        command:
+        - "java"
+        - "-jar"
+        - "jmx_prometheus_httpserver.jar"
+        - "5556"
+        - example_configs/zookeeper.yaml
+        ports:
+        - containerPort: 5556
+      - name: zookeeper
+        image: solsson/kafka:0.11.0.0-rc2@sha256:c1316e0131f4ec83bc645ca2141e4fda94e0d28f4fb5f836e15e37a5e054bdf1
+        env:
+        - name: JMX_PORT
+          value: "5555"
+        command:
+        - sh
+        - -c
+        - >
+          set -e;
+          export ZOOKEEPER_SERVER_ID=$((${HOSTNAME##*-} + 4));
+          echo "${ZOOKEEPER_SERVER_ID:-1}" | tee /var/lib/zookeeper/data/myid;
+          sed -i "s/server\.$ZOOKEEPER_SERVER_ID\=[a-z0-9.-]*/server.$ZOOKEEPER_SERVER_ID=0.0.0.0/" config/zookeeper.properties;
+          cat config/zookeeper.properties;
+          ./bin/zookeeper-server-start.sh config/zookeeper.properties
+        ports:
+        - containerPort: 2181
+          name: client
+        - containerPort: 2888
+          name: peer
+        - containerPort: 3888
+          name: leader-election
+        volumeMounts:
+        - name: config
+          mountPath: /usr/local/kafka/config
+        - name: data
+          mountPath: /var/lib/zookeeper/data
+      volumes:
+      - name: config
+        configMap:
+          name: zookeeper-config
+      - name: data
+        emptyDir: {}
