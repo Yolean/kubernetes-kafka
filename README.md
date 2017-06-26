@@ -8,12 +8,6 @@ To get consistent service DNS names `kafka-N.broker.kafka`(`.svc.cluster.local`)
 kubectl create -f 00namespace.yml
 ```
 
-## Prepare your cluster
-
-For Minikube run `kubectl create -f configure-minikube/`.
-
-There's a similar setup for gke, in `configure-gke` of course. You might want to tweak it before creating.
-
 ## Set up volume claims
 
 You may add [storage class](http://kubernetes.io/docs/user-guide/persistent-volumes/#storageclasses)
