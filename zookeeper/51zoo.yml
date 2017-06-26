@@ -1,16 +1,16 @@
 apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
-  name: pzoo
+  name: zoo
   namespace: kafka
 spec:
-  serviceName: "pzoo"
-  replicas: 5
+  serviceName: "zoo"
+  replicas: 2
   template:
     metadata:
       labels:
         app: zookeeper
-        storage: persistent
+        storage: ephemeral
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "5556"
@@ -37,7 +37,7 @@ spec:
         - -c
         - >
           set -e;
-          export ZOOKEEPER_SERVER_ID=$((${HOSTNAME##*-} + 1));
+          export ZOOKEEPER_SERVER_ID=$((${HOSTNAME##*-} + 4));
           echo "${ZOOKEEPER_SERVER_ID:-1}" | tee /var/lib/zookeeper/data/myid;
           sed -i "s/server\.$ZOOKEEPER_SERVER_ID\=[a-z0-9.-]*/server.$ZOOKEEPER_SERVER_ID=0.0.0.0/" config/zookeeper.properties;
           cat config/zookeeper.properties;
@@ -58,13 +58,5 @@ spec:
       - name: config
         configMap:
           name: zookeeper-config
-  volumeClaimTemplates:
-  - metadata:
-      name: data
-      annotations:
-        volume.beta.kubernetes.io/storage-class: kafka-zookeeper
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 1Gi
+      - name: data
+        emptyDir: {}
