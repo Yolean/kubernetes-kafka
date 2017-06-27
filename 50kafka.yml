@@ -37,11 +37,11 @@ spec:
           --override log.dirs=/var/lib/kafka/data/topics
           --override broker.id=${HOSTNAME##*-}
         volumeMounts:
-        - name: datadir
+        - name: data
           mountPath: /var/lib/kafka/data
   volumeClaimTemplates:
   - metadata:
-      name: datadir
+      name: data
     spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
