@@ -8,20 +8,6 @@ To get consistent service DNS names `kafka-N.broker.kafka`(`.svc.cluster.local`)
 kubectl create -f 00namespace.yml
 ```
 
-## Set up volume claims
-
-You may add [storage class](http://kubernetes.io/docs/user-guide/persistent-volumes/#storageclasses)
-to the kafka StatefulSet declaration to enable automatic volume provisioning.
-
-Alternatively create [PV](http://kubernetes.io/docs/user-guide/persistent-volumes/#persistent-volumes)s and [PVC](http://kubernetes.io/docs/user-guide/persistent-volumes/#persistentvolumeclaims)s manually. For example in Minikube.
-
-```
-./bootstrap/pv.sh
-kubectl create -f ./10pvc.yml
-# check that claims are bound
-kubectl -n kafka get pvc
-```
-
 ## Set up Zookeeper
 
 The Kafka book (Definitive Guide, O'Reilly 2016) recommends that Kafka has its own Zookeeper cluster with at least 5 instances.

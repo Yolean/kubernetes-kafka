@@ -20,6 +20,13 @@ spec:
         image: solsson/kafka-prometheus-jmx-exporter@sha256:1f7c96c287a2dbec1d909cd8f96c0656310239b55a9a90d7fd12c81f384f1f7d
         ports:
         - containerPort: 5556
+        resources:
+          requests:
+            cpu: 0m
+            memory: 40Mi
+          limits:
+            cpu: 10m
+            memory: 80Mi
       - name: broker
         image: solsson/kafka:0.11.0.0-rc2@sha256:c1316e0131f4ec83bc645ca2141e4fda94e0d28f4fb5f836e15e37a5e054bdf1
         env:
@@ -36,6 +43,10 @@ spec:
           --override log.retention.hours=-1
           --override log.dirs=/var/lib/kafka/data/topics
           --override broker.id=${HOSTNAME##*-}
+        resources:
+          requests:
+            cpu: 100m
+            memory: 512Mi
         volumeMounts:
         - name: data
           mountPath: /var/lib/kafka/data
