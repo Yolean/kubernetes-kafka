@@ -15,7 +15,7 @@ spec:
         prometheus.io/scrape: "true"
         prometheus.io/port: "5556"
     spec:
-      terminationGracePeriodSeconds: 10
+      terminationGracePeriodSeconds: 30
       containers:
       - name: metrics
         image: solsson/kafka-prometheus-jmx-exporter@sha256:1f7c96c287a2dbec1d909cd8f96c0656310239b55a9a90d7fd12c81f384f1f7d
@@ -40,7 +40,7 @@ spec:
         - name: JMX_PORT
           value: "5555"
         command:
-        - sh
+        - /bin/bash
         - -c
         - >
           set -e;
