@@ -36,6 +36,10 @@ spec:
           --override log.retention.hours=-1
           --override log.dirs=/var/lib/kafka/data/topics
           --override broker.id=${HOSTNAME##*-}
+        resources:
+          requests:
+            cpu: 100m
+            memory: 600Mi
         volumeMounts:
         - name: data
           mountPath: /var/lib/kafka/data
