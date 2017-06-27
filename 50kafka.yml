@@ -47,6 +47,12 @@ spec:
           requests:
             cpu: 100m
             memory: 512Mi
+        livenessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - 'echo "" | nc -w 1 127.0.0.1 9092'
         volumeMounts:
         - name: data
           mountPath: /var/lib/kafka/data
