@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: producer-test1
+  namespace: kafka
+spec:
+  template:
+    metadata:
+      name: producer-test1
+    spec:
+      containers:
+      - name: kafka
+        image: solsson/kafka:0.11.0.0-rc2@sha256:c1316e0131f4ec83bc645ca2141e4fda94e0d28f4fb5f836e15e37a5e054bdf1
+        command:
+        - /bin/sh
+        - -c
+        - >
+          echo "test1 $(date)"
+          |
+          ./bin/kafka-console-producer.sh
+          --topic test1
+          --broker-list kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
+          ; sleep 1
+      restartPolicy: Never
