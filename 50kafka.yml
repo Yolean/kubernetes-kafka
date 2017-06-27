@@ -26,7 +26,7 @@ spec:
             memory: 40Mi
           limits:
             cpu: 10m
-            memory: 80Mi
+            memory: 100Mi
       - name: broker
         image: solsson/kafka:0.11.0.0-rc2@sha256:c1316e0131f4ec83bc645ca2141e4fda94e0d28f4fb5f836e15e37a5e054bdf1
         env:
