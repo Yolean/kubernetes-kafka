@@ -9,7 +9,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 200Gi
+      storage: 100Mi
   selector:
     matchLabels:
       app: kafka
@@ -25,7 +25,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 200Gi
+      storage: 100Mi
   selector:
     matchLabels:
       app: kafka
@@ -41,7 +41,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 200Gi
+      storage: 100Mi
   selector:
     matchLabels:
       app: kafka
