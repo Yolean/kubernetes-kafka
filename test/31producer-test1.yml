@@ -10,7 +10,7 @@ spec:
     spec:
       containers:
       - name: kafka
-        image: solsson/kafka:0.11.0.0-rc2@sha256:c1316e0131f4ec83bc645ca2141e4fda94e0d28f4fb5f836e15e37a5e054bdf1
+        image: solsson/kafka:0.11.0.0@sha256:4c194db2ec15698aca6f1aa8a2fd5e5c566caed82b4bf43446c388f315397756
         command:
         - /bin/sh
         - -c
