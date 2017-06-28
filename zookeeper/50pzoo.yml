@@ -43,9 +43,8 @@ spec:
           value: "5555"
         command:
         - /bin/bash
-        - -c
+        - -euc
         - >
-          set -e;
           export ZOOKEEPER_SERVER_ID=$((${HOSTNAME##*-} + 1));
           echo "${ZOOKEEPER_SERVER_ID:-1}" | tee /var/lib/zookeeper/data/myid;
           sed -i "s/server\.$ZOOKEEPER_SERVER_ID\=[a-z0-9.-]*/server.$ZOOKEEPER_SERVER_ID=0.0.0.0/" config/zookeeper.properties;
