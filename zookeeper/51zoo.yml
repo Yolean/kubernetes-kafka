@@ -21,6 +21,8 @@ spec:
         image: solsson/kafka-prometheus-jmx-exporter@sha256:1f7c96c287a2dbec1d909cd8f96c0656310239b55a9a90d7fd12c81f384f1f7d
         command:
         - java
+        - -Xms39M
+        - -Xmx99M
         - -jar
         - jmx_prometheus_httpserver.jar
         - "5556"
@@ -41,9 +43,8 @@ spec:
           value: "5555"
         command:
         - /bin/bash
-        - -c
+        - -euc
         - >
-          set -e;
           export ZOOKEEPER_SERVER_ID=$((${HOSTNAME##*-} + 4));
           echo "${ZOOKEEPER_SERVER_ID:-1}" | tee /var/lib/zookeeper/data/myid;
           sed -i "s/server\.$ZOOKEEPER_SERVER_ID\=[a-z0-9.-]*/server.$ZOOKEEPER_SERVER_ID=0.0.0.0/" config/zookeeper.properties;

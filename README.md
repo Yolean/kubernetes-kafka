@@ -69,3 +69,4 @@ kubectl exec -c broker kafka-0 -- /bin/sh -c 'apk add --no-cache curl && curl ht
 kubectl logs -c metrics zoo-0
 kubectl exec -c zookeeper zoo-0 -- /bin/sh -c 'apk add --no-cache curl && curl http://localhost:5556/metrics'
 ```
+Metrics containers can't be used for the curl because they're too short on memory.
