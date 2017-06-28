@@ -4,45 +4,40 @@ apiVersion: v1
 metadata:
   name: datadir-kafka-0
   namespace: kafka
+  annotations:
+    volume.beta.kubernetes.io/storage-class: gp2 
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 200Gi
-  selector:
-    matchLabels:
-      app: kafka
-      podindex: "0"
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: datadir-kafka-1
   namespace: kafka
+  annotations:
+    volume.beta.kubernetes.io/storage-class: gp2 
+
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 200Gi
-  selector:
-    matchLabels:
-      app: kafka
-      podindex: "1"
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: datadir-kafka-2
   namespace: kafka
+  annotations:
+    volume.beta.kubernetes.io/storage-class: gp2 
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 200Gi
-  selector:
-    matchLabels:
-      app: kafka
-      podindex: "2"
