@@ -21,15 +21,13 @@ spec:
           cd /var/log/containers/;
           tail
           -n 0
-          -f
-          --zero-terminated
+          --follow=name
           *.log
           |
           kafkacat
           -b kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
           -t ops-kube-logs-raw-001
           -P
-          -D '\0'
           #-z snappy
         resources:
           limits:
