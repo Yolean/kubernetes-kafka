@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: topic-ops-kube-logs-raw
+  namespace: kafka
+spec:
+  template:
+    metadata:
+      labels:
+        app: topic-create
+        topic-id: ops-kube-logs-raw
+        topic-gen: "001"
+    spec:
+      containers:
+      - name: kafka
+        image: solsson/kafka:0.11.0.0@sha256:4c194db2ec15698aca6f1aa8a2fd5e5c566caed82b4bf43446c388f315397756
+        command:
+        - ./bin/kafka-topics.sh
+        - --zookeeper
+        - zookeeper:2181
+        - --create
+        - --if-not-exists
+        - --topic
+        - ops-kube-logs-raw-001
+        - --partitions
+        - "1"
+        - --replication-factor
+        - "1"
+        - --config
+        # this might be eight days
+        - retention.ms=69125000
+      restartPolicy: Never
