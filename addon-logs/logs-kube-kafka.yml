@@ -17,7 +17,19 @@ spec:
         command:
         - sh
         - -ec
-        - 'tail -f /dev/null'
+        - >
+          tail
+          -n 0
+          -f
+          /var/log/containers/*.log
+          |
+          kafkacat
+          -b kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
+          -t ops-kube-logs-raw-001
+          -P
+          -D '\n\n==> '
+          -K ' <==\n'
+          #-z snappy
         resources:
           limits:
             memory: 100Mi
