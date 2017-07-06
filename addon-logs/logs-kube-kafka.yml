@@ -18,17 +18,18 @@ spec:
         - sh
         - -ec
         - >
+          cd /var/log/containers/;
           tail
           -n 0
           -f
-          /var/log/containers/*.log
+          --zero-terminated
+          *.log
           |
           kafkacat
           -b kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
           -t ops-kube-logs-raw-001
           -P
-          -D '\n\n==> '
-          -K ' <==\n'
+          -D '\0'
           #-z snappy
         resources:
           limits:
