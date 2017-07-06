@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: events-kube-kafka
+  namespace: kafka
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      # prefer duplicate events over missed
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: events
+        from: kube
+        to: kafka
+    spec:
+      containers:
+      - name: kubectl-kafkacat
+        image: solsson/kubectl-kafkacat@sha256:e496cb9bca667c5cf629bcedd3a5788affa4c68e9a6a0198d521e9dd6fcaf89b
+        command:
+        - sh
+        - -ec
+        - 'tail -f /dev/null'
