@@ -22,6 +22,14 @@ spec:
       - name: kubectl-kafkacat
         image: solsson/kubectl-kafkacat@sha256:e496cb9bca667c5cf629bcedd3a5788affa4c68e9a6a0198d521e9dd6fcaf89b
         command:
-        - sh
+        - /bin/bash
         - -ec
-        - 'tail -f /dev/null'
+        - >
+          kubectl
+          get events
+          -w
+          |
+          kafkacat
+          -b kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
+          -t ops-kube-events-all-json-001
+          -P
