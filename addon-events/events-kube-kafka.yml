@@ -25,12 +25,14 @@ spec:
         - /bin/bash
         - -ec
         - >
+          echo '
           curl
           --cacert /run/secrets/kubernetes.io/serviceaccount/ca.crt
-          --header "Authorization: Bearer $(cat /run/secrets/kubernetes.io/serviceaccont/token)"
+          --header "Authorization: Bearer $(cat /run/secrets/kubernetes.io/serviceaccount/token)"
           https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT/api/v1/watch/events
           |
           kafkacat
           -b kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
           -t ops-kube-events-all-json-001
           -P
+          '; tail -f /dev/null
