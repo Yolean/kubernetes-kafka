@@ -34,6 +34,8 @@ data:
     # The id of the broker. This must be set to a unique integer for each broker.
     broker.id=${KAFKA_BROKER_ID}
 
+    #broker.rack=${KAFKA_BROKER_RACK}
+
     # Switch to enable topic deletion or not, default value is false
     delete.topic.enable=true
 
