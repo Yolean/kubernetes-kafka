@@ -35,7 +35,7 @@ spec:
         ports:
         - containerPort: 9092
         command:
-        - /bin/bash
+        - /bin/sh
         - -c
         - >
           ./bin/kafka-server-start.sh
