@@ -75,7 +75,7 @@ spec:
             - '[ "imok" = "$(echo ruok | nc -w 1 127.0.0.1 2181)" ]'
         volumeMounts:
         - name: config
-          mountPath: /usr/local/kafka/config
+          mountPath: /opt/kafka/config
         - name: data
           mountPath: /var/lib/zookeeper/data
       volumes:
