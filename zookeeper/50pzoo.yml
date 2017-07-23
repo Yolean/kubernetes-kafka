@@ -37,7 +37,7 @@ spec:
             cpu: 10m
             memory: 100Mi
       - name: zookeeper
-        image: solsson/kafka:0.11.0.0@sha256:4c194db2ec15698aca6f1aa8a2fd5e5c566caed82b4bf43446c388f315397756
+        image: solsson/kafka:0.11.0.0@sha256:92c5092d7c2f10abd11693731f6e112d40bfd42d6428a7cdf0516c9666dd3e58
         env:
         - name: JMX_PORT
           value: "5555"
