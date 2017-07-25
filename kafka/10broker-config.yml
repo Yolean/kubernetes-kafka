@@ -58,7 +58,7 @@ data:
     # the brokers.
     num.partitions=1
 
-    default.replication.factor=2
+    default.replication.factor=1
 
     min.insync.replicas=1
 
