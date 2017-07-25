@@ -54,8 +54,14 @@ spec:
             - -c
             - 'echo "" | nc -w 1 127.0.0.1 9092'
         volumeMounts:
+        - name: config
+          mountPath: /opt/kafka/config
         - name: data
           mountPath: /var/lib/kafka/data
+      volumes:
+      - name: config
+        configMap:
+          name: broker-config
   volumeClaimTemplates:
   - metadata:
       name: data
