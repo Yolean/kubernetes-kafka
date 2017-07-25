@@ -44,6 +44,7 @@ spec:
           --override log.retention.hours=-1
           --override log.dirs=/var/lib/kafka/data/topics
           --override broker.id=${HOSTNAME##*-}
+          --override auto.create.topics.enable=false
         resources:
           requests:
             cpu: 100m
