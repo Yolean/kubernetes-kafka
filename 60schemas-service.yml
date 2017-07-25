@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: schema-registry
+  name: schemas
   namespace: kafka
 spec:
   ports:
