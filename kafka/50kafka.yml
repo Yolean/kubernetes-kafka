@@ -9,9 +9,10 @@ spec:
     matchLabels:
       app: kafka
   serviceName: "broker"
-  replicas: 3
+  replicas: 1
   updateStrategy:
     type: OnDelete
+  replicas: 1
   template:
     metadata:
       labels:
