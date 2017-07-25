@@ -9,7 +9,7 @@ spec:
       app: zookeeper
       storage: ephemeral
   serviceName: "zoo"
-  replicas: 1
+  replicas: 0
   updateStrategy:
     type: OnDelete
   template:
