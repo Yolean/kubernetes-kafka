@@ -5,6 +5,6 @@ metadata:
   namespace: kafka
 spec:
   ports:
-  - port: 8081
+  - port: 80
   selector:
     app: schema-registry

@@ -18,5 +18,7 @@ spec:
           value: zookeeper:2181
         - name: SCHEMA_REGISTRY_HOST_NAME
           value: schemas
+        - name: SCHEMA_REGISTRY_LISTENERS
+          value: http://0.0.0.0:80
         ports:
-        - containerPort: 8081
+        - containerPort: 80
