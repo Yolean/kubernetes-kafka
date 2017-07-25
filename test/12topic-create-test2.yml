@@ -22,4 +22,6 @@ spec:
         - "1"
         - --replication-factor
         - "3"
+        - --config
+        - min.insync.replicas=2
       restartPolicy: Never
