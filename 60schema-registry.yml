@@ -1,0 +1,22 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: schema-registry
+  namespace: kafka
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: schema-registry
+    spec:
+      containers:
+      - name: schema-registry
+        image: confluentinc/cp-schema-registry@sha256:ac1eb34d9a60ce8904eb1bc01fd94bf1f6513924ca507734679d4b513133714c
+        env:
+        - name: SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL
+          value: zookeeper:2181
+        - name: SCHEMA_REGISTRY_HOST_NAME
+          value: schema-registry
+        ports:
+        - containerPort: 8081
