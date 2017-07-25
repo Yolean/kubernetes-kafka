@@ -40,6 +40,7 @@ spec:
         - >
           ./bin/kafka-server-start.sh
           config/server.properties
+          --override zookeeper.connect=zookeeper:2181
           --override log.retention.hours=-1
           --override log.dirs=/var/lib/kafka/data/topics
           --override broker.id=${HOSTNAME##*-}
@@ -54,8 +55,14 @@ spec:
             - -c
             - 'echo "" | nc -w 1 127.0.0.1 9092'
         volumeMounts:
+        - name: config
+          mountPath: /opt/kafka/config
         - name: data
           mountPath: /var/lib/kafka/data
+      volumes:
+      - name: config
+        configMap:
+          name: broker-config
   volumeClaimTemplates:
   - metadata:
       name: data
