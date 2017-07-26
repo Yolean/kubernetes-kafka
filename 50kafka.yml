@@ -31,7 +31,7 @@ spec:
         image: solsson/kafka:0.11.0.0@sha256:b27560de08d30ebf96d12e74f80afcaca503ad4ca3103e63b1fd43a2e4c976ce
         env:
         - name: KAFKA_LOG4J_OPTS
-          value: -Dlog4j.configuration=file:/opt/kafka/config/log4j.properties
+          value: -Dlog4j.configuration=file:/etc/kafka/log4j.properties
         - name: JMX_PORT
           value: "5555"
         ports:
@@ -41,7 +41,7 @@ spec:
         - -c
         - >
           ./bin/kafka-server-start.sh
-          ./config/server.properties
+          /etc/kafka/server.properties
           --override zookeeper.connect=zookeeper:2181
           --override log.retention.hours=-1
           --override log.dirs=/var/lib/kafka/data/topics
@@ -59,7 +59,7 @@ spec:
             - 'echo "" | nc -w 1 127.0.0.1 9092'
         volumeMounts:
         - name: config
-          mountPath: /opt/kafka/config
+          mountPath: /etc/kafka
         - name: data
           mountPath: /var/lib/kafka/data
       volumes:
