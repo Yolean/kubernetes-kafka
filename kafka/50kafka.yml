@@ -12,7 +12,6 @@ spec:
   replicas: 1
   updateStrategy:
     type: OnDelete
-  replicas: 1
   template:
     metadata:
       labels:
