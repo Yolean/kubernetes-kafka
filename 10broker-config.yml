@@ -5,8 +5,11 @@ metadata:
 apiVersion: v1
 data:
   init.sh: |-
-    echo "I guess I'm running in the init container"
-    sed -i 's/%p %m/%p -INIT-WAS-HERE- %m/' /etc/kafka/log4j.properties
+    #!/bin/bash
+    set -x
+
+    export KAFKA_BROKER_ID=${HOSTNAME##*-}
+    sed -i "s/\${KAFKA_BROKER_ID}/$KAFKA_BROKER_ID/" /etc/kafka/server.properties
 
   server.properties: |-
     # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -29,7 +32,7 @@ data:
     ############################# Server Basics #############################
 
     # The id of the broker. This must be set to a unique integer for each broker.
-    broker.id=0
+    broker.id=${KAFKA_BROKER_ID}
 
     # Switch to enable topic deletion or not, default value is false
     #delete.topic.enable=true

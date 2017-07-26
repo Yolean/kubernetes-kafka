@@ -18,7 +18,7 @@ spec:
       initContainers:
       - name: init-config
         image: solsson/kafka:0.11.0.0@sha256:b27560de08d30ebf96d12e74f80afcaca503ad4ca3103e63b1fd43a2e4c976ce
-        command: ['/bin/sh', '-ec', '. /etc/kafka/init.sh']
+        command: ['/bin/bash', '/etc/kafka/init.sh']
         volumeMounts:
         - name: config
           mountPath: /etc/kafka
@@ -52,7 +52,6 @@ spec:
           --override zookeeper.connect=zookeeper:2181
           --override log.retention.hours=-1
           --override log.dirs=/var/lib/kafka/data/topics
-          --override broker.id=${HOSTNAME##*-}
           --override auto.create.topics.enable=false
         resources:
           requests:
