@@ -4,6 +4,10 @@ metadata:
   namespace: kafka
 apiVersion: v1
 data:
+  init.sh: |-
+    echo "I guess I'm running in the init container"
+    sed -i 's/%p %m/%p -INIT-WAS-HERE- %m/' /etc/kafka/log4j.properties
+
   server.properties: |-
     # Licensed to the Apache Software Foundation (ASF) under one or more
     # contributor license agreements.  See the NOTICE file distributed with
