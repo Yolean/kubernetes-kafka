@@ -28,7 +28,7 @@ spec:
             cpu: 10m
             memory: 100Mi
       - name: broker
-        image: solsson/kafka:0.11.0.0@sha256:df808192488b280e3bee7a271208032a5669e0e58d4aebe83500492ebaea342b
+        image: solsson/kafka:0.11.0.0@sha256:e0dec6aa1f376bd374a6ca5863b783d01703acf1f71c0c4441a217a7bd80dfbc
         env:
         - name: JMX_PORT
           value: "5555"
