@@ -44,7 +44,7 @@ spec:
         - name: JMX_PORT
           value: "5555"
         command:
-        - /bin/sh
+        - /bin/bash
         - -euc
         - >
           export ZOOKEEPER_SERVER_ID=$((${HOSTNAME##*-} + 4));
