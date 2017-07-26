@@ -28,7 +28,7 @@ spec:
             cpu: 10m
             memory: 100Mi
       - name: broker
-        image: solsson/kafka:0.11.0.0@sha256:e0dec6aa1f376bd374a6ca5863b783d01703acf1f71c0c4441a217a7bd80dfbc
+        image: solsson/kafka:0.11.0.0@sha256:b27560de08d30ebf96d12e74f80afcaca503ad4ca3103e63b1fd43a2e4c976ce
         env:
         - name: KAFKA_LOG4J_OPTS
           value: -Dlog4j.configuration=file:/opt/kafka/config/log4j.properties
