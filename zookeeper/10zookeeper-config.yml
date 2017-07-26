@@ -4,6 +4,18 @@ metadata:
   namespace: kafka
 apiVersion: v1
 data:
+  init.sh: |-
+    #!/bin/bash
+    set -x
+
+    OFFSET=1
+    case $HOSTNAME in zoo-*)
+      OFFSET=4
+    esac
+    export ZOOKEEPER_SERVER_ID=$((${HOSTNAME##*-} + $OFFSET))
+    echo "${ZOOKEEPER_SERVER_ID:-1}" | tee /var/lib/zookeeper/data/myid
+    sed -i "s/server\.$ZOOKEEPER_SERVER_ID\=[a-z0-9.-]*/server.$ZOOKEEPER_SERVER_ID=0.0.0.0/" /etc/kafka/zookeeper.properties
+
   zookeeper.properties: |-
     tickTime=2000
     dataDir=/var/lib/zookeeper/data
@@ -16,7 +28,7 @@ data:
     server.3=pzoo-2.pzoo:2888:3888:participant
     server.4=zoo-0.zoo:2888:3888:participant
     server.5=zoo-1.zoo:2888:3888:participant
-    
+
   log4j.properties: |-
     log4j.rootLogger=INFO, stdout
     log4j.appender.stdout=org.apache.log4j.ConsoleAppender
