@@ -1,0 +1,11 @@
+# Allows bootstrap_servers = kafka.kubeless:9092 while kafka is in a different namespace
+kind: Service
+apiVersion: v1
+metadata:
+  name: kafka
+  namespace: kubeless
+spec:
+  type: ExternalName
+  externalName: bootstrap.kafka.svc.cluster.local
+  ports:
+  - port: 9092
