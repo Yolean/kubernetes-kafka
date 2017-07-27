@@ -8,11 +8,8 @@ data:
     #!/bin/bash
     set -x
 
-    OFFSET=1
-    case $HOSTNAME in zoo-*)
-      OFFSET=4
-    esac
-    export ZOOKEEPER_SERVER_ID=$((${HOSTNAME##*-} + $OFFSET))
+    [ -z "$ID_OFFSET" ] && ID_OFFSET=1
+    export ZOOKEEPER_SERVER_ID=$((${HOSTNAME##*-} + $ID_OFFSET))
     echo "${ZOOKEEPER_SERVER_ID:-1}" | tee /var/lib/zookeeper/data/myid
     sed -i "s/server\.$ZOOKEEPER_SERVER_ID\=[a-z0-9.-]*/server.$ZOOKEEPER_SERVER_ID=0.0.0.0/" /etc/kafka/zookeeper.properties
 
