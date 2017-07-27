@@ -1,5 +1,5 @@
 # Sets up a pod that monitors itself, to test resource usage etc.
-# kubectl exec test-metrics-... -- /bin/sh -c 'apk add --no-cache curl && curl http://localhost:5556/metrics'
+# kubectl exec monitoring-test-... -- /bin/sh -c 'apk add --no-cache curl && curl http://localhost:5556/metrics'
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
