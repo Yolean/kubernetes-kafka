@@ -1,0 +1,158 @@
+---
+apiVersion: extensions/v1beta1
+description: Kubernetes Native Serverless Framework
+kind: ThirdPartyResource
+metadata:
+  name: function.k8s.io
+versions:
+- name: v1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper
+  namespace: kubeless
+spec:
+  ports:
+  - name: client
+    port: 2181
+  selector:
+    kubeless: zookeeper
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: controller-acct
+  namespace: kubeless
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: broker
+  namespace: kubeless
+spec:
+  clusterIP: None
+  ports:
+  - port: 9092
+  selector:
+    kubeless: kafka
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka
+  namespace: kubeless
+spec:
+  ports:
+  - port: 9092
+  selector:
+    kubeless: kafka
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: zoo
+  namespace: kubeless
+spec:
+  serviceName: zoo
+  template:
+    metadata:
+      labels:
+        kubeless: zookeeper
+    spec:
+      containers:
+      - env:
+        - name: ZOO_SERVERS
+          value: server.1=zoo-0.zoo:2888:3888:participant
+        image: bitnami/zookeeper@sha256:2244fba9d7c35df85f078ffdbf77ec9f9b44dad40752f15dd619a85d70aec22d
+        imagePullPolicy: IfNotPresent
+        name: zookeeper
+        ports:
+        - containerPort: 2181
+          name: client
+        - containerPort: 2888
+          name: peer
+        - containerPort: 3888
+          name: leader-election
+        volumeMounts:
+        - mountPath: /bitnami/zookeeper
+          name: zookeeper
+      volumes:
+      - name: zookeeper
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    kubeless: controller
+  name: kubeless-controller
+  namespace: kubeless
+spec:
+  selector:
+    matchLabels:
+      kubeless: controller
+  template:
+    metadata:
+      labels:
+        kubeless: controller
+    spec:
+      containers:
+      - image: bitnami/kubeless-controller@sha256:719e032c351d1db448b941060db0d5a2a77da62c6e9f38d509d372c22f3021e8
+        imagePullPolicy: IfNotPresent
+        name: kubeless-controller
+      serviceAccountName: controller-acct
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: kafka
+  namespace: kubeless
+spec:
+  serviceName: broker
+  template:
+    metadata:
+      labels:
+        kubeless: kafka
+    spec:
+      containers:
+      - env:
+        - name: KAFKA_ADVERTISED_HOST_NAME
+          value: broker.kubeless
+        - name: KAFKA_ADVERTISED_PORT
+          value: "9092"
+        - name: KAFKA_PORT
+          value: "9092"
+        - name: KAFKA_ZOOKEEPER_CONNECT
+          value: zookeeper.kubeless:2181
+        image: bitnami/kafka@sha256:0b7c8b790546ddb9dcd7e8ff4d50f030fc496176238f36789537620bb13fb54c
+        imagePullPolicy: IfNotPresent
+        name: broker
+        ports:
+        - containerPort: 9092
+        volumeMounts:
+        - mountPath: /opt/bitnami/kafka/data
+          name: datadir
+  volumeClaimTemplates:
+  - metadata:
+      name: datadir
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zoo
+  namespace: kubeless
+spec:
+  clusterIP: None
+  ports:
+  - name: peer
+    port: 9092
+  - name: leader-election
+    port: 3888
+  selector:
+    kubeless: zookeeper
