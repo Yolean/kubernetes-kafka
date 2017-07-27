@@ -35,4 +35,4 @@ spec:
           -b kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
           -t ops-kube-events-all-json-001
           -P
-          -z gzip
+          -z snappy
