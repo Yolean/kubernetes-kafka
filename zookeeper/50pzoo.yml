@@ -16,6 +16,15 @@ spec:
         prometheus.io/port: "5556"
     spec:
       terminationGracePeriodSeconds: 10
+      initContainers:
+      - name: init-config
+        image: solsson/kafka:0.11.0.0@sha256:b27560de08d30ebf96d12e74f80afcaca503ad4ca3103e63b1fd43a2e4c976ce
+        command: ['/bin/bash', '/etc/kafka/init.sh']
+        volumeMounts:
+        - name: config
+          mountPath: /etc/kafka
+        - name: data
+          mountPath: /var/lib/zookeeper/data
       containers:
       - name: metrics
         image: solsson/kafka-prometheus-jmx-exporter@sha256:1f7c96c287a2dbec1d909cd8f96c0656310239b55a9a90d7fd12c81f384f1f7d
@@ -37,19 +46,15 @@ spec:
             cpu: 10m
             memory: 100Mi
       - name: zookeeper
-        image: solsson/kafka:0.11.0.0@sha256:4c194db2ec15698aca6f1aa8a2fd5e5c566caed82b4bf43446c388f315397756
+        image: solsson/kafka:0.11.0.0@sha256:b27560de08d30ebf96d12e74f80afcaca503ad4ca3103e63b1fd43a2e4c976ce
         env:
+        - name: KAFKA_LOG4J_OPTS
+          value: -Dlog4j.configuration=file:/etc/kafka/log4j.properties
         - name: JMX_PORT
           value: "5555"
         command:
-        - /bin/bash
-        - -euc
-        - >
-          export ZOOKEEPER_SERVER_ID=$((${HOSTNAME##*-} + 1));
-          echo "${ZOOKEEPER_SERVER_ID:-1}" | tee /var/lib/zookeeper/data/myid;
-          sed -i "s/server\.$ZOOKEEPER_SERVER_ID\=[a-z0-9.-]*/server.$ZOOKEEPER_SERVER_ID=0.0.0.0/" config/zookeeper.properties;
-          cat config/zookeeper.properties;
-          ./bin/zookeeper-server-start.sh config/zookeeper.properties
+        - ./bin/zookeeper-server-start.sh
+        - /etc/kafka/zookeeper.properties
         ports:
         - containerPort: 2181
           name: client
@@ -66,16 +71,16 @@ spec:
             command:
             - /bin/sh
             - -c
-            - '[ "imok" == $(echo "ruok" | nc -w 1 127.0.0.1 2181) ]'
+            - '[ "imok" = "$(echo ruok | nc -w 1 127.0.0.1 2181)" ]'
         readinessProbe:
           exec:
             command:
             - /bin/sh
             - -c
-            - '[ "imok" == $(echo "ruok" | nc -w 1 127.0.0.1 2181) ]'
+            - '[ "imok" = "$(echo ruok | nc -w 1 127.0.0.1 2181)" ]'
         volumeMounts:
         - name: config
-          mountPath: /usr/local/kafka/config
+          mountPath: /etc/kafka
         - name: data
           mountPath: /var/lib/zookeeper/data
       volumes:

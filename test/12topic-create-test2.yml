@@ -10,7 +10,7 @@ spec:
     spec:
       containers:
       - name: kafka
-        image: solsson/kafka:0.11.0.0@sha256:4c194db2ec15698aca6f1aa8a2fd5e5c566caed82b4bf43446c388f315397756
+        image: solsson/kafka:0.11.0.0@sha256:b27560de08d30ebf96d12e74f80afcaca503ad4ca3103e63b1fd43a2e4c976ce
         command:
         - ./bin/kafka-topics.sh
         - --zookeeper
@@ -22,4 +22,6 @@ spec:
         - "1"
         - --replication-factor
         - "3"
+        - --config
+        - min.insync.replicas=2
       restartPolicy: Never
