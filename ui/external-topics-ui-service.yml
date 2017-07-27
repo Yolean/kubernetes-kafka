@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-topics-ui
+  namespace: kafka
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 8000
+  selector:
+    app: topics-ui

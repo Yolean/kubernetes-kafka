@@ -1,0 +1,20 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: topics-ui
+  namespace: kafka
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: topics-ui
+    spec:
+      containers:
+      - name: kafka-topics-ui
+        image: landoop/kafka-topics-ui@sha256:c2cd04ae46e7853963a1f47fdadbbf488b62530fd0ef578e3b1acaea8439e511
+        env:
+        - name: KAFKA_REST_PROXY_URL
+          value: http://rest.kafka.svc.cluster.local
+        ports:
+        - containerPort: 8000
