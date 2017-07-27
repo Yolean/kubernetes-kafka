@@ -20,10 +20,13 @@ spec:
         - /bin/sh
         - -c
         - >
-          curl -I $REST;
-          curl -X POST $REST/consumers/list;
+          curl --retry 10 --retry-delay 30 --retry-connrefused -I $REST;
 
-          # http://docs.confluent.io/current/kafka-rest/docs/intro.html
+          curl -H 'Accept: application/vnd.kafka.v2+json' $REST/topics;
+
+          curl --retry 10 -H 'Accept: application/vnd.kafka.v2+json' $REST/topics/test1;
+          curl -X POST -H "Content-Type: application/vnd.kafka.json.v2+json" -H "Accept: application/vnd.kafka.v2+json" --data "{\"records\":[{\"value\":\"Test from $HOSTNAME at $(date)\"}]}" $REST/topics/$TOPIC -v;
+          curl --retry 10 -H 'Accept: application/vnd.kafka.v2+json' $REST/topics/test2;
 
           curl -X POST -H "Content-Type: application/vnd.kafka.json.v2+json" -H "Accept: application/vnd.kafka.v2+json" --data '{"records":[{"value":{"foo":"bar"}}]}' $REST/topics/$TOPIC -v;
 
