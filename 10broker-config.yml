@@ -4,6 +4,13 @@ metadata:
   namespace: kafka
 apiVersion: v1
 data:
+  init.sh: |-
+    #!/bin/bash
+    set -x
+
+    export KAFKA_BROKER_ID=${HOSTNAME##*-}
+    sed -i "s/\${KAFKA_BROKER_ID}/$KAFKA_BROKER_ID/" /etc/kafka/server.properties
+
   server.properties: |-
     # Licensed to the Apache Software Foundation (ASF) under one or more
     # contributor license agreements.  See the NOTICE file distributed with
@@ -25,7 +32,7 @@ data:
     ############################# Server Basics #############################
 
     # The id of the broker. This must be set to a unique integer for each broker.
-    broker.id=0
+    broker.id=${KAFKA_BROKER_ID}
 
     # Switch to enable topic deletion or not, default value is false
     #delete.topic.enable=true

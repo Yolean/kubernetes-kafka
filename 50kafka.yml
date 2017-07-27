@@ -15,6 +15,13 @@ spec:
         prometheus.io/port: "5556"
     spec:
       terminationGracePeriodSeconds: 30
+      initContainers:
+      - name: init-config
+        image: solsson/kafka:0.11.0.0@sha256:b27560de08d30ebf96d12e74f80afcaca503ad4ca3103e63b1fd43a2e4c976ce
+        command: ['/bin/bash', '/etc/kafka/init.sh']
+        volumeMounts:
+        - name: config
+          mountPath: /etc/kafka
       containers:
       - name: metrics
         image: solsson/kafka-prometheus-jmx-exporter@sha256:1f7c96c287a2dbec1d909cd8f96c0656310239b55a9a90d7fd12c81f384f1f7d
@@ -31,22 +38,22 @@ spec:
         image: solsson/kafka:0.11.0.0@sha256:b27560de08d30ebf96d12e74f80afcaca503ad4ca3103e63b1fd43a2e4c976ce
         env:
         - name: KAFKA_LOG4J_OPTS
-          value: -Dlog4j.configuration=file:/opt/kafka/config/log4j.properties
+          value: -Dlog4j.configuration=file:/etc/kafka/log4j.properties
         - name: JMX_PORT
           value: "5555"
         ports:
         - containerPort: 9092
         command:
-        - /bin/sh
-        - -c
-        - >
-          ./bin/kafka-server-start.sh
-          ./config/server.properties
-          --override zookeeper.connect=zookeeper:2181
-          --override log.retention.hours=-1
-          --override log.dirs=/var/lib/kafka/data/topics
-          --override broker.id=${HOSTNAME##*-}
-          --override auto.create.topics.enable=false
+        - ./bin/kafka-server-start.sh
+        - /etc/kafka/server.properties
+        - --override
+        -   zookeeper.connect=zookeeper:2181
+        - --override
+        -   log.retention.hours=-1
+        - --override
+        -   log.dirs=/var/lib/kafka/data/topics
+        - --override
+        -   auto.create.topics.enable=false
         resources:
           requests:
             cpu: 100m
@@ -59,7 +66,7 @@ spec:
             - 'echo "" | nc -w 1 127.0.0.1 9092'
         volumeMounts:
         - name: config
-          mountPath: /opt/kafka/config
+          mountPath: /etc/kafka
         - name: data
           mountPath: /var/lib/kafka/data
       volumes:
