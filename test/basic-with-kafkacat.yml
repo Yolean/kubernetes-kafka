@@ -1,7 +1,7 @@
 ---
 kind: ConfigMap
 metadata:
-  name: basic-produce-consume
+  name: basic-with-kafkacat
   namespace: test-kafka
 apiVersion: v1
 data:
@@ -19,8 +19,8 @@ data:
 
     unique=$(date -Ins)
 
-    echo "Test $unique" | kafkacat -P -b $BOOTSTRAP -t test-basic-produce-consume -v
-    kafkacat -C -b $BOOTSTRAP -t test-basic-produce-consume -o -1 -e | grep $unique
+    echo "Test $unique" | kafkacat -P -b $BOOTSTRAP -t test-basic-with-kafkacat -v
+    kafkacat -C -b $BOOTSTRAP -t test-basic-with-kafkacat -o -1 -e | grep $unique
 
     exit 0
 
@@ -28,7 +28,7 @@ data:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: basic-produce-consume
+  name: basic-with-kafkacat
   namespace: test-kafka
 spec:
   template:
@@ -43,7 +43,7 @@ spec:
         - --create
         - --if-not-exists
         - --topic
-        -   test-basic-produce-consume
+        -   test-basic-with-kafkacat
         - --partitions
         -   "1"
         - --replication-factor
@@ -53,7 +53,7 @@ spec:
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: basic-produce-consume
+  name: basic-with-kafkacat
   namespace: test-kafka
 spec:
   replicas: 1
@@ -64,7 +64,7 @@ spec:
         test-type: readiness
     spec:
       containers:
-      - name: kafka
+      - name: testcase
         # common test images
         #image: solsson/curl@sha256:8b0927b81d10043e70f3e05e33e36fb9b3b0cbfcbccdb9f04fd53f67a270b874
         image: solsson/kafkacat@sha256:1266d140c52cb39bf314b6f22b6d7a01c4c9084781bc779fdfade51214a713a8
@@ -100,4 +100,4 @@ spec:
       volumes:
       - name: config
         configMap:
-          name: basic-produce-consume
+          name: basic-with-kafkacat
