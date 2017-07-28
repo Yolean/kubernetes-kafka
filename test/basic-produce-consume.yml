@@ -6,11 +6,17 @@ metadata:
 apiVersion: v1
 data:
 
-  live.sh: |-
+  setup.sh: |-
+    touch /tmp/testlog
+    tail -f /tmp/testlog
+
+  continue.sh: |-
     exit 0
 
   run.sh: |-
-    echo "Test is up"
+    exec >> /tmp/testlog
+    exec 2>&1
+    echo "Test completed at $(date -u +%Y-%m-%dT%H:%M:%SZ)."
     exit 0
 
 ---
@@ -30,6 +36,7 @@ spec:
         - --zookeeper
         -   zookeeper.kafka.svc.cluster.local:2181
         - --create
+        - --if-not-exists
         - --topic
         -   test-basic-produce-consume
         - --partitions
@@ -64,21 +71,20 @@ spec:
           value: zookeeper.kafka.svc.cluster.local:2181
         # Test set up
         command:
-        - tail
-        - -f
-        - /dev/null
-        # Test run
+        - /bin/bash
+        - /test/setup.sh
+        # Test run, again and again
         readinessProbe:
           exec:
             command:
             - /bin/bash
             - /test/run.sh
-        # Test restart on nonzero exit
+        # Test quit on nonzero exit
         livenessProbe:
           exec:
             command:
             - /bin/bash
-            - /test/live.sh
+            - /test/continue.sh
         volumeMounts:
         - name: config
           mountPath: /test
