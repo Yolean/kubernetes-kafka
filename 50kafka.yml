@@ -11,6 +11,8 @@ spec:
       labels:
         app: kafka
       annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "5556"
     spec:
       terminationGracePeriodSeconds: 30
       initContainers:
@@ -26,11 +28,24 @@ spec:
         - name: config
           mountPath: /etc/kafka
       containers:
+      - name: metrics
+        image: solsson/kafka-prometheus-jmx-exporter@sha256:1f7c96c287a2dbec1d909cd8f96c0656310239b55a9a90d7fd12c81f384f1f7d
+        ports:
+        - containerPort: 5556
+        resources:
+          requests:
+            cpu: 0m
+            memory: 40Mi
+          limits:
+            cpu: 10m
+            memory: 100Mi
       - name: broker
         image: solsson/kafka:1.0.0@sha256:17fdf1637426f45c93c65826670542e36b9f3394ede1cb61885c6a4befa8f72d
         env:
         - name: KAFKA_LOG4J_OPTS
           value: -Dlog4j.configuration=file:/etc/kafka/log4j.properties
+        - name: JMX_PORT
+          value: "5555"
         ports:
         - containerPort: 9092
         command:
