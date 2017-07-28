@@ -25,16 +25,15 @@ Zookeeper at `zookeeper.kafka.svc.cluster.local:2181`.
 
 ## Set up Zookeeper
 
-The Kafka book (Definitive Guide, O'Reilly 2016) recommends that Kafka has its own Zookeeper cluster with at least 5 instances.
-We use the zookeeper build that comes with the Kafka distribution, and tweak the startup command to support StatefulSet.
+The [Kafka book](https://www.confluent.io/resources/kafka-definitive-guide-preview-edition/) recommends that Kafka has its own Zookeeper cluster with at least 5 instances.
 
 ```
 kubectl create -f ./zookeeper/
 ```
 
-## Start Kafka
+To support automatic migration in the face of availability zone unavailability :wink: we mix persistent and ephemeral storage.
 
-Assuming you have your PVCs `Bound`, or enabled automatic provisioning (see above), go ahead and:
+## Start Kafka
 
 ```
 kubectl create -f ./
