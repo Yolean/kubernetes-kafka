@@ -12,18 +12,14 @@ How to use:
  * Join the discussion here in issues and PRs.
 
 Why?
-No single readable readme can properly introduce both Kafka and Kubernets.
-We started this project as beginners with both,
-and by now our microservices enjoy lock-in with this "Streaming Platform" :smile:.
-We read [Designing Data-Intensive Applications](http://dataintensive.net/)
-and the [Confluent blog](https://www.confluent.io/blog/).
+See for yourself. No single readable readme can properly introduce both Kafka and Kubernets.
+Back when we read [Newman](http://samnewman.io/books/building_microservices/) we were beginners with both.
+Now we read [Kleppmann](http://dataintensive.net/), [Confluent's blog](https://www.confluent.io/blog/) and [SRE](https://landing.google.com/sre/book.html) and enjoy this "Streaming Platform" lock-in :smile:.
 
 ## What you get
 
-[Bootstrap servers](http://kafka.apache.org/documentation/#producerconfigs):
-```
-kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092`
-```
+[Bootstrap servers](http://kafka.apache.org/documentation/#producerconfigs): `kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092`
+`
 
 Zookeeper at `zookeeper.kafka.svc.cluster.local:2181`.
 
