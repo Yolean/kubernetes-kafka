@@ -66,14 +66,6 @@ Pods that keep consuming messages (but they won't exit on cluster failures)
 kubectl create -f test/21consumer-test1.yml
 ```
 
-## Teardown & cleanup
-
-Testing and retesting... delete the namespace. PVs are outside namespaces so delete them too.
-```
-kubectl delete namespace kafka
-rm -R ./data/ && kubectl -n kafka delete pv datadir-kafka-0 datadir-kafka-1 datadir-kafka-2
-```
-
 ## Metrics, Prometheus style
 
 Is the metrics system up and running?
