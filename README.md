@@ -27,6 +27,12 @@ The goal is to provide [Bootstrap servers](http://kafka.apache.org/documentation
 
 Zookeeper at `zookeeper.kafka.svc.cluster.local:2181`.
 
+## Prepare storage classes
+
+For Minikube run `kubectl create -f configure-minikube/`.
+
+There's a similar setup for GKE, in `configure-gke` of course. You might want to tweak it before creating.
+
 ## Start Zookeeper
 
 The [Kafka book](https://www.confluent.io/resources/kafka-definitive-guide-preview-edition/) recommends that Kafka has its own Zookeeper cluster with at least 5 instances.
