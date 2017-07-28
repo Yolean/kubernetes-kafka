@@ -7,20 +7,20 @@ Good for both experiments and production.
 
 How to use:
  * Run a Kubernetes cluster, [minikube](https://github.com/kubernetes/minikube) or real.
- * To quickly get a small Kafka cluster running, use the `kubectl apply`s below.
- * To start using Kafka for real, fork and have a look at [addon](https://github.com/Yolean/kubernetes-kafka/labels/addon)s.
- * Join the discussion here in issues and PRs.
+ * Quickstart: use the `kubectl apply`s below.
+ * Kafka for real: fork and have a look at [addon](https://github.com/Yolean/kubernetes-kafka/labels/addon)s.
+ * Join the discussion in issues and PRs.
 
 Why?
-See for yourself. No single readable readme can properly introduce both Kafka and Kubernets.
+See for yourself, but we think this project gives you better adaptability than [helm](https://github.com/kubernetes/helm) [chart](https://github.com/kubernetes/charts/tree/master/incubator/kafka)s. No single readable readme or template can properly introduce both Kafka and Kubernets.
 Back when we read [Newman](http://samnewman.io/books/building_microservices/) we were beginners with both.
-Now we read [Kleppmann](http://dataintensive.net/), [Confluent's blog](https://www.confluent.io/blog/) and [SRE](https://landing.google.com/sre/book.html) and enjoy this "Streaming Platform" lock-in :smile:.
+Now we've read [Kleppmann](http://dataintensive.net/), [Confluent](https://www.confluent.io/blog/) and [SRE](https://landing.google.com/sre/book.html) and enjoy this "Streaming Platform" lock-in :smile:.
 
 ## What you get
 
 Keep an eye on `kubectl --namespace kafka get pods -w`.
 
-[Bootstrap servers](http://kafka.apache.org/documentation/#producerconfigs): `kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092`
+The goal is to provide [Bootstrap servers](http://kafka.apache.org/documentation/#producerconfigs): `kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092`
 `
 
 Zookeeper at `zookeeper.kafka.svc.cluster.local:2181`.
@@ -30,7 +30,7 @@ Zookeeper at `zookeeper.kafka.svc.cluster.local:2181`.
 The [Kafka book](https://www.confluent.io/resources/kafka-definitive-guide-preview-edition/) recommends that Kafka has its own Zookeeper cluster with at least 5 instances.
 
 ```
-kubectl create -f ./zookeeper/
+kubectl apply -f ./zookeeper/
 ```
 
 To support automatic migration in the face of availability zone unavailability we mix persistent and ephemeral storage.
@@ -38,7 +38,7 @@ To support automatic migration in the face of availability zone unavailability w
 ## Start Kafka
 
 ```
-kubectl create -f ./
+kubectl apply -f ./
 ```
 
 You might want to verify in logs that Kafka found its own DNS name(s) correctly. Look for records like:
