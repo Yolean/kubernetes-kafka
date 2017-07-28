@@ -44,14 +44,3 @@ You might want to verify in logs that Kafka found its own DNS name(s) correctly.
 kubectl -n kafka logs kafka-0 | grep "Registered broker"
 # INFO Registered broker 0 at path /brokers/ids/0 with addresses: PLAINTEXT -> EndPoint(kafka-0.broker.kafka.svc.cluster.local,9092,PLAINTEXT)
 ```
-
-## Metrics, Prometheus style
-
-Is the metrics system up and running?
-```
-kubectl logs -c metrics kafka-0
-kubectl exec -c broker kafka-0 -- /bin/sh -c 'apk add --no-cache curl && curl http://localhost:5556/metrics'
-kubectl logs -c metrics zoo-0
-kubectl exec -c zookeeper zoo-0 -- /bin/sh -c 'apk add --no-cache curl && curl http://localhost:5556/metrics'
-```
-Metrics containers can't be used for the curl because they're too short on memory.
