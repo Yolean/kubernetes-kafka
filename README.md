@@ -1,16 +1,31 @@
 
-# Kafka as Kubernetes StatefulSet
 
-Transparent Kafka setup that you can grow with,
-extendable through [addon](https://github.com/Yolean/kubernetes-kafka/labels/addon)s.
+# Kafka on Kubernetes
 
+Transparent Kafka setup that you can grow with.
+Good for both experiments and production.
 
-Example of three Kafka brokers depending on five Zookeeper instances.
+How to use:
+ * Run a Kubernetes cluster, [minikube](https://github.com/kubernetes/minikube) or real.
+ * To quickly get a small Kafka cluster running, use the `kubectl apply`s below.
+ * To start using Kafka for real, fork and have a look at [addon](https://github.com/Yolean/kubernetes-kafka/labels/addon)s.
+ * Join the discussion here in issues and PRs.
 
-To get consistent service DNS names `kafka-N.broker.kafka`(`.svc.cluster.local`), run everything in a [namespace](http://kubernetes.io/docs/admin/namespaces/walkthrough/):
+Why?
+No single readable readme can properly introduce both Kafka and Kubernets.
+We started this project as beginners with both,
+and by now our microservices enjoy lock-in with this "Streaming Platform" :smile:.
+We read [Designing Data-Intensive Applications](http://dataintensive.net/)
+and the [Confluent blog](https://www.confluent.io/blog/).
+
+## What you get
+
+[Bootstrap servers](http://kafka.apache.org/documentation/#producerconfigs):
 ```
-kubectl create -f 00namespace.yml
+kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092`
 ```
+
+Zookeeper at `zookeeper.kafka.svc.cluster.local:2181`.
 
 ## Set up Zookeeper
 
