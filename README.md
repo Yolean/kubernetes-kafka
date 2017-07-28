@@ -18,12 +18,14 @@ Now we read [Kleppmann](http://dataintensive.net/), [Confluent's blog](https://w
 
 ## What you get
 
+Keep an eye on `kubectl --namespace kafka get pods -w`.
+
 [Bootstrap servers](http://kafka.apache.org/documentation/#producerconfigs): `kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092`
 `
 
 Zookeeper at `zookeeper.kafka.svc.cluster.local:2181`.
 
-## Set up Zookeeper
+## Start Zookeeper
 
 The [Kafka book](https://www.confluent.io/resources/kafka-definitive-guide-preview-edition/) recommends that Kafka has its own Zookeeper cluster with at least 5 instances.
 
@@ -31,7 +33,7 @@ The [Kafka book](https://www.confluent.io/resources/kafka-definitive-guide-previ
 kubectl create -f ./zookeeper/
 ```
 
-To support automatic migration in the face of availability zone unavailability :wink: we mix persistent and ephemeral storage.
+To support automatic migration in the face of availability zone unavailability we mix persistent and ephemeral storage.
 
 ## Start Kafka
 
@@ -44,3 +46,8 @@ You might want to verify in logs that Kafka found its own DNS name(s) correctly.
 kubectl -n kafka logs kafka-0 | grep "Registered broker"
 # INFO Registered broker 0 at path /brokers/ids/0 with addresses: PLAINTEXT -> EndPoint(kafka-0.broker.kafka.svc.cluster.local,9092,PLAINTEXT)
 ```
+
+That's it. Just add business value :wink:.
+For clients we tend to use [librdkafka](https://github.com/edenhill/librdkafka)-based drivers like [node-rdkafka](https://github.com/Blizzard/node-rdkafka).
+To use [Kafka Connect](http://kafka.apache.org/documentation/#connect) and [Kafka Streams](http://kafka.apache.org/documentation/streams/) you may want to take a look at our [sample](https://github.com/solsson/dockerfiles/tree/master/connect-files) [Dockerfile](https://github.com/solsson/dockerfiles/tree/master/streams-logfilter)s.
+Don't forget the [addon](https://github.com/Yolean/kubernetes-kafka/labels/addon)s.
