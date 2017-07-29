@@ -24,7 +24,7 @@ spec:
           mountPath: /etc/kafka
       containers:
       - name: metrics
-        image: solsson/kafka-prometheus-jmx-exporter@sha256:1f7c96c287a2dbec1d909cd8f96c0656310239b55a9a90d7fd12c81f384f1f7d
+        image: solsson/kafka-prometheus-jmx-exporter@sha256:07cdc4b446ebe8208950202b924caefadad006ea94ae92d73bef81897df4d5c7
         ports:
         - containerPort: 5556
         resources:
