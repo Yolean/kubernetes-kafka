@@ -1,83 +1,61 @@
 
-# Kafka as Kubernetes StatefulSet
 
-Example of three Kafka brokers depending on five Zookeeper instances.
+# Kafka on Kubernetes
 
-To get consistent service DNS names `kafka-N.broker.kafka`(`.svc.cluster.local`), run everything in a [namespace](http://kubernetes.io/docs/admin/namespaces/walkthrough/):
+Transparent Kafka setup that you can grow with.
+Good for both experiments and production.
+
+How to use:
+ * Run a Kubernetes cluster, [minikube](https://github.com/kubernetes/minikube) or real.
+ * Quickstart: use the `kubectl apply`s below.
+ * Kafka for real: fork and have a look at [addon](https://github.com/Yolean/kubernetes-kafka/labels/addon)s.
+ * Join the discussion in issues and PRs.
+
+Why?
+See for yourself, but we think this project gives you better adaptability than [helm](https://github.com/kubernetes/helm) [chart](https://github.com/kubernetes/charts/tree/master/incubator/kafka)s. No single readable readme or template can properly introduce both Kafka and Kubernets.
+Back when we read [Newman](http://samnewman.io/books/building_microservices/) we were beginners with both.
+Now we've read [Kleppmann](http://dataintensive.net/), [Confluent](https://www.confluent.io/blog/) and [SRE](https://landing.google.com/sre/book.html) and enjoy this "Streaming Platform" lock-in :smile:.
+
+## What you get
+
+Keep an eye on `kubectl --namespace kafka get pods -w`.
+
+The goal is to provide [Bootstrap servers](http://kafka.apache.org/documentation/#producerconfigs): `kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092`
+`
+
+Zookeeper at `zookeeper.kafka.svc.cluster.local:2181`.
+
+## Start Zookeeper
+
+The [Kafka book](https://www.confluent.io/resources/kafka-definitive-guide-preview-edition/) recommends that Kafka has its own Zookeeper cluster with at least 5 instances.
+
 ```
-kubectl create -f 00namespace.yml
-```
-
-## Set up volume claims
-
-You may add [storage class](http://kubernetes.io/docs/user-guide/persistent-volumes/#storageclasses)
-to the kafka StatefulSet declaration to enable automatic volume provisioning.
-
-Alternatively create [PV](http://kubernetes.io/docs/user-guide/persistent-volumes/#persistent-volumes)s and [PVC](http://kubernetes.io/docs/user-guide/persistent-volumes/#persistentvolumeclaims)s manually. For example in Minikube.
-
-```
-./bootstrap/pv.sh
-kubectl create -f ./bootstrap/pvc.yml
-# check that claims are bound
-kubectl get pvc
-```
-
-## Set up Zookeeper
-
-There is a Zookeeper+StatefulSet [blog post](http://blog.kubernetes.io/2016/12/statefulset-run-scale-stateful-applications-in-kubernetes.html) and [example](https://github.com/kubernetes/contrib/tree/master/statefulsets/zookeeper),
-but it appears tuned for workloads heavier than Kafka topic metadata.
-
-The Kafka book (Definitive Guide, O'Reilly 2016) recommends that Kafka has its own Zookeeper cluster,
-so we use the [official docker image](https://hub.docker.com/_/zookeeper/)
-but with a [startup script change to guess node id from hostname](https://github.com/solsson/zookeeper-docker/commit/df9474f858ad548be8a365cb000a4dd2d2e3a217).
-
-Zookeeper runs as a [Deployment](http://kubernetes.io/docs/user-guide/deployments/) without persistent storage:
-```
-kubectl create -f ./zookeeper/
+kubectl apply -f ./zookeeper/
 ```
 
-If you lose your zookeeper cluster, kafka will be unaware that persisted topics exist.
-The data is still there, but you need to re-create topics.
+To support automatic migration in the face of availability zone unavailability we mix persistent and ephemeral storage.
 
 ## Start Kafka
 
-Assuming you have your PVCs `Bound`, or enabled automatic provisioning (see above), go ahead and:
-
 ```
-kubectl create -f ./
+kubectl apply -f ./
 ```
 
 You might want to verify in logs that Kafka found its own DNS name(s) correctly. Look for records like:
 ```
-kubectl logs kafka-0 | grep "Registered broker"
+kubectl -n kafka logs kafka-0 | grep "Registered broker"
 # INFO Registered broker 0 at path /brokers/ids/0 with addresses: PLAINTEXT -> EndPoint(kafka-0.broker.kafka.svc.cluster.local,9092,PLAINTEXT)
 ```
 
-## Testing manually
+That's it. Just add business value :wink:.
+For clients we tend to use [librdkafka](https://github.com/edenhill/librdkafka)-based drivers like [node-rdkafka](https://github.com/Blizzard/node-rdkafka).
+To use [Kafka Connect](http://kafka.apache.org/documentation/#connect) and [Kafka Streams](http://kafka.apache.org/documentation/streams/) you may want to take a look at our [sample](https://github.com/solsson/dockerfiles/tree/master/connect-files) [Dockerfile](https://github.com/solsson/dockerfiles/tree/master/streams-logfilter)s.
+Don't forget the [addon](https://github.com/Yolean/kubernetes-kafka/labels/addon)s.
 
-There's a Kafka pod that doesn't start the server, so you can invoke the various shell scripts.
-```
-kubectl create -f test/99testclient.yml
-```
+# Tests
 
-See `./test/test.sh` for some sample commands.
-
-## Automated test, while going chaosmonkey on the cluster
-
-This is WIP, but topic creation has been automated. Note that as a [Job](http://kubernetes.io/docs/user-guide/jobs/), it will restart if the command fails, including if the topic exists :(
 ```
-kubectl create -f test/11topic-create-test1.yml
-```
-
-Pods that keep consuming messages (but they won't exit on cluster failures)
-```
-kubectl create -f test/21consumer-test1.yml
-```
-
-## Teardown & cleanup
-
-Testing and retesting... delete the namespace. PVs are outside namespaces so delete them too.
-```
-kubectl delete namespace kafka
-rm -R ./data/ && kubectl delete pv datadir-kafka-0 datadir-kafka-1 datadir-kafka-2
+kubectl apply -f test/
+# Anything that isn't READY here is a failed test
+kubectl get pods -l test-target=kafka,test-type=readiness -w --all-namespaces
 ```

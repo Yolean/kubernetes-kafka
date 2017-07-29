@@ -1,68 +1,71 @@
 apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
-  name: kafka
+  name: zoo
   namespace: kafka
 spec:
-  serviceName: "broker"
-  replicas: 3
+  serviceName: "zoo"
+  replicas: 2
   template:
     metadata:
       labels:
-        app: kafka
+        app: zookeeper
+        storage: ephemeral
       annotations:
     spec:
-      terminationGracePeriodSeconds: 30
+      terminationGracePeriodSeconds: 10
       initContainers:
       - name: init-config
         image: solsson/kafka:0.11.0.0@sha256:b27560de08d30ebf96d12e74f80afcaca503ad4ca3103e63b1fd43a2e4c976ce
         command: ['/bin/bash', '/etc/kafka/init.sh']
+        env:
+        - name: ID_OFFSET
+          value: "4"
         volumeMounts:
         - name: config
           mountPath: /etc/kafka
+        - name: data
+          mountPath: /var/lib/zookeeper/data
       containers:
-      - name: broker
+      - name: zookeeper
         image: solsson/kafka:0.11.0.0@sha256:b27560de08d30ebf96d12e74f80afcaca503ad4ca3103e63b1fd43a2e4c976ce
         env:
         - name: KAFKA_LOG4J_OPTS
           value: -Dlog4j.configuration=file:/etc/kafka/log4j.properties
-        ports:
-        - containerPort: 9092
         command:
-        - ./bin/kafka-server-start.sh
-        - /etc/kafka/server.properties
-        - --override
-        -   zookeeper.connect=zookeeper:2181
-        - --override
-        -   log.retention.hours=-1
-        - --override
-        -   log.dirs=/var/lib/kafka/data/topics
-        - --override
-        -   auto.create.topics.enable=false
+        - ./bin/zookeeper-server-start.sh
+        - /etc/kafka/zookeeper.properties
+        ports:
+        - containerPort: 2181
+          name: client
+        - containerPort: 2888
+          name: peer
+        - containerPort: 3888
+          name: leader-election
         resources:
           requests:
-            cpu: 100m
-            memory: 512Mi
+            cpu: 10m
+            memory: 100Mi
         livenessProbe:
           exec:
             command:
             - /bin/sh
             - -c
-            - 'echo "" | nc -w 1 127.0.0.1 9092'
+            - '[ "imok" = "$(echo ruok | nc -w 1 127.0.0.1 2181)" ]'
+        readinessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - '[ "imok" = "$(echo ruok | nc -w 1 127.0.0.1 2181)" ]'
         volumeMounts:
         - name: config
           mountPath: /etc/kafka
         - name: data
-          mountPath: /var/lib/kafka/data
+          mountPath: /var/lib/zookeeper/data
       volumes:
       - name: config
         configMap:
-          name: broker-config
-  volumeClaimTemplates:
-  - metadata:
-      name: data
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 200Gi
+          name: zookeeper-config
+      - name: data
+        emptyDir: {}

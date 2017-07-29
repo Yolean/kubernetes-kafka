@@ -1,0 +1,103 @@
+---
+kind: ConfigMap
+metadata:
+  name: basic-with-kafkacat
+  namespace: test-kafka
+apiVersion: v1
+data:
+
+  setup.sh: |-
+    touch /tmp/testlog
+    tail -f /tmp/testlog
+
+  continue.sh: |-
+    exit 0
+
+  run.sh: |-
+    exec >> /tmp/testlog
+    exec 2>&1
+
+    unique=$(date -Ins)
+
+    echo "Test $unique" | kafkacat -P -b $BOOTSTRAP -t test-basic-with-kafkacat -v
+    kafkacat -C -b $BOOTSTRAP -t test-basic-with-kafkacat -o -1 -e | grep $unique
+
+    exit 0
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: basic-with-kafkacat
+  namespace: test-kafka
+spec:
+  template:
+    spec:
+      containers:
+      - name: topic-create
+        image: solsson/kafka:0.11.0.0@sha256:b27560de08d30ebf96d12e74f80afcaca503ad4ca3103e63b1fd43a2e4c976ce
+        command:
+        - ./bin/kafka-topics.sh
+        - --zookeeper
+        -   zookeeper.kafka.svc.cluster.local:2181
+        - --create
+        - --if-not-exists
+        - --topic
+        -   test-basic-with-kafkacat
+        - --partitions
+        -   "1"
+        - --replication-factor
+        -   "1"
+      restartPolicy: Never
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: basic-with-kafkacat
+  namespace: test-kafka
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        test-target: kafka
+        test-type: readiness
+    spec:
+      containers:
+      - name: testcase
+        # common test images
+        #image: solsson/curl@sha256:8b0927b81d10043e70f3e05e33e36fb9b3b0cbfcbccdb9f04fd53f67a270b874
+        image: solsson/kafkacat@sha256:1266d140c52cb39bf314b6f22b6d7a01c4c9084781bc779fdfade51214a713a8
+        #image: solsson/kubectl-kafkacat@sha256:3715a7ede3f168f677ee6faf311ff6887aff31f660cfeecad5d87b4f18516321
+        env:
+        - name: BOOTSTRAP
+          #value: kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
+          value: kafka-0.broker.kafka.svc.cluster.local:9092
+        - name: ZOOKEEPER
+          value: zookeeper.kafka.svc.cluster.local:2181
+        # Test set up
+        command:
+        - /bin/bash
+        - -e
+        - /test/setup.sh
+        # Test run, again and again
+        readinessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -e
+            - /test/run.sh
+        # Test quit on nonzero exit
+        livenessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -e
+            - /test/continue.sh
+        volumeMounts:
+        - name: config
+          mountPath: /test
+      volumes:
+      - name: config
+        configMap:
+          name: basic-with-kafkacat
