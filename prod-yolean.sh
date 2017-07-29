@@ -4,6 +4,11 @@ set -ex
 
 ANNOTATION_PREFIX='yolean.se/kubernetes-kafka-'
 BUILD=$(basename $0)
+REMOTE=origin
+FROM="$REMOTE/"
+START=master
+
+[ ! -z "$(git status --untracked-files=no -s)" ] && echo "Working copy must be clean" && exit 1
 
 function annotate {
   key=$1
@@ -21,12 +26,8 @@ function annotate {
   esac
 }
 
-git fetch
-git checkout origin/master
-
-echo "Working copy must be clean"
-[ -z "$(git status --untracked-files=no -s)" ]
-START_REV_GIT=$(git rev-parse --short HEAD)
+git checkout ${FROM}$START
+REVS="$START:$(git rev-parse --short ${FROM}$START)"
 
 git checkout -b prod-yolean-$(date +"%Y%m%dT%H%M%S")
 
@@ -36,13 +37,14 @@ for BRANCH in \
   addon-rest \
   addon-kube-events-topic
 do
-  git merge --no-ff $BRANCH -m "prod-yolean merge $BRANCH"
+  git merge --no-ff ${FROM}$BRANCH -m "prod-yolean merge ${FROM}$BRANCH" && \
+    REVS="$REVS $BRANCH:$(git rev-parse --short ${FROM}$BRANCH)"
 done
 
 END_BRANCH_GIT=$(git rev-parse --abbrev-ref HEAD)
 
 for F in ./50kafka.yml ./zookeeper/50pzoo.yml ./zookeeper/51zoo.yml
 do
-  annotate fromrev $START_REV_GIT $F
-  annotate build $END_BRANCH_GIT $F
+  annotate revs "$REVS" $F
+  annotate build "$END_BRANCH_GIT" $F
 done
