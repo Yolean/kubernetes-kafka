@@ -9,7 +9,16 @@ function annotate {
   key=$1
   value=$2
   file=$3
-  sed -i "s|      annotations:|      annotations:\n        ${ANNOTATION_PREFIX}$key: '$value'|" $file
+  case $(uname) in
+    Darwin*)
+      sed -i '' 's|      annotations:|      annotations:\
+        --next-annotation--|' $file
+      sed -i '' "s|--next-annotation--|${ANNOTATION_PREFIX}$key: '$value'|" $file
+      ;;
+    *)
+      sed -i "s|      annotations:|      annotations:\n        ${ANNOTATION_PREFIX}$key: '$value'|" $file
+      ;;
+  esac
 }
 
 git fetch
