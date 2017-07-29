@@ -9,18 +9,18 @@ data:
   curl-format.txt: |-
     \n
     # ### curl stats ###\n
-    time_namelookup: %{time_namelookup}\n
-    time_connect: %{time_connect}\n
-    time_appconnect: %{time_appconnect}\n
-    time_pretransfer: %{time_pretransfer}\n
-    time_redirect: %{time_redirect}\n
-    time_starttransfer: %{time_starttransfer}\n
+    time_namelookup %{time_namelookup}\n
+    time_connect %{time_connect}\n
+    time_appconnect %{time_appconnect}\n
+    time_pretransfer %{time_pretransfer}\n
+    time_redirect %{time_redirect}\n
+    time_starttransfer %{time_starttransfer}\n
     \n
-    time_total: %{time_total}\n
+    time_total %{time_total}\n
     \n
-    http_code: %{http_code}\n
-    content_type: %{content_type}\n
-    size_download: %{size_download}\n
+    http_code{url="%{url_effective}"} %{http_code}\n
+    content_type %{content_type}\n
+    size_download %{size_download}\n
 
   setup.sh: |-
     touch /tmp/testlog
@@ -33,7 +33,20 @@ data:
     exec >> /tmp/testlog
     exec 2>&1
 
-    curl -w "@/test/curl-format.txt" -s --fail-early --max-time $MAX_RESPONSE_TIME http://kafka-0.broker.kafka.svc.cluster.local:5556/metrics
+    curl -w "@/test/curl-format.txt" -s --max-time $MAX_RESPONSE_TIME \
+      http://kafka-0.broker.kafka.svc.cluster.local:5556/metrics \
+      | grep http_code \
+      | grep 200
+
+    curl -w "@/test/curl-format.txt" -s --max-time $MAX_RESPONSE_TIME \
+      http://zoo-0.zoo.kafka.svc.cluster.local:5556/metrics \
+      | grep http_code \
+      | grep 200
+
+    curl -w "@/test/curl-format.txt" -s --max-time $MAX_RESPONSE_TIME \
+      http://pzoo-1.pzoo.kafka.svc.cluster.local:5556/metrics \
+      | grep http_code \
+      | grep 200
 
     exit 0
 
