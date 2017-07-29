@@ -25,6 +25,16 @@ spec:
       containers:
       - name: metrics
         image: solsson/kafka-prometheus-jmx-exporter@sha256:07cdc4b446ebe8208950202b924caefadad006ea94ae92d73bef81897df4d5c7
+        command:
+        - java
+        - -Xmx80M
+        # TODO OpenJDK 64-Bit Server VM warning: ignoring option MaxPermSize=16m; support was removed in 8.0
+        - -XX:MaxPermSize=16m
+        - -Xss1m
+        - -jar
+        - jmx_prometheus_httpserver.jar
+        - "5556"
+        - example_configs/kafka-prometheus-monitoring.yml
         ports:
         - containerPort: 5556
         resources:

@@ -1,5 +1,5 @@
 # kubectl apply -f test/metrics.yml && kubectl scale --replicas=0 deploy/metrics && kubectl scale --replicas=1 deploy/metrics
-# kubectl exec -ti metrics-... -- tail -f /tmp/loglast | grep time_total
+# kubectl exec -ti metrics-... -- tail -f /tmp/loglast | egrep 'time_total|^jmx_scrape_duration_seconds'
 ---
 kind: ConfigMap
 metadata:
@@ -10,7 +10,7 @@ data:
 
   curl-format.txt: |-
     \n
-    # ### curl stats ###\n
+    # ------ curl stats ------\n
     time_namelookup %{time_namelookup}\n
     time_connect %{time_connect}\n
     time_appconnect %{time_appconnect}\n
@@ -23,6 +23,8 @@ data:
     http_code{url="%{url_effective}"} %{http_code}\n
     size_download{url="%{url_effective}"} %{size_download}\n
     content_type %{content_type}\n
+    # ----- curl complete -----\n
+    \n
 
   setup.sh: |-
     touch /tmp/testlog
@@ -76,7 +78,7 @@ spec:
         image: solsson/curl@sha256:8c0c5d669b3dd67932da934024252af59fb9d0fa0e5118b5a737b35c5e1487bf
         env:
         - name: MAX_RESPONSE_TIME
-          value: "5"
+          value: "3"
         # Test set up
         command:
         - /bin/bash
