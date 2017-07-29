@@ -46,7 +46,6 @@ spec:
             cpu: 0m
             memory: 40Mi
           limits:
-            cpu: 10m
             memory: 100Mi
       - name: zookeeper
         image: solsson/kafka:1.0.0@sha256:17fdf1637426f45c93c65826670542e36b9f3394ede1cb61885c6a4befa8f72d
