@@ -10,7 +10,7 @@ data:
     touch /tmp/testlog
 
     ./bin/kafka-topics.sh --zookeeper $ZOOKEEPER \
-      --create --if-not-exists --topic test-basic-with-kafkacat \
+      --create --if-not-exists --topic test-basic-produce-consume \
       --partitions 1 --replication-factor 1
 
     # Despite the deprecation warning --zookeeper nothing is consumed when using --bootstrap-server

@@ -57,5 +57,5 @@ Don't forget the [addon](https://github.com/Yolean/kubernetes-kafka/labels/addon
 ```
 kubectl apply -f test/
 # Anything that isn't READY here is a failed test
-kubectl -n test-kafka get pods -l test-target=kafka,test-type=readiness -w
+kubectl get pods -l test-target=kafka,test-type=readiness -w --all-namespaces
 ```
