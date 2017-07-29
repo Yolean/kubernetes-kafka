@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: events-kube-kafka
+  namespace: kafka
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      # prefer duplicate events over missed
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: events
+        from: kube
+        to: kafka
+    spec:
+      containers:
+      - name: kafkacat-curl
+        image: solsson/kafkacat-curl@sha256:26b81296ba1d2c6b2cbce81c644b3b780ab5beab57bebbbb11f0d0a99e2d0d2b
+        command:
+        - /bin/bash
+        - -ec
+        - >
+          curl
+          -s
+          --cacert /run/secrets/kubernetes.io/serviceaccount/ca.crt
+          --header "Authorization: Bearer $(cat /run/secrets/kubernetes.io/serviceaccount/token)"
+          https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT/api/v1/watch/events
+          |
+          kafkacat
+          -b kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
+          -t ops-kube-events-all-json-001
+          -P
+          -z snappy
