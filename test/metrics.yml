@@ -1,0 +1,85 @@
+---
+kind: ConfigMap
+metadata:
+  name: metrics
+  namespace: test-kafka
+apiVersion: v1
+data:
+
+  curl-format.txt: |-
+    \n
+    # ### curl stats ###\n
+    time_namelookup: %{time_namelookup}\n
+    time_connect: %{time_connect}\n
+    time_appconnect: %{time_appconnect}\n
+    time_pretransfer: %{time_pretransfer}\n
+    time_redirect: %{time_redirect}\n
+    time_starttransfer: %{time_starttransfer}\n
+    \n
+    time_total: %{time_total}\n
+    \n
+    http_code: %{http_code}\n
+    content_type: %{content_type}\n
+    size_download: %{size_download}\n
+
+  setup.sh: |-
+    touch /tmp/testlog
+    tail -f /tmp/testlog
+
+  continue.sh: |-
+    exit 0
+
+  run.sh: |-
+    exec >> /tmp/testlog
+    exec 2>&1
+
+    curl -w "@/test/curl-format.txt" -s --fail-early --max-time $MAX_RESPONSE_TIME http://kafka-0.broker.kafka.svc.cluster.local:5556/metrics
+
+    exit 0
+
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: metrics
+  namespace: test-kafka
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        test-target: kafka
+        test-type: readiness
+    spec:
+      containers:
+      - name: testcase
+        image: solsson/curl@sha256:8c0c5d669b3dd67932da934024252af59fb9d0fa0e5118b5a737b35c5e1487bf
+        env:
+        - name: MAX_RESPONSE_TIME
+          value: "5"
+        # Test set up
+        command:
+        - /bin/bash
+        - -e
+        - /test/setup.sh
+        # Test run, again and again
+        readinessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -e
+            - /test/run.sh
+        # Test quit on nonzero exit
+        livenessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -e
+            - /test/continue.sh
+        volumeMounts:
+        - name: config
+          mountPath: /test
+      volumes:
+      - name: config
+        configMap:
+          name: metrics
