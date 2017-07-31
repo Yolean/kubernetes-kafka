@@ -35,7 +35,7 @@ spec:
         - java
         - -Xms39M
         - -Xmx80M
-        - -XX:MaxPermSize=16m
+        - -XX:MaxMetaspaceSize=16m
         - -Xss1m
         - -jar
         - jmx_prometheus_httpserver.jar

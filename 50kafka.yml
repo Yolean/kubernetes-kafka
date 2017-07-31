@@ -33,8 +33,7 @@ spec:
         command:
         - java
         - -Xmx80M
-        # TODO OpenJDK 64-Bit Server VM warning: ignoring option MaxPermSize=16m; support was removed in 8.0
-        - -XX:MaxPermSize=16m
+        - -XX:MaxMetaspaceSize=16m
         - -Xss1m
         - -jar
         - jmx_prometheus_httpserver.jar
