@@ -170,7 +170,7 @@ data:
 
     # Unspecified loggers and loggers with additivity=true output to server.log and stdout
     # Note that INFO only applies to unspecified loggers, the log level of the child logger is used otherwise
-    log4j.rootLogger=INFO, stdout, kafkaAppender
+    log4j.rootLogger=INFO, stdout
 
     log4j.appender.stdout=org.apache.log4j.ConsoleAppender
     log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
