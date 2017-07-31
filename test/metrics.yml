@@ -1,5 +1,5 @@
 # kubectl apply -f test/metrics.yml && kubectl scale --replicas=0 deploy/metrics && kubectl scale --replicas=1 deploy/metrics
-# kubectl exec -ti metrics-... -- tail -f /tmp/loglast | egrep 'time_total|^jmx_scrape_duration_seconds|^java_lang_memory_heapmemoryusage_used|^java_lang_memory_nonheapmemoryusage_used'
+# kubectl exec metrics-... -- tail -f /tmp/loglast | egrep 'time_total|^jmx_scrape_duration_seconds|^java_lang_memory_heapmemoryusage_used|^java_lang_memory_nonheapmemoryusage_used'
 ---
 kind: ConfigMap
 metadata:
