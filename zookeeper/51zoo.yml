@@ -33,7 +33,6 @@ spec:
         image: solsson/kafka-prometheus-jmx-exporter@sha256:07cdc4b446ebe8208950202b924caefadad006ea94ae92d73bef81897df4d5c7
         command:
         - java
-        - -Xms39M
         - -Xmx80M
         - -XX:MaxMetaspaceSize=16m
         - -jar
