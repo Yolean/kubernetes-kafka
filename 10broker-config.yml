@@ -35,7 +35,7 @@ data:
     broker.id=${KAFKA_BROKER_ID}
 
     # Switch to enable topic deletion or not, default value is false
-    #delete.topic.enable=true
+    delete.topic.enable=true
 
     ############################# Socket Server Settings #############################
 
