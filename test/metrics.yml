@@ -52,7 +52,7 @@ data:
       | grep 200
 
     curl -w "@/test/curl-format.txt" -s --max-time $MAX_RESPONSE_TIME \
-      http://pzoo-1.pzoo.kafka.svc.cluster.local:5556/metrics \
+      http://pzoo-0.pzoo.kafka.svc.cluster.local:5556/metrics \
       | tee -a /tmp/loglast \
       | grep http_code \
       | grep 200
