@@ -12,11 +12,7 @@ spec:
     spec:
       containers:
       - name: cp
-        image: solsson/kafka-cp@sha256:53075cf5877c1311516d5c78a4d52fd46d3d369514681e150f96bc06997fa0e4
-        env:
-        # what does this do?
-        - name: SCHEMA_REGISTRY_HOST_NAME
-          value: schemas
+        image: solsson/kafka-cp@sha256:a22047b9e8bf4b8badfd2fbba47f2d1acdcbb84dfb03c61a15e1ac203036cedf
         command:
         - schema-registry-start
         - /etc/schema-registry/schema-registry.properties
