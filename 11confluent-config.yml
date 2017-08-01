@@ -19,8 +19,8 @@ data:
     # See the License for the specific language governing permissions and
     # limitations under the License.
 
-    listeners=http://0.0.0.0:8081
-    kafkastore.connection.url=localhost:2181
+    listeners=http://0.0.0.0:80
+    kafkastore.connection.url=zookeeper:2181
     kafkastore.topic=_schemas
     debug=false
 
@@ -42,8 +42,9 @@ data:
     ##
 
     #id=kafka-rest-test-server
-    #schema.registry.url=http://localhost:8081
-    #zookeeper.connect=localhost:2181
+    listeners=http://0.0.0.0:80
+    schema.registry.url=http://schemas.kafka.svc.cluster.local:80
+    zookeeper.connect=zookeeper:2181
     #
     # Configure interceptor classes for sending consumer and producer metrics to Confluent Control Center
     # Make sure that monitoring-interceptors-<version>.jar is on the Java class path
