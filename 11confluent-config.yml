@@ -43,8 +43,9 @@ data:
 
     #id=kafka-rest-test-server
     listeners=http://0.0.0.0:80
-    schema.registry.url=http://schemas.kafka.svc.cluster.local:80
+    bootstrap.servers=kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
     zookeeper.connect=zookeeper:2181
+    schema.registry.url=http://schemas.kafka.svc.cluster.local:80
     #
     # Configure interceptor classes for sending consumer and producer metrics to Confluent Control Center
     # Make sure that monitoring-interceptors-<version>.jar is on the Java class path

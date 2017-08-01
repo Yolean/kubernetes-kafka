@@ -22,10 +22,7 @@ data:
     curl -X POST \
       -H "Content-Type: application/vnd.kafka.json.v2+json" -H "Accept: application/vnd.kafka.v2+json" \
       --data "{\"records\":[{\"value\":\"Test from $HOSTNAME at $(date -u -Iseconds)\"}]}" \
-      $REST/topics/$TOPIC -v --max-time 30 \
-      || echo " (timeout might be ok because we only want to send one message)"
-    # TODO why does the above block?
-
+      $REST/topics/$TOPIC
 
     curl --retry 10 -H 'Accept: application/vnd.kafka.v2+json' $REST/topics/$TOPIC/partitions
     echo ""
