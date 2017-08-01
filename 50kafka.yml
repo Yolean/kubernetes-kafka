@@ -23,24 +23,6 @@ spec:
         - name: config
           mountPath: /etc/kafka
       containers:
-      - name: metrics
-        image: solsson/kafka-prometheus-jmx-exporter@sha256:07cdc4b446ebe8208950202b924caefadad006ea94ae92d73bef81897df4d5c7
-        command:
-        - java
-        - -Xmx64M
-        - -XX:MaxMetaspaceSize=32m
-        - -jar
-        - jmx_prometheus_httpserver.jar
-        - "5556"
-        - example_configs/kafka-prometheus-monitoring.yml
-        ports:
-        - containerPort: 5556
-        resources:
-          requests:
-            cpu: 0m
-            memory: 40Mi
-          limits:
-            memory: 100Mi
       - name: broker
         image: solsson/kafka:0.11.0.0@sha256:b27560de08d30ebf96d12e74f80afcaca503ad4ca3103e63b1fd43a2e4c976ce
         env:
@@ -76,6 +58,24 @@ spec:
           mountPath: /etc/kafka
         - name: data
           mountPath: /var/lib/kafka/data
+      - name: metrics
+        image: solsson/kafka-prometheus-jmx-exporter@sha256:07cdc4b446ebe8208950202b924caefadad006ea94ae92d73bef81897df4d5c7
+        command:
+        - java
+        - -Xmx64M
+        - -XX:MaxMetaspaceSize=32m
+        - -jar
+        - jmx_prometheus_httpserver.jar
+        - "5556"
+        - example_configs/kafka-prometheus-monitoring.yml
+        ports:
+        - containerPort: 5556
+        resources:
+          requests:
+            cpu: 0m
+            memory: 40Mi
+          limits:
+            memory: 100Mi
       volumes:
       - name: config
         configMap:
