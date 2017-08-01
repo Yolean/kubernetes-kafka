@@ -29,24 +29,6 @@ spec:
         - name: data
           mountPath: /var/lib/zookeeper/data
       containers:
-      - name: metrics
-        image: solsson/kafka-prometheus-jmx-exporter@sha256:07cdc4b446ebe8208950202b924caefadad006ea94ae92d73bef81897df4d5c7
-        command:
-        - java
-        - -Xmx64M
-        - -XX:MaxMetaspaceSize=32m
-        - -jar
-        - jmx_prometheus_httpserver.jar
-        - "5556"
-        - example_configs/zookeeper.yaml
-        ports:
-        - containerPort: 5556
-        resources:
-          requests:
-            cpu: 0m
-            memory: 40Mi
-          limits:
-            memory: 100Mi
       - name: zookeeper
         image: solsson/kafka:1.0.0@sha256:17fdf1637426f45c93c65826670542e36b9f3394ede1cb61885c6a4befa8f72d
         env:
@@ -79,6 +61,24 @@ spec:
           mountPath: /etc/kafka
         - name: data
           mountPath: /var/lib/zookeeper/data
+      - name: metrics
+        image: solsson/kafka-prometheus-jmx-exporter@sha256:07cdc4b446ebe8208950202b924caefadad006ea94ae92d73bef81897df4d5c7
+        command:
+        - java
+        - -Xmx64M
+        - -XX:MaxMetaspaceSize=32m
+        - -jar
+        - jmx_prometheus_httpserver.jar
+        - "5556"
+        - example_configs/zookeeper.yaml
+        ports:
+        - containerPort: 5556
+        resources:
+          requests:
+            cpu: 0m
+            memory: 40Mi
+          limits:
+            memory: 100Mi
       volumes:
       - name: config
         configMap:
