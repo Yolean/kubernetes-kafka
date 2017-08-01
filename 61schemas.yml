@@ -11,14 +11,20 @@ spec:
         app: schema-registry
     spec:
       containers:
-      - name: cp-schema-registry
-        image: confluentinc/cp-schema-registry@sha256:ac1eb34d9a60ce8904eb1bc01fd94bf1f6513924ca507734679d4b513133714c
+      - name: cp
+        image: solsson/kafka-cp@sha256:a22047b9e8bf4b8badfd2fbba47f2d1acdcbb84dfb03c61a15e1ac203036cedf
         env:
-        - name: SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL
-          value: zookeeper:2181
-        - name: SCHEMA_REGISTRY_HOST_NAME
-          value: schemas
-        - name: SCHEMA_REGISTRY_LISTENERS
-          value: http://0.0.0.0:80
+        - name: SCHEMA_REGISTRY_LOG4J_OPTS
+          value: -Dlog4j.configuration=file:/etc/schema-registry/log4j.properties
+        command:
+        - schema-registry-start
+        - /etc/schema-registry/schema-registry.properties
         ports:
         - containerPort: 80
+        volumeMounts:
+        - name: config
+          mountPath: /etc/schema-registry
+      volumes:
+      - name: config
+        configMap:
+          name: confluent-config

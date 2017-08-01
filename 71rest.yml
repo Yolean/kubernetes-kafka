@@ -11,16 +11,20 @@ spec:
         app: kafka-rest
     spec:
       containers:
-      - name: cp-kafka-rest
-        image: confluentinc/cp-kafka-rest@sha256:aa213c1a67eae6ce9836b52a9b5ecee4d6a0b44f2b9cc69f4e4de85131462f1d
+      - name: cp
+        image: solsson/kafka-cp@sha256:a22047b9e8bf4b8badfd2fbba47f2d1acdcbb84dfb03c61a15e1ac203036cedf
         env:
-        - name: KAFKA_REST_ZOOKEEPER_CONNECT
-          value: zookeeper:2181
-        - name: KAFKA_REST_HOST_NAME
-          value: rest
-        - name: KAFKA_REST_LISTENERS
-          value: http://0.0.0.0:80
-        - name: KAFKA_REST_SCHEMA_REGISTRY_URL
-          value: http://schemas.kafka.svc.cluster.local:80
+        - name: KAFKAREST_LOG4J_OPTS
+          value: -Dlog4j.configuration=file:/etc/kafka-rest/log4j.properties
+        command:
+        - kafka-rest-start
+        - /etc/kafka-rest/kafka-rest.properties
         ports:
         - containerPort: 80
+        volumeMounts:
+        - name: config
+          mountPath: /etc/kafka-rest
+      volumes:
+      - name: config
+        configMap:
+          name: confluent-config

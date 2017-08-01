@@ -12,31 +12,43 @@ data:
     # Keep starting up until rest proxy is up and running
     curl --retry 10 --retry-delay 30 --retry-connrefused -I -s $REST
 
+    curl -s -H 'Accept: application/vnd.kafka.v2+json' $REST/brokers | egrep '."brokers":.0'
 
-    curl -H 'Accept: application/vnd.kafka.v2+json' $REST/topics
+    curl -s -H 'Accept: application/vnd.kafka.v2+json' $REST/topics
     echo ""
 
-    curl --retry 10 -H 'Accept: application/vnd.kafka.v2+json' $REST/topics/$TOPIC
+    curl -s -H 'Accept: application/vnd.kafka.v2+json' $REST/topics/$TOPIC
     echo ""
 
     curl -X POST \
       -H "Content-Type: application/vnd.kafka.json.v2+json" -H "Accept: application/vnd.kafka.v2+json" \
       --data "{\"records\":[{\"value\":\"Test from $HOSTNAME at $(date -u -Iseconds)\"}]}" \
-      $REST/topics/$TOPIC -v --max-time 30 \
-      || echo " (timeout might be ok because we only want to send one message)"
-    # TODO why does the above block?
-
-
-    curl --retry 10 -H 'Accept: application/vnd.kafka.v2+json' $REST/topics/$TOPIC/partitions
+      $REST/topics/$TOPIC
     echo ""
 
-    curl -X POST -H "Content-Type: application/vnd.kafka.v2+json" --data '{"name": "my_consumer_instance", "format": "json", "auto.offset.reset": "earliest"}' $REST/consumers/my_json_consumer -v;
+    curl -s -H 'Accept: application/vnd.kafka.v2+json' $REST/topics/$TOPIC/partitions
+    echo ""
 
-    curl -X POST -H "Content-Type: application/vnd.kafka.v2+json" --data "{\"topics\":[\"$TOPIC\"]}" $REST/consumers/my_json_consumer/instances/my_consumer_instance/subscription -v;
+    curl -X POST \
+      -H "Content-Type: application/vnd.kafka.v2+json" \
+      --data '{"name": "my_consumer_instance", "format": "json", "auto.offset.reset": "earliest"}' \
+      $REST/consumers/my_json_consumer
+    echo ""
 
-    curl -X GET -H "Accept: application/vnd.kafka.json.v2+json" $REST/consumers/my_json_consumer/instances/my_consumer_instance/records -v;
+    curl -X POST \
+      -H "Content-Type: application/vnd.kafka.v2+json" \
+      --data "{\"topics\":[\"$TOPIC\"]}" \
+      $REST/consumers/my_json_consumer/instances/my_consumer_instance/subscription \
+      -w "%{http_code}"
+    echo ""
 
-    curl -X DELETE -H "Content-Type: application/vnd.kafka.v2+json" $REST/consumers/my_json_consumer/instances/my_consumer_instance -v;
+    curl -X GET \
+      -H "Accept: application/vnd.kafka.json.v2+json" \
+      $REST/consumers/my_json_consumer/instances/my_consumer_instance/records
+
+    curl -X DELETE \
+      -H "Content-Type: application/vnd.kafka.v2+json" \
+      $REST/consumers/my_json_consumer/instances/my_consumer_instance
 
     tail -f /tmp/testlog
 
