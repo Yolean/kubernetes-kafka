@@ -13,6 +13,9 @@ spec:
       containers:
       - name: cp
         image: solsson/kafka-cp@sha256:a22047b9e8bf4b8badfd2fbba47f2d1acdcbb84dfb03c61a15e1ac203036cedf
+        env:
+        - name: SCHEMA_REGISTRY_LOG4J_OPTS
+          value: -Dlog4j.configuration=file:/etc/schema-registry/log4j.properties
         command:
         - schema-registry-start
         - /etc/schema-registry/schema-registry.properties

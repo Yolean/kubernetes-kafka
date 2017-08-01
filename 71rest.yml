@@ -13,6 +13,9 @@ spec:
       containers:
       - name: cp
         image: solsson/kafka-cp@sha256:a22047b9e8bf4b8badfd2fbba47f2d1acdcbb84dfb03c61a15e1ac203036cedf
+        env:
+        - name: KAFKAREST_LOG4J_OPTS
+          value: -Dlog4j.configuration=file:/etc/kafka-rest/log4j.properties
         command:
         - kafka-rest-start
         - /etc/kafka-rest/kafka-rest.properties
