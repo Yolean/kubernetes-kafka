@@ -11,6 +11,19 @@ data:
     export KAFKA_BROKER_ID=${HOSTNAME##*-}
     sed -i "s/\${KAFKA_BROKER_ID}/$KAFKA_BROKER_ID/" /etc/kafka/server.properties
 
+    PODNAME=$HOSTNAME
+    NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
+
+    # todo add curl to kafka image, switch to a curl image for init or write the whole lookup in java
+    hash curl 2>/dev/null || { apt-get update; DEBIAN_FRONTEND=noninteractive apt-get install curl -y --no-install-recommends; }
+
+    API=https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT/api
+    AUTH="--cacert /run/secrets/kubernetes.io/serviceaccount/ca.crt --header \"Authorization: Bearer $(cat /run/secrets/kubernetes.io/serviceaccount/token)\""
+
+    curl -s $AUTH $API/namespaces/kafka/pods/$PODNAME -I --fail-early || {
+      echo "Access problems. Could be RBAC."
+    }
+
   server.properties: |-
     # Licensed to the Apache Software Foundation (ASF) under one or more
     # contributor license agreements.  See the NOTICE file distributed with
