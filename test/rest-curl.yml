@@ -71,6 +71,27 @@ data:
     curl -X GET $SCHEMAS/subjects/$TOPIC-value/versions/1
     echo ""
 
+    # rest + schema
+    # TODO new topic needed because this breaks json consumer above
+
+    curl -X POST -H "Content-Type: application/vnd.kafka.avro.v2+json" \
+      -H "Accept: application/vnd.kafka.v2+json" \
+      --data '{"value_schema": "{\"type\": \"record\", \"name\": \"User\", \"fields\": [{\"name\": \"name\", \"type\": \"string\"}]}", "records": [{"value": {"name": "testUser"}}]}' \
+      $REST/topics/$TOPIC
+    echo ""
+
+    curl -X POST  -H "Content-Type: application/vnd.kafka.v2+json" \
+      --data '{"name": "my_consumer_instance", "format": "avro", "auto.offset.reset": "earliest"}' \
+      $REST/consumers/my_avro_consumer
+    echo ""
+
+    curl -X POST -H "Content-Type: application/vnd.kafka.v2+json" \
+      --data "{\"topics\":[\"$TOPIC\"]}" \
+      $REST/consumers/my_avro_consumer/instances/my_consumer_instance/subscription
+
+    curl -X GET -H "Accept: application/vnd.kafka.avro.v2+json" \
+      $REST/consumers/my_avro_consumer/instances/my_consumer_instance/records
+
     tail -f /tmp/testlog
 
   continue.sh: |-
