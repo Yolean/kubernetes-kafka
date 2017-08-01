@@ -50,6 +50,27 @@ data:
       -H "Content-Type: application/vnd.kafka.v2+json" \
       $REST/consumers/my_json_consumer/instances/my_consumer_instance
 
+    # schema-registry
+
+    curl -X GET $SCHEMAS/subjects
+    echo ""
+
+    curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" \
+      --data '{"schema": "{\"type\": \"string\"}"}' \
+      $SCHEMAS/subjects/$TOPIC-key/versions
+    echo ""
+
+    curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" \
+      --data '{"schema": "{\"type\": \"string\"}"}' \
+      $SCHEMAS/subjects/$TOPIC-value/versions
+    echo ""
+
+    curl -X GET $SCHEMAS/schemas/ids/1
+    echo ""
+
+    curl -X GET $SCHEMAS/subjects/$TOPIC-value/versions/1
+    echo ""
+
     tail -f /tmp/testlog
 
   continue.sh: |-
@@ -104,6 +125,8 @@ spec:
       - name: testcase
         image: solsson/curl@sha256:8c0c5d669b3dd67932da934024252af59fb9d0fa0e5118b5a737b35c5e1487bf
         env:
+        - name: SCHEMAS
+          value: http://schemas.kafka.svc.cluster.local
         - name: REST
           value: http://rest.kafka.svc.cluster.local
         - name: TOPIC

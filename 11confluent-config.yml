@@ -20,6 +20,7 @@ data:
     # limitations under the License.
 
     listeners=http://0.0.0.0:80
+    #kafkastore.bootstrap.servers
     kafkastore.connection.url=zookeeper:2181
     kafkastore.topic=_schemas
     debug=false
