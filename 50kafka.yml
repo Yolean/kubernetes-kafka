@@ -6,6 +6,8 @@ metadata:
 spec:
   serviceName: "broker"
   replicas: 3
+  updateStrategy:
+    type: RollingUpdate
   template:
     metadata:
       labels:
