@@ -4,6 +4,7 @@ kind: ServiceAccount
 metadata:
   name: kafka
   namespace: kafka
+automountServiceAccountToken: true
 ---
 # Sufficient rights to look up self's pod description and pod's node description
 kind: ClusterRole
