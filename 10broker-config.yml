@@ -17,6 +17,13 @@ data:
     # todo add curl to kafka image, switch to a curl image for init or write the whole lookup in java
     hash curl 2>/dev/null || { apt-get update; DEBIAN_FRONTEND=noninteractive apt-get install curl -y --no-install-recommends; }
 
+    hash kubectl 2>/dev/null || {
+      curl -sLS -o k.tar.gz -k https://dl.k8s.io/v1.7.2/kubernetes-client-linux-amd64.tar.gz
+      echo "9c2363710d61a12a28df2d8a4688543b785156369973d33144ab1f2c1d5c7b53  k.tar.gz" | sha256sum -c
+      tar xvf k.tar.gz -C /usr/local/bin/ --strip-components=3 kubernetes/client/bin/kubectl
+      rm k.tar.gz
+    }
+
     API=https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT/api
     AUTH="--cacert /run/secrets/kubernetes.io/serviceaccount/ca.crt --header \"Authorization: Bearer $(cat /run/secrets/kubernetes.io/serviceaccount/token)\""
 
