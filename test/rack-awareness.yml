@@ -39,7 +39,7 @@ spec:
       serviceAccountName: kafka
       containers:
       - name: testcase
-        image: solsson/curl@sha256:8c0c5d669b3dd67932da934024252af59fb9d0fa0e5118b5a737b35c5e1487bf
+        image: solsson/kafka:0.11.0.0@sha256:b27560de08d30ebf96d12e74f80afcaca503ad4ca3103e63b1fd43a2e4c976ce
         env:
         - name: MY_NODE_NAME
           valueFrom:
