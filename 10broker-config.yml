@@ -11,12 +11,12 @@ data:
     export KAFKA_BROKER_ID=${HOSTNAME##*-}
     sed -i "s/\${KAFKA_BROKER_ID}/$KAFKA_BROKER_ID/" /etc/kafka/server.properties
 
-    PODNAME=$HOSTNAME
-    NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
-
     # todo add curl to kafka image, switch to a curl image for init or write the whole lookup in java
     hash curl 2>/dev/null || { apt-get update; DEBIAN_FRONTEND=noninteractive apt-get install curl -y --no-install-recommends; }
 
+    echo "Service Account is $MY_POD_SERVICE_ACCOUNT"
+
+    # curl auth was with system:anonymous so trying kubectl instead
     hash kubectl 2>/dev/null || {
       curl -sLS -o k.tar.gz -k https://dl.k8s.io/v1.7.2/kubernetes-client-linux-amd64.tar.gz
       echo "9c2363710d61a12a28df2d8a4688543b785156369973d33144ab1f2c1d5c7b53  k.tar.gz" | sha256sum -c
@@ -24,12 +24,13 @@ data:
       rm k.tar.gz
     }
 
-    API=https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT/api
-    AUTH="--cacert /run/secrets/kubernetes.io/serviceaccount/ca.crt --header \"Authorization: Bearer $(cat /run/secrets/kubernetes.io/serviceaccount/token)\""
-
-    curl -s $AUTH $API/namespaces/kafka/pods/$PODNAME -I --fail-early || {
-      echo "Access problems. Could be RBAC."
-    }
+    ZONE=$(kubectl get node $MY_NODE_NAME -o=go-template='{{index .metadata.labels "failure-domain.beta.kubernetes.io/zone"}}')
+    [ -z "$ZONE" ] &&
+    if [ ! -z "$ZONE" ]; then
+      sed -i "s/#broker.rack=$/broker.rack=$ZONE/" /etc/kafka/server.properties
+    else
+      sed -i "s/#broker.rack=$# No zone label found/" /etc/kafka/server.properties
+    fi
 
   server.properties: |-
     # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -54,7 +55,7 @@ data:
     # The id of the broker. This must be set to a unique integer for each broker.
     broker.id=${KAFKA_BROKER_ID}
 
-    #broker.rack=${KAFKA_BROKER_RACK}
+    #broker.rack=
 
     # Switch to enable topic deletion or not, default value is false
     delete.topic.enable=true
