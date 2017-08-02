@@ -33,6 +33,7 @@ git checkout -b prod-yolean-$(date +"%Y%m%dT%H%M%S")
 
 for BRANCH in \
   addon-storage-classes \
+  rolling-update \
   addon-metrics \
   addon-kube-events-topic
 do
