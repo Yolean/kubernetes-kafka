@@ -59,6 +59,14 @@ For clusters that enfoce [RBAC](https://kubernetes.io/docs/admin/authorization/r
 kubectl apply -f rbac-namespace-default/
 ```
 
+## Set "reclaim policy" for persistent volumes
+
+Caution: For each new kafka and pzoo pod you have to [manually set Reclaim Policy](https://kubernetes.io/docs/tasks/administer-cluster/change-pv-reclaim-policy/)
+to avoid losing your data if the [PVC](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims)s or [PV](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistent-volumes)s are deleted,
+including if the `kafka` namespace is deleted and recreated.
+
+See [feature#352](https://github.com/kubernetes/features/issues/352) [#38192](https://github.com/kubernetes/kubernetes/issues/38192) [#47987](https://github.com/kubernetes/kubernetes/pull/47987) for details on why this isn't supported (yet) in manifests.
+
 # Tests
 
 ```
