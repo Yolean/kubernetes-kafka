@@ -11,17 +11,17 @@ data:
     export KAFKA_BROKER_ID=${HOSTNAME##*-}
     sed -i "s/\${KAFKA_BROKER_ID}/$KAFKA_BROKER_ID/" /etc/kafka/server.properties
 
-    PODNAME=$HOSTNAME
-    NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
-
-    # todo add curl to kafka image, switch to a curl image for init or write the whole lookup in java
-    hash curl 2>/dev/null || { apt-get update; DEBIAN_FRONTEND=noninteractive apt-get install curl -y --no-install-recommends; }
-
-    API=https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT/api
-    AUTH="--cacert /run/secrets/kubernetes.io/serviceaccount/ca.crt --header \"Authorization: Bearer $(cat /run/secrets/kubernetes.io/serviceaccount/token)\""
-
-    curl -s $AUTH $API/namespaces/kafka/pods/$PODNAME -I --fail-early || {
-      echo "Access problems. Could be RBAC."
+    hash kubectl 2>/dev/null || {
+      sed -i "s/#init#broker.rack=#init#/#init#broker.rack=# kubectl not found in path/" /etc/kafka/server.properties
+    } && {
+      ZONE=$(kubectl get node "$NODE_NAME" -o=go-template='{{index .metadata.labels "failure-domain.beta.kubernetes.io/zone"}}')
+      if [ $? -ne 0 ]; then
+        sed -i "s/#init#broker.rack=#init#/#init#broker.rack=# zone lookup failed, see -c init-config logs/" /etc/kafka/server.properties
+      elif [ "x$ZONE" == "x<no value>" ]; then
+        sed -i "s/#init#broker.rack=#init#/#init#broker.rack=# zone label not found for node $NODE_NAME/" /etc/kafka/server.properties
+      else
+        sed -i "s/#init#broker.rack=#init#/broker.rack=$ZONE/" /etc/kafka/server.properties
+      fi
     }
 
   server.properties: |-
@@ -47,7 +47,7 @@ data:
     # The id of the broker. This must be set to a unique integer for each broker.
     broker.id=${KAFKA_BROKER_ID}
 
-    #broker.rack=${KAFKA_BROKER_RACK}
+    #init#broker.rack=#init#
 
     # Switch to enable topic deletion or not, default value is false
     delete.topic.enable=true
