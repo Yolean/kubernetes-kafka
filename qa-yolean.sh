@@ -29,15 +29,16 @@ function annotate {
 git checkout ${FROM}$START
 REVS="$START:$(git rev-parse --short ${FROM}$START)"
 
-git checkout -b prod-yolean-$(date +"%Y%m%dT%H%M%S")
+git checkout -b qa-yolean-$(date +"%Y%m%dT%H%M%S")
 
 for BRANCH in \
+  multizone-rack-awareness \
   addon-storage-classes \
   rolling-update \
   addon-metrics \
   addon-kube-events-topic
 do
-  git merge --no-ff ${FROM}$BRANCH -m "prod-yolean merge ${FROM}$BRANCH" && \
+  git merge --no-ff ${FROM}$BRANCH -m "qa-yolean merge ${FROM}$BRANCH" && \
     REVS="$REVS $BRANCH:$(git rev-parse --short ${FROM}$BRANCH)"
 done
 
