@@ -15,7 +15,7 @@ spec:
       terminationGracePeriodSeconds: 30
       initContainers:
       - name: init-config
-        image: solsson/kubectl-kafkacat@sha256:450cf4e25f19020ab23200890e51aad333eec9bbff28ce6c22c90146aa726075
+        image: solsson/kafka-initutils@sha256:c275d681019a0d8f01295dbd4a5bae3cfa945c8d0f7f685ae1f00f2579f08c7d
         env:
         - name: NODE_NAME
           valueFrom:
