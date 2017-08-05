@@ -59,7 +59,7 @@ spec:
         - name: data
           mountPath: /var/lib/kafka/data
       - name: metrics
-        image: solsson/kafka-prometheus-jmx-exporter@sha256:07cdc4b446ebe8208950202b924caefadad006ea94ae92d73bef81897df4d5c7
+        image: solsson/kafka-prometheus-jmx-exporter@sha256:348b0f6510b08dff70ba468a16d25dc8def480fe79aca0e3c76f098d67b108a3
         command:
         - java
         - -Xmx64M
