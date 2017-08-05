@@ -5,12 +5,12 @@ apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: node-reader
 rules:
-  - apiGroups:
-      - ""
-    resources:
-      - nodes
-    verbs:
-      - get
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  verbs:
+  - get
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
