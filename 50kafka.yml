@@ -48,7 +48,7 @@ spec:
           requests:
             cpu: 100m
             memory: 512Mi
-        livenessProbe:
+        readinessProbe:
           exec:
             command:
             - /bin/sh
