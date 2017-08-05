@@ -1,4 +1,11 @@
-# For kubectl get node, required for kafka init container rack awareness
+# To see if init containers need RBAC:
+#
+# $ kubectl exec kafka-1 -- cat /etc/kafka/server.properties | grep broker.rack
+# #init#broker.rack=# zone lookup failed, see -c init-config logs
+# $ kubectl logs -c init-config kafka-0
+# ++ kubectl get node some-node '-o=go-template={{index .metadata.labels "failure-domain.beta.kubernetes.io/zone"}}'
+# Error from server (Forbidden): User "system:serviceaccount:kafka:default" cannot get nodes at the cluster scope.: "Unknown user \"system:serviceaccount:kafka:default\""
+#
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1beta1

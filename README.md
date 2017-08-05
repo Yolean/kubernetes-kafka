@@ -59,15 +59,6 @@ For clusters that enfoce [RBAC](https://kubernetes.io/docs/admin/authorization/r
 kubectl apply -f rbac-namespace-default/
 ```
 
-For example here's how you see that `kafka`s init containers need RBAC for [rack awareness](https://github.com/Yolean/kubernetes-kafka/pull/41):
-```
-$ kubectl exec kafka-1 -- cat /etc/kafka/server.properties | grep broker.rack
-#init#broker.rack=# zone lookup failed, see -c init-config logs
-$ kubectl logs -c init-config kafka-0
-++ kubectl get node some-node '-o=go-template={{index .metadata.labels "failure-domain.beta.kubernetes.io/zone"}}'
-Error from server (Forbidden): User "system:serviceaccount:kafka:default" cannot get nodes at the cluster scope.: "Unknown user \"system:serviceaccount:kafka:default\""
-```
-
 # Tests
 
 ```
