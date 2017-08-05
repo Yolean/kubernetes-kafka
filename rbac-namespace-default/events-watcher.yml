@@ -4,6 +4,8 @@ kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: events-watcher
+  labels:
+    origin: github.com_Yolean_kubernetes-kafka
 rules:
 - apiGroups:
   - ""
@@ -16,6 +18,8 @@ kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: kafka-events-watcher
+  labels:
+    origin: github.com_Yolean_kubernetes-kafka
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
