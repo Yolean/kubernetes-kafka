@@ -32,7 +32,6 @@ REVS="$START:$(git rev-parse --short ${FROM}$START)"
 git checkout -b qa-yolean-$(date +"%Y%m%dT%H%M%S")
 
 for BRANCH in \
-  multizone-rack-awareness \
   addon-storage-classes \
   rolling-update \
   addon-metrics \
