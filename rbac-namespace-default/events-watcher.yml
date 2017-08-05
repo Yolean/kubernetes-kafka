@@ -1,0 +1,26 @@
+# For kubectl get node, required for kafka init container rack awareness
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: events-watcher
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - watch
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: kafka-events-watcher
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: events-watcher
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: kafka
