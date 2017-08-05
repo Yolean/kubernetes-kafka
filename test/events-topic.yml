@@ -1,8 +1,8 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: test-events-consumer
-  namespace: kafka
+  name: events-topic
+  namespace: test-kafka
 spec:
   replicas: 1
   strategy:
@@ -14,9 +14,8 @@ spec:
   template:
     metadata:
       labels:
-        app: events
-        type: test
-        from: kafka-ops
+        test-target: events-topic
+        test-type: readiness
     spec:
       containers:
       - name: kafkacat
