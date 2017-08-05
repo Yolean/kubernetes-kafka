@@ -5,17 +5,12 @@ metadata:
   namespace: test-kafka
 spec:
   replicas: 1
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      # prefer duplicate events over missed
-      maxUnavailable: 0
-      maxSurge: 1
   template:
     metadata:
       labels:
         test-target: events-topic
-        test-type: readiness
+        # Would be a valid testcase if it verifies that >0 messages per some time unit have been produced
+        #test-type: readiness
     spec:
       containers:
       - name: kafkacat
