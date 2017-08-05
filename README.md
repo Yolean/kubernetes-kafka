@@ -52,6 +52,13 @@ For clients we tend to use [librdkafka](https://github.com/edenhill/librdkafka)-
 To use [Kafka Connect](http://kafka.apache.org/documentation/#connect) and [Kafka Streams](http://kafka.apache.org/documentation/streams/) you may want to take a look at our [sample](https://github.com/solsson/dockerfiles/tree/master/connect-files) [Dockerfile](https://github.com/solsson/dockerfiles/tree/master/streams-logfilter)s.
 Don't forget the [addon](https://github.com/Yolean/kubernetes-kafka/labels/addon)s.
 
+## RBAC
+
+For clusters that enfoce [RBAC](https://kubernetes.io/docs/admin/authorization/rbac/) there's a minimal set of policies in
+```
+kubectl apply -f rbac-namespace-default/
+```
+
 # Tests
 
 ```
