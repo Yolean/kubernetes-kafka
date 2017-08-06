@@ -8,8 +8,8 @@ data:
     #!/bin/bash
     set -x
 
-    export KAFKA_BROKER_ID=${HOSTNAME##*-}
-    sed -i "s/\${KAFKA_BROKER_ID}/$KAFKA_BROKER_ID/" /etc/kafka/server.properties
+    KAFKA_BROKER_ID=${HOSTNAME##*-}
+    sed -i "s/#init#broker.id=#init#/broker.id=$KAFKA_BROKER_ID/" /etc/kafka/server.properties
 
     hash kubectl 2>/dev/null || {
       sed -i "s/#init#broker.rack=#init#/#init#broker.rack=# kubectl not found in path/" /etc/kafka/server.properties
@@ -45,7 +45,7 @@ data:
     ############################# Server Basics #############################
 
     # The id of the broker. This must be set to a unique integer for each broker.
-    broker.id=${KAFKA_BROKER_ID}
+    #init#broker.id=#init#
 
     #init#broker.rack=#init#
 
