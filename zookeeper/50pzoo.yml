@@ -12,7 +12,7 @@ spec:
   serviceName: "pzoo"
   replicas: 3
   updateStrategy:
-    type: OnDelete
+    type: RollingUpdate
   template:
     metadata:
       labels:
