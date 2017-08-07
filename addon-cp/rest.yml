@@ -28,6 +28,10 @@ spec:
           httpGet:
             path: /
             port: 80
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
         ports:
         - containerPort: 80
         volumeMounts:
