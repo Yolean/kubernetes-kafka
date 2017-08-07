@@ -6,6 +6,8 @@ metadata:
 spec:
   serviceName: "pzoo"
   replicas: 3
+  updateStrategy:
+    type: RollingUpdate
   template:
     metadata:
       labels:
