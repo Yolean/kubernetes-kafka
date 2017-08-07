@@ -78,9 +78,9 @@ spec:
         resources:
           requests:
             cpu: 0m
-            memory: 40Mi
-          limits:
             memory: 100Mi
+          limits:
+            memory: 150Mi
       volumes:
       - name: config
         configMap:
