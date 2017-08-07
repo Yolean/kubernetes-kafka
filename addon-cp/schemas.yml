@@ -24,6 +24,10 @@ spec:
         command:
         - schema-registry-start
         - /etc/schema-registry/schema-registry.properties
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
         ports:
         - containerPort: 80
         volumeMounts:

@@ -24,6 +24,10 @@ spec:
         command:
         - kafka-rest-start
         - /etc/kafka-rest/kafka-rest.properties
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
         ports:
         - containerPort: 80
         volumeMounts:
