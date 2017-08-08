@@ -34,6 +34,7 @@ git checkout -b qa-yolean-$(date +"%Y%m%dT%H%M%S")
 for BRANCH in \
   addon-storage-classes \
   rolling-update \
+  addon-rest \
   addon-metrics \
   addon-kube-events-topic
 do
