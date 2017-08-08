@@ -54,3 +54,4 @@ data:
       labels:
         replicaId: "$2"
         memberType: "$3"
+    - pattern : java.lang<type=(.*)>
