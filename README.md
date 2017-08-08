@@ -11,10 +11,12 @@ How to use:
  * Kafka for real: fork and have a look at [addon](https://github.com/Yolean/kubernetes-kafka/labels/addon)s.
  * Join the discussion in issues and PRs.
 
-Why?
-See for yourself, but we think this project gives you better adaptability than [helm](https://github.com/kubernetes/helm) [chart](https://github.com/kubernetes/charts/tree/master/incubator/kafka)s. No single readable readme or template can properly introduce both Kafka and Kubernets.
+No readable readme can properly introduce both [Kafka](http://kafka.apache.org/) and [Kubernets](https://kubernetes.io/),
+but we think the combination of the two is a great backbone for microservices.
 Back when we read [Newman](http://samnewman.io/books/building_microservices/) we were beginners with both.
 Now we've read [Kleppmann](http://dataintensive.net/), [Confluent](https://www.confluent.io/blog/) and [SRE](https://landing.google.com/sre/book.html) and enjoy this "Streaming Platform" lock-in :smile:.
+
+We also think the plain-yaml approach of this project is easier to understand and evolve than [helm](https://github.com/kubernetes/helm) [chart](https://github.com/kubernetes/charts/tree/master/incubator/kafka)s.
 
 ## What you get
 
@@ -50,7 +52,7 @@ kubectl -n kafka logs kafka-0 | grep "Registered broker"
 That's it. Just add business value :wink:.
 For clients we tend to use [librdkafka](https://github.com/edenhill/librdkafka)-based drivers like [node-rdkafka](https://github.com/Blizzard/node-rdkafka).
 To use [Kafka Connect](http://kafka.apache.org/documentation/#connect) and [Kafka Streams](http://kafka.apache.org/documentation/streams/) you may want to take a look at our [sample](https://github.com/solsson/dockerfiles/tree/master/connect-files) [Dockerfile](https://github.com/solsson/dockerfiles/tree/master/streams-logfilter)s.
-Don't forget the [addon](https://github.com/Yolean/kubernetes-kafka/labels/addon)s.
+And don't forget the [addon](https://github.com/Yolean/kubernetes-kafka/labels/addon)s.
 
 ## RBAC
 
@@ -59,7 +61,15 @@ For clusters that enfoce [RBAC](https://kubernetes.io/docs/admin/authorization/r
 kubectl apply -f rbac-namespace-default/
 ```
 
-# Tests
+## Caution: `Delete` Reclaim Policy is default
+
+In production you likely want to [manually set Reclaim Policy](https://kubernetes.io/docs/tasks/administer-cluster/change-pv-reclaim-policy/),
+our your data will be gone if the generated [volume claim](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims)s are deleted.
+
+This can't be done [in manifests](https://github.com/Yolean/kubernetes-kafka/pull/50),
+at least not [until Kubernetes 1.8](https://github.com/kubernetes/features/issues/352).
+
+## Tests
 
 ```
 kubectl apply -f test/
