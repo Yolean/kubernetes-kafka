@@ -37,6 +37,8 @@ data:
     log4j.logger.org.apache.zookeeper.server.NIOServerCnxn=WARN
 
   jmx-zookeeper-prometheus.yaml: |+
+    lowercaseOutputName: true
+    jmxUrl: service:jmx:rmi:///jndi/rmi://localhost:5555/jmxrmi
     rules:
     - pattern : org.apache.ZooKeeperService<type=(.*)>
     - pattern : java.lang<type=(.*)>
