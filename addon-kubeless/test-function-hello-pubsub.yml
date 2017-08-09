@@ -1,0 +1,29 @@
+# This is basically https://github.com/kubeless/kubeless/blob/master/examples/nodejs/helloevent.js
+# created through:
+# ./kubeless function deploy helloevent --from-file helloevent.js --handler hello.handler --runtime nodejs8 --trigger-topic test-basic-with-kafkacat
+
+# Uses the topic from ../test/basic-with-kafkacat.yml,
+# which means it gets triggered every 10 seconds by the publisher there
+
+# See output:
+# kubectl -n default logs -lfunction=kubeless-test-function
+# Check for validation errors after create:
+# kubectl -n kubeless logs -lkubeless=controller --since=60s
+
+---
+apiVersion: k8s.io/v1
+kind: Function
+metadata:
+  name: kubeless-test-function
+  namespace: default
+spec:
+  handler: hello.handler
+  runtime: nodejs8
+  type: PubSub
+  topic: test-basic-with-kafkacat
+  function: |-
+    module.exports = {
+      handler: (context) => {
+        console.log('Serverless at', new Date().toUTCString(), 'with message:', context);
+      }
+    };
