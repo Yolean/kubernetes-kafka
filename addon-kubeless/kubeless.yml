@@ -30,7 +30,7 @@ spec:
         kubeless: controller
     spec:
       containers:
-      - image: bitnami/kubeless-controller@sha256:719e032c351d1db448b941060db0d5a2a77da62c6e9f38d509d372c22f3021e8
+      - image: bitnami/kubeless-controller@sha256:0bc030762e8694d268be75bed0d52ea6ecb84b03da85ffcbd55da4817c047052
         imagePullPolicy: IfNotPresent
         name: kubeless-controller
       serviceAccountName: controller-acct
