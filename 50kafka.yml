@@ -10,6 +10,7 @@ spec:
     metadata:
       labels:
         app: kafka
+        kubeless: kafka
       annotations:
     spec:
       terminationGracePeriodSeconds: 30
