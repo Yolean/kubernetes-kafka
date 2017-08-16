@@ -64,7 +64,7 @@ kubectl apply -f rbac-namespace-default/
 ## Caution: `Delete` Reclaim Policy is default
 
 In production you likely want to [manually set Reclaim Policy](https://kubernetes.io/docs/tasks/administer-cluster/change-pv-reclaim-policy/),
-our your data will be gone if the generated [volume claim](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims)s are deleted.
+or your data will be gone if the generated [volume claim](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims)s are deleted.
 
 This can't be done [in manifests](https://github.com/Yolean/kubernetes-kafka/pull/50),
 at least not [until Kubernetes 1.8](https://github.com/kubernetes/features/issues/352).
