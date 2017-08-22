@@ -1,0 +1,46 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: connect
+  namespace: kafka
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: kafka-connect
+    spec:
+      containers:
+      - name: connect
+        # Note that you most likely want an image with your choice of connectors
+        # unless you have some way to mount your choice of additional jars.
+        # This image is an example with stock connectors and Confluent's JDBC.
+        image: solsson/kafka-connect-jdbc@sha256:a6108f094eaef52469c8ca7d3e60b2523cadd6f5283f481c96308033b26fc92e
+        env:
+        - name: KAFKAREST_LOG4J_OPTS
+          value: -Dlog4j.configuration=file:/etc/kafka-connect/log4j.properties
+        command:
+        - ./bin/connect-distributed.sh
+        - /etc/kafka-connect/connect-distributed.properties
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: config
+          mountPath: /etc/kafka-connect
+      volumes:
+      - name: config
+        configMap:
+          name: connect-config

@@ -27,7 +27,8 @@ data:
     # the `bootstrap.servers` and those specifying replication factors.
 
     # A list of host/port pairs to use for establishing the initial connection to the Kafka cluster.
-    bootstrap.servers=localhost:9092
+    #bootstrap.servers=kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
+    bootstrap.servers=kafka-0.broker.kafka.svc.cluster.local:9092
 
     # unique name for the cluster, used in forming the Connect cluster group. Note that this must not conflict with consumer group IDs
     group.id=connect-cluster
@@ -82,12 +83,12 @@ data:
 
     # These are provided to inform the user about the presence of the REST host and port configs
     # Hostname & Port for the REST API to listen on. If this is set, it will bind to the interface used to listen to requests.
-    #rest.host.name=
-    #rest.port=8083
+    rest.host.name=0.0.0.0
+    rest.port=80
 
     # The Hostname & Port that will be given out to other workers to connect to i.e. URLs that are routable from other servers.
-    #rest.advertised.host.name=
-    #rest.advertised.port=
+    rest.advertised.host.name=connect.kafka.svc.cluster.local
+    rest.advertised.port=80
 
     # Set to a list of filesystem paths separated by commas (,) to enable class loading isolation for plugins
     # (connectors, converters, transformations). The list should consist of top level directories that include
