@@ -66,7 +66,7 @@ spec:
       containers:
       - name: testcase
         # common test images
-        #image: solsson/curl@sha256:8b0927b81d10043e70f3e05e33e36fb9b3b0cbfcbccdb9f04fd53f67a270b874
+        #image: solsson/curl@sha256:8c0c5d669b3dd67932da934024252af59fb9d0fa0e5118b5a737b35c5e1487bf
         image: solsson/kafkacat@sha256:1266d140c52cb39bf314b6f22b6d7a01c4c9084781bc779fdfade51214a713a8
         #image: solsson/kubectl-kafkacat@sha256:3715a7ede3f168f677ee6faf311ff6887aff31f660cfeecad5d87b4f18516321
         env:
