@@ -9,6 +9,8 @@ data:
   setup.sh: |-
     echo "TODO setup"
 
+    apk add --update sqlite
+
     touch /tmp/testlog
     tail -f /tmp/testlog
 
@@ -64,7 +66,7 @@ spec:
     spec:
       containers:
       - name: testcase
-        image: solsson/curl@sha256:8c0c5d669b3dd67932da934024252af59fb9d0fa0e5118b5a737b35c5e1487bf
+        image: solsson/curl@sha256:523319afd39573746e8f5a7c98d4a6cd4b8cbec18b41eb30c8baa13ede120ce3
         env:
         - name: BOOTSTRAP
           value: kafka-0.broker.kafka.svc.cluster.local:9092
