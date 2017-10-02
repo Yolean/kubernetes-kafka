@@ -1,6 +1,50 @@
+# [SMP](https://github.com/StreamingMicroservicesPlatform) using Kubernetes and Kafka
+
+Streaming Platform for start-ups and small DevOps teams.
+A self-hosted PaaS, if you will, for using Kafka as backend for Your Microservices.
+
+We do what [Confluent's quickstart](https://docs.confluent.io/current/quickstart.html) does,
+but in Kubernetes as that's where services live in production.
+The setup includes Kafka, Schema Regitstry and REST Proxy.
+
+## Scope
+
+ * Starts nicely on Minikube, with resources left for your services.
+ * Can scale up to production workloads.
+   - Example: `kubectl apply -f ./scale-3/` (TODO; we haven't really solved how to make scale a simple parameter yet)
+
+## Decisions up front
+
+Before you `kubectl` anything, you need to decide on:
+
+ * Storage classes for Kafka and Zookeeper volumes. Select one of:
+   - `kubectl apply -f configure-minikube/`
+   - `kubectl apply -f configure-gke-pd/`
+ * Run self-tests or not. They do generate some load, but indicate if the platform is working or not.
+   - To include tests, replace `apply -f` with `apply -fR` in your `kubectl`s below.
+   - Anything that isn't READY in `kubectl get pods -l test-target=kafka,test-type=readiness -w --all-namespaces` is a failed test.
+
+## Create
+
+Prerequisites:
+ * Kubernets 1.8 (the [v2.0.0](https://github.com/Yolean/kubernetes-kafka/releases/tag/v2.0.0) release supports earlier versions)
+
+Required:
+ * `kubectl apply -f ./zookeeper/`
+ * `kubectl apply -f ./kafka/`
+
+Optional:
+ * `kubectl apply -f ./confluent-platform/`
+ * `kubectl apply -f ./prometheus/`
+ * `kubectl apply -f ./kube-events/`
+ * `kubectl apply -f ./ksql/` (coming in v3.1.0)
+ * `kubectl apply -f ./log-processing-pipeline/` (coming in v3.2.0)
 
 
-# Kafka on Kubernetes
+
+
+
+# (previous readme) Kafka on Kubernetes
 
 Transparent Kafka setup that you can grow with.
 Good for both experiments and production.
