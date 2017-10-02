@@ -1,0 +1,30 @@
+kind: ConfigMap
+metadata:
+  name: ksql-config
+  namespace: kafka
+apiVersion: v1
+data:
+  ksqlserver.properties: |-
+    bootstrap.servers=kafka-0.broker.kafka.svc.cluster.local:9092
+    application.id=ksql_server_quickstart
+    ksql.command.topic.suffix=commands
+
+    listeners=http://0.0.0.0:80
+
+  log4j.properties: |-
+    log4j.rootLogger=INFO, stdout
+
+    log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+    log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+    log4j.appender.stdout.layout.ConversionPattern=[%d] %p %m (%c:%L)%n
+
+    log4j.appender.streams=org.apache.log4j.ConsoleAppender
+    log4j.appender.streams.layout=org.apache.log4j.PatternLayout
+    log4j.appender.streams.layout.ConversionPattern=[%d] %p %m (%c:%L)%n
+
+    log4j.logger.kafka=ERROR, stdout
+    log4j.logger.org.apache.kafka.streams=INFO, streams
+    log4j.additivity.org.apache.kafka.streams=false
+    log4j.logger.org.apache.zookeeper=ERROR, stdout
+    log4j.logger.org.apache.kafka=ERROR, stdout
+    log4j.logger.org.I0Itec.zkclient=ERROR, stdout
