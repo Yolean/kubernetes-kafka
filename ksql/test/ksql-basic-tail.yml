@@ -36,8 +36,7 @@ spec:
     spec:
       containers:
       - name: testcase
-        image: ksql-build
-        imagePullPolicy: Never
+        image: solsson/kafka-ksql@sha256:0ecd9e9042f422ac5856a306c7ada0c52046cbe9e0612cba6ed75b6260f2c101
         env:
         - name: BOOTSTRAP
           value: kafka-0.broker.kafka.svc.cluster.local:9092

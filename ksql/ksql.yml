@@ -16,8 +16,8 @@ spec:
         app: ksql
     spec:
       containers:
-      - name: cp
-        image: solsson/kafka-ksql@sha256:cea326dd042c4451d0c503d1ee2666d1fa893008acf20b9fb2bc0b2327fc23fb
+      - name: ksql
+        image: solsson/kafka-ksql@sha256:0ecd9e9042f422ac5856a306c7ada0c52046cbe9e0612cba6ed75b6260f2c101
         readinessProbe:
           httpGet:
             path: /
