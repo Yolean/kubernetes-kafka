@@ -9,8 +9,8 @@ data:
   setup.sh: |-
     touch /tmp/testlog
 
-    # do nothing for now
-    tail -f /dev/null
+    echo "Nothing happens in this test yet. To get a KSQL prompt run something like:"      >> /tmp/testlog
+    echo "kubectl -n test-kafka exec -ti $(hostname) -- ksql-cli remote http://ksql.kafka" >> /tmp/testlog
     
     tail -f /tmp/testlog
 
