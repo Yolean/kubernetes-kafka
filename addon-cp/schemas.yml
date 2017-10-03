@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: cp
-        image: solsson/kafka-cp@sha256:a22047b9e8bf4b8badfd2fbba47f2d1acdcbb84dfb03c61a15e1ac203036cedf
+        image: solsson/kafka-cp@sha256:89e5b3b326bf8ef888efa9501cd22fb941ca7b5ccef8dfc2f44a1e218f4427e1
         env:
         - name: SCHEMA_REGISTRY_LOG4J_OPTS
           value: -Dlog4j.configuration=file:/etc/schema-registry/log4j.properties
