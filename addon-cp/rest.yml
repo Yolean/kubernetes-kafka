@@ -21,6 +21,8 @@ spec:
         env:
         - name: KAFKAREST_LOG4J_OPTS
           value: -Dlog4j.configuration=file:/etc/kafka-rest/log4j.properties
+        - name: REST_PORT
+          value: "80"
         command:
         - kafka-rest-start
         - /etc/kafka-rest/kafka-rest.properties

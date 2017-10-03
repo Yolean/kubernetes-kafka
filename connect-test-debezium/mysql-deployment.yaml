@@ -1,0 +1,29 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: kafka
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: mysql
+    spec:
+      containers:
+      - env:
+        - name: MYSQL_PASSWORD
+          value: mysqlpw
+        - name: MYSQL_ROOT_PASSWORD
+          value: debezium
+        - name: MYSQL_USER
+          value: mysqluser
+        image: debezium/example-mysql:0.6
+        name: mysql
+        ports:
+        - containerPort: 3306
+        resources: {}
+      restartPolicy: Always
+status: {}
