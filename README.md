@@ -11,7 +11,7 @@ How to use:
  * Kafka for real: fork and have a look at [addon](https://github.com/Yolean/kubernetes-kafka/labels/addon)s.
  * Join the discussion in issues and PRs.
 
-No readable readme can properly introduce both [Kafka](http://kafka.apache.org/) and [Kubernets](https://kubernetes.io/),
+No readable readme can properly introduce both [Kafka](http://kafka.apache.org/) and [Kubernetes](https://kubernetes.io/),
 but we think the combination of the two is a great backbone for microservices.
 Back when we read [Newman](http://samnewman.io/books/building_microservices/) we were beginners with both.
 Now we've read [Kleppmann](http://dataintensive.net/), [Confluent](https://www.confluent.io/blog/) and [SRE](https://landing.google.com/sre/book.html) and enjoy this "Streaming Platform" lock-in :smile:.
