@@ -244,3 +244,22 @@ data:
     # Change to DEBUG to enable audit log for the authorizer
     log4j.logger.kafka.authorizer.logger=WARN, authorizerAppender
     log4j.additivity.kafka.authorizer.logger=false
+
+  jmx-kafka-prometheus.yml: |+
+    lowercaseOutputName: true
+    jmxUrl: service:jmx:rmi:///jndi/rmi://127.0.0.1:5555/jmxrmi
+    ssl: false
+    whitelistObjectNames: ["kafka.server:*","java.lang:*"]
+    rules:
+      - pattern : kafka.server<type=ReplicaFetcherManager, name=MaxLag, clientId=(.+)><>Value
+      - pattern : kafka.server<type=BrokerTopicMetrics, name=(.+), topic=(.+)><>OneMinuteRate
+      - pattern : kafka.server<type=KafkaRequestHandlerPool, name=RequestHandlerAvgIdlePercent><>OneMinuteRate
+      - pattern : kafka.server<type=Produce><>queue-size
+      - pattern : kafka.server<type=ReplicaManager, name=(.+)><>(Value|OneMinuteRate)
+      - pattern : kafka.server<type=controller-channel-metrics, broker-id=(.+)><>(.*)
+      - pattern : kafka.server<type=socket-server-metrics, networkProcessor=(.+)><>(.*)
+      - pattern : kafka.server<type=Fetch><>queue-size
+      - pattern : kafka.server<type=SessionExpireListener, name=(.+)><>OneMinuteRate
+      - pattern : java.lang<type=OperatingSystem><>SystemCpuLoad
+      - pattern : java.lang<type=Memory><HeapMemoryUsage>used
+      - pattern : java.lang<type=OperatingSystem><>FreePhysicalMemorySize

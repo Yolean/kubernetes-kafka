@@ -67,7 +67,7 @@ spec:
         - -jar
         - jmx_prometheus_httpserver.jar
         - "5556"
-        - example_configs/kafka-prometheus-monitoring.yml
+        - /etc/kafka/jmx-kafka-prometheus.yml
         ports:
         - containerPort: 5556
         resources:
@@ -76,6 +76,9 @@ spec:
             memory: 100Mi
           limits:
             memory: 150Mi
+        volumeMounts:
+        - name: config
+          mountPath: /etc/kafka
       volumes:
       - name: config
         configMap:
