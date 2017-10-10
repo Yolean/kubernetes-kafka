@@ -1,0 +1,67 @@
+---
+kind: ConfigMap
+metadata:
+  name: test-logs-aggregated
+  namespace: test-kafka
+apiVersion: v1
+data:
+
+  setup.sh: |-
+    touch /tmp/testlog
+
+    tail -f /tmp/testlog
+
+  continue.sh: |-
+    exit 0
+
+  run.sh: |-
+    exit 0
+
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: test-logs-aggregated
+  namespace: test-kafka
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        test-target: kafka
+        test-type: readiness
+    spec:
+      containers:
+      - name: testcase
+        image: solsson/kafkacat@sha256:decb4e4a0e722c8e202bd05e81c43b94d87c6cba977f90d16623e74027045000
+        env:
+        - name: BOOTSTRAP
+          value: kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
+        - name: ZOOKEEPER
+          value: zookeeper.kafka.svc.cluster.local:2181
+        # Test set up
+        command:
+        - /bin/bash
+        - -e
+        - /test/setup.sh
+        # Test run, again and again
+        readinessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -e
+            - /test/run.sh
+        # Test quit on nonzero exit
+        livenessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -e
+            - /test/continue.sh
+        volumeMounts:
+        - name: config
+          mountPath: /test
+      volumes:
+      - name: config
+        configMap:
+          name: test-logs-aggregated
