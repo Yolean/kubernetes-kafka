@@ -12,6 +12,10 @@ data:
     tail -f /tmp/testlog
 
   continue.sh: |-
+
+    echo "--- $(date -u --iso-8601='ns') ---" >> /tmp/testlog
+    kafkacat -b $BOOTSTRAP -C -t $TOPIC -f '%t [%p] %o: %k = %s\n' -o -10 -e >> /tmp/testlog
+
     exit 0
 
   run.sh: |-
@@ -33,12 +37,12 @@ spec:
     spec:
       containers:
       - name: testcase
-        image: solsson/kafkacat@sha256:decb4e4a0e722c8e202bd05e81c43b94d87c6cba977f90d16623e74027045000
+        image: solsson/kafkacat@sha256:9cee76d02eee590c4874c42ca2e10de22d15c2dfa5b67205e35089a49cfba1f4
         env:
         - name: BOOTSTRAP
           value: kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
-        - name: ZOOKEEPER
-          value: zookeeper.kafka.svc.cluster.local:2181
+        - name: TOPIC
+          value: ops-kube-logs-raw-001
         # Test set up
         command:
         - /bin/bash
