@@ -18,9 +18,6 @@ data:
 
     tail -f /tmp/testlog
 
-  continue.sh: |-
-    exit 0
-
   run.sh: |-
     exec >> /tmp/testlog
     exec 2>&1
@@ -35,6 +32,9 @@ data:
     #apt-get update && apt-get install -y --no-install-recommends procps
     #pkill java
 
+    exit 0
+
+  continue.sh: |-
     exit 0
 
 ---
