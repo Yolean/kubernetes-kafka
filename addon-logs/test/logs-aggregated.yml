@@ -13,8 +13,8 @@ data:
 
   continue.sh: |-
 
-    echo "--- $(date -u --iso-8601='ns') ---" >> /tmp/testlog
-    kafkacat -b $BOOTSTRAP -C -t $TOPIC -f '%t [%p] %o: %k = %s\n' -o -10 -e >> /tmp/testlog
+    echo "{\"#---\":\"$(date -u --iso-8601='ns')\"}" >> /tmp/testlog
+    kafkacat -b $BOOTSTRAP -C -t $TOPIC -f '{"#topic":"%t","#partition":%p,"#offset":%o,"#key":"%k","=":%s}\n' -o -10 -e >> /tmp/testlog
 
     exit 0
 
