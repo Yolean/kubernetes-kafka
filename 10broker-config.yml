@@ -22,6 +22,8 @@ data:
       else
         sed -i "s/#init#broker.rack=#init#/broker.rack=$ZONE/" /etc/kafka/server.properties
       fi
+
+      kubectl -n $POD_NAMESPACE label pod $POD_NAME kafka-broker-id=$KAFKA_BROKER_ID
     }
 
   server.properties: |-
