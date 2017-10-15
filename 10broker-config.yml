@@ -8,7 +8,7 @@ data:
     #!/bin/bash
     set -x
 
-    KAFKA_BROKER_ID=${HOSTNAME##*-}
+    KAFKA_BROKER_ID=${POD_NAME##*-}
     sed -i "s/#init#broker.id=#init#/broker.id=$KAFKA_BROKER_ID/" /etc/kafka/server.properties
 
     hash kubectl 2>/dev/null || {
