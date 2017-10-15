@@ -41,6 +41,7 @@ spec:
           value: -Dlog4j.configuration=file:/etc/kafka/log4j.properties
         ports:
         - containerPort: 9092
+        - containerPort: 9094
         command:
         - ./bin/kafka-server-start.sh
         - /etc/kafka/server.properties
