@@ -37,8 +37,6 @@ spec:
         - ./bin/kafka-server-start.sh
         - /etc/kafka/server.properties
         - --override
-        -   zookeeper.connect=zookeeper:2181
-        - --override
         -   log.dirs=/var/lib/kafka/data/topics
         resources:
           requests:
