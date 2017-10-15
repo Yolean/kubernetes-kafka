@@ -67,7 +67,7 @@ spec:
       - name: testcase
         # common test images
         #image: solsson/curl@sha256:8b0927b81d10043e70f3e05e33e36fb9b3b0cbfcbccdb9f04fd53f67a270b874
-        image: solsson/kafkacat@sha256:1266d140c52cb39bf314b6f22b6d7a01c4c9084781bc779fdfade51214a713a8
+        image: solsson/kafkacat@sha256:ebebf47061300b14a4b4c2e1e4303ab29f65e4b95d34af1b14bb8f7ec6da7cef
         #image: solsson/kubectl-kafkacat@sha256:3715a7ede3f168f677ee6faf311ff6887aff31f660cfeecad5d87b4f18516321
         env:
         - name: BOOTSTRAP
