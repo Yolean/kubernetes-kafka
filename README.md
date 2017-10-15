@@ -6,9 +6,12 @@ Transparent Kafka setup that you can grow with.
 Good for both experiments and production.
 
 How to use:
+ * Good to know: you'll likely want to fork this repo. It prioritizes clarity over configurability, using plain manifests and .propeties files; no client side logic.
  * Run a Kubernetes cluster, [minikube](https://github.com/kubernetes/minikube) or real.
  * Quickstart: use the `kubectl apply`s below.
- * Kafka for real: fork and have a look at [addon](https://github.com/Yolean/kubernetes-kafka/labels/addon)s.
+ * Have a look at [addon](https://github.com/Yolean/kubernetes-kafka/labels/addon)s, or the official forks:
+   - [kubernetes-kafka-small](https://github.com/Reposoft/kubernetes-kafka-small) for single-node clusters like Minikube.
+   - [StreamingMicroservicesPlatform](https://github.com/StreamingMicroservicesPlatform/kubernetes-kafka) Like Confluent's [platform quickstart](https://docs.confluent.io/current/connect/quickstart.html) but for Kubernetes.
  * Join the discussion in issues and PRs.
 
 No readable readme can properly introduce both [Kafka](http://kafka.apache.org/) and [Kubernetes](https://kubernetes.io/),
@@ -70,6 +73,9 @@ This can't be done [in manifests](https://github.com/Yolean/kubernetes-kafka/pul
 at least not [until Kubernetes 1.8](https://github.com/kubernetes/features/issues/352).
 
 ## Tests
+
+Tests are based on the [kube-test](https://github.com/Yolean/kube-test) concept.
+Like the rest of this repo they have `kubectl` as the only local dependency.
 
 ```
 kubectl apply -f test/
