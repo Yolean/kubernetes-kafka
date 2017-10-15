@@ -36,8 +36,6 @@ spec:
         command:
         - ./bin/kafka-server-start.sh
         - /etc/kafka/server.properties
-        - --override
-        -   log.dirs=/var/lib/kafka/data/topics
         resources:
           requests:
             cpu: 100m
