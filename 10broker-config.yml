@@ -35,7 +35,6 @@ data:
     # Switch to enable topic deletion or not, default value is false
     delete.topic.enable=true
 
-    # Yolean/kubernetes-kafka
     auto.create.topics.enable=false
 
     ############################# Socket Server Settings #############################
