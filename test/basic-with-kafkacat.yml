@@ -9,6 +9,11 @@ data:
   setup.sh: |-
     touch /tmp/testlog
 
+    touch /tmp/produce
+    tail -f /tmp/produce | kafkacat -P -b $BOOTSTRAP -t test-basic-with-kafkacat -v > /tmp/producer.out 2> /tmp/producer.err &
+
+    kafkacat -C -b $BOOTSTRAP -t test-basic-with-kafkacat -q -f '[%p,%o] %s\n' > /tmp/consumer.out 2> /tmp/consumer.err &
+
     tail -f /tmp/testlog
 
   test.sh: |-
@@ -16,9 +21,19 @@ data:
     exec 2>&1
 
     unique=$(date -Ins)
+    echo "Test $unique" >> /tmp/produce
+    sleep 1
+    LAST=$(tail -n 1 /tmp/consumer.out | tee -a /tmp/testlog)
 
-    echo "Test $unique" | kafkacat -P -b $BOOTSTRAP -t test-basic-with-kafkacat -v
-    kafkacat -C -b $BOOTSTRAP -t test-basic-with-kafkacat -o -1 -e | grep $unique
+    [ "$LAST" == *"$unique" ] || {
+      echo "Last message '$LAST' doesn't contain marker '$unique'"
+      #kafkacat -C -b $BOOTSTRAP -t test-basic-with-kafkacat -o -1 -e | grep $unique
+      #echo "Producer output:"
+      #cat /tmp/producer.out
+      #echo "Producer err:"
+      #cat /tmp/producer.err
+      #exit 1
+    }
 
     exit 0
 
