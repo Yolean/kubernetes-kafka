@@ -36,14 +36,6 @@ spec:
         command:
         - ./bin/kafka-server-start.sh
         - /etc/kafka/server.properties
-        - --override
-        -   zookeeper.connect=zookeeper:2181
-        - --override
-        -   log.retention.hours=-1
-        - --override
-        -   log.dirs=/var/lib/kafka/data/topics
-        - --override
-        -   auto.create.topics.enable=false
         resources:
           requests:
             cpu: 100m
