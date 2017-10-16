@@ -45,8 +45,9 @@ data:
     fi
 
     # get info about this message
-    kafkacat -Q -b $BOOTSTRAP -t test-basic-with-kafkacat:0:$LAST_TS || \
-      echo "At $(date +%FT%H:%M:%S.%3N) bootstrap broker might be down"
+    kafkacat -Q -b $BOOTSTRAP -t test-basic-with-kafkacat:0:$LAST_TS \
+      -X socket.timeout.ms=600 -X session.timeout.ms=300 -X request.timeout.ms=50 -X metadata.request.timeout.ms=600
+    [ $? -eq 0 ] || echo "At $(date +%FT%H:%M:%S.%3N) bootstrap broker(s) might be down"
     # but don't fail the test; producer and consumer should keep going if there are other brokers
 
     # We haven't asserted that the consumer works, so we'll just have to assume that it will exit if it fails
