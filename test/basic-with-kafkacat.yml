@@ -9,31 +9,21 @@ data:
   setup.sh: |-
     touch /tmp/testlog
 
-    touch /tmp/produce
-    tail -f /tmp/produce | kafkacat -P -b $BOOTSTRAP -t test-basic-with-kafkacat -v > /tmp/producer.out 2> /tmp/producer.err &
-
-    kafkacat -C -b $BOOTSTRAP -t test-basic-with-kafkacat -q -f '[%p,%o] %s\n' > /tmp/consumer.out 2> /tmp/consumer.err &
-
     tail -f /tmp/testlog
 
   test.sh: |-
     exec >> /tmp/testlog
     exec 2>&1
 
-    unique=$(date -Ins)
-    echo "Test $unique" >> /tmp/produce
-    sleep 1
-    LAST=$(tail -n 1 /tmp/consumer.out | tee -a /tmp/testlog)
+    LAST_TS=$(kafkacat -C -b $BOOTSTRAP -t test-basic-with-kafkacat -o -1 -f '%T\n' -c 1 -u)
+    NOW=$(date -u +%s%3N)
+    echo "$NOW ($(date +%FT%H:%M:%S.%3N)):"
+    echo "$LAST_TS"
+    echo "$((($NOW - $LAST_TS)/1000)) seconds old"
 
-    [ "$LAST" == *"$unique" ] || {
-      echo "Last message '$LAST' doesn't contain marker '$unique'"
-      #kafkacat -C -b $BOOTSTRAP -t test-basic-with-kafkacat -o -1 -e | grep $unique
-      #echo "Producer output:"
-      #cat /tmp/producer.out
-      #echo "Producer err:"
-      #cat /tmp/producer.err
-      #exit 1
-    }
+    #Q_TS=$(date -u +%s%3N)
+    Q_TS=$LAST_TS
+    kafkacat -Q -b $BOOTSTRAP -t test-basic-with-kafkacat:0:$Q_TS
 
     exit 0
 
@@ -90,6 +80,38 @@ spec:
         #test-use:
     spec:
       containers:
+      - name: producer
+        image: solsson/kafkacat@sha256:ebebf47061300b14a4b4c2e1e4303ab29f65e4b95d34af1b14bb8f7ec6da7cef
+        env:
+        - name: BOOTSTRAP
+          value: kafka-0.broker.kafka.svc.cluster.local:9092
+        command:
+        - /bin/bash
+        - -cex
+        - >
+          echo "--- start $HOSTNAME $(date --iso-8601='ns' -u) ---" >> /shared/produce.tmp;
+          tail -f /shared/produce.tmp |
+          kafkacat -P -b $BOOTSTRAP -t test-basic-with-kafkacat -v -T;
+        volumeMounts:
+        - name: config
+          mountPath: /test
+        - name: shared
+          mountPath: /shared
+      - name: consumer
+        image: solsson/kafkacat@sha256:ebebf47061300b14a4b4c2e1e4303ab29f65e4b95d34af1b14bb8f7ec6da7cef
+        env:
+        - name: BOOTSTRAP
+          value: kafka-0.broker.kafka.svc.cluster.local:9092
+        command:
+        - /bin/bash
+        - -cex
+        - >
+          kafkacat -C -b $BOOTSTRAP -t test-basic-with-kafkacat -o -1 -f '[%p,%o] %s\n' -u
+        volumeMounts:
+        - name: config
+          mountPath: /test
+        - name: shared
+          mountPath: /shared
       - name: testcase
         image: solsson/kafkacat@sha256:ebebf47061300b14a4b4c2e1e4303ab29f65e4b95d34af1b14bb8f7ec6da7cef
         env:
@@ -121,3 +143,5 @@ spec:
       - name: config
         configMap:
           name: test-basic-with-kafkacat
+      - name: shared
+        emptyDir: {}
