@@ -15,17 +15,17 @@ data:
     exec >> /tmp/testlog
     exec 2>&1
 
-    PRODUCE_WAIT=.1
+    PC_WAIT=.2
     MAX_AGE=5
 
     UNIQUE="${HOSTNAME}@$(date -u -Ins)"
 
     echo "Test $UNIQUE" >> /shared/produce.tmp
-    sleep $PRODUCE_WAIT
-    LAST=$(kafkacat -C -b $BOOTSTRAP -t test-basic-with-kafkacat -o -1 -f '%T= %s' -c 1 -u)
+    sleep $PC_WAIT
+    LAST=$(tail -n 1 /shared/consumed.tmp)
 
-    LAST_TS=$(echo $LAST | awk -F'= ' '{print $1}')
-    LAST_MSG=$(echo $LAST | awk -F'= ' '{print $2}')
+    LAST_TS=$(echo $LAST | awk -F';' '{print $1}')
+    LAST_MSG=$(echo $LAST | awk -F';' '{print $4}')
     NOW=$(date -u +%s%3N)
     DIFF_S=$((($NOW - $LAST_TS)/1000))
     DIFF_MS=$((($NOW - $LAST_TS)%1000))
@@ -45,7 +45,9 @@ data:
     fi
 
     # get info about this message
-    kafkacat -Q -b $BOOTSTRAP -t test-basic-with-kafkacat:0:$LAST_TS
+    kafkacat -Q -b $BOOTSTRAP -t test-basic-with-kafkacat:0:$LAST_TS || \
+      echo "At $(date +%FT%H:%M:%S.%3N) bootstrap broker might be down"
+    # but don't fail the test; producer and consumer should keep going if there are other brokers
 
     # We haven't asserted that the consumer works, so we'll just have to assume that it will exit if it fails
 
@@ -113,9 +115,11 @@ spec:
         - /bin/bash
         - -cex
         - >
-          echo "--- start $HOSTNAME $(date --iso-8601='ns' -u) ---" >> /shared/produce.tmp;
+          echo "--- start $HOSTNAME $(date --iso-8601='ns' -u) ---" >> /shared/produce.tmp
+          ;
           tail -f /shared/produce.tmp |
-          kafkacat -P -b $BOOTSTRAP -t test-basic-with-kafkacat -v -T -d broker;
+          kafkacat -P -b $BOOTSTRAP -t test-basic-with-kafkacat -v -T -d broker
+          ;
         volumeMounts:
         - name: config
           mountPath: /test
@@ -130,7 +134,9 @@ spec:
         - /bin/bash
         - -cex
         - >
-          kafkacat -C -b $BOOTSTRAP -t test-basic-with-kafkacat -o -1 -f '[%p,%o] %s\n' -u -d broker;
+          kafkacat -C -b $BOOTSTRAP -t test-basic-with-kafkacat -o -1 -f '%T;%p;%o;%s\n' -u -d broker |
+          tee /shared/consumed.tmp
+          ;
         volumeMounts:
         - name: config
           mountPath: /test
