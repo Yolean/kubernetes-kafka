@@ -15,15 +15,39 @@ data:
     exec >> /tmp/testlog
     exec 2>&1
 
-    LAST_TS=$(kafkacat -C -b $BOOTSTRAP -t test-basic-with-kafkacat -o -1 -f '%T\n' -c 1 -u)
-    NOW=$(date -u +%s%3N)
-    echo "$NOW ($(date +%FT%H:%M:%S.%3N)):"
-    echo "$LAST_TS"
-    echo "$((($NOW - $LAST_TS)/1000)) seconds old"
+    PRODUCE_WAIT=.1
+    MAX_AGE=5
 
-    #Q_TS=$(date -u +%s%3N)
-    Q_TS=$LAST_TS
-    kafkacat -Q -b $BOOTSTRAP -t test-basic-with-kafkacat:0:$Q_TS
+    UNIQUE="${HOSTNAME}@$(date -u -Ins)"
+
+    echo "Test $UNIQUE" >> /shared/produce.tmp
+    sleep $PRODUCE_WAIT
+    LAST=$(kafkacat -C -b $BOOTSTRAP -t test-basic-with-kafkacat -o -1 -f '%T= %s' -c 1 -u)
+
+    LAST_TS=$(echo $LAST | awk -F'= ' '{print $1}')
+    LAST_MSG=$(echo $LAST | awk -F'= ' '{print $2}')
+    NOW=$(date -u +%s%3N)
+    DIFF_S=$((($NOW - $LAST_TS)/1000))
+    DIFF_MS=$((($NOW - $LAST_TS)%1000))
+    #echo "$NOW ($(date +%FT%H:%M:%S.%3N)):"
+    #echo "$LAST_TS"
+
+    if [ $DIFF_S -gt $MAX_AGE ]; then
+      echo "Last message is $DIFF_S.$DIFF_MS old:"
+      echo "$LAST_MSG"
+      exit 10
+    fi
+
+    if [[ "$LAST_MSG" != *"$UNIQUE" ]]; then
+      echo "Last message (at $LAST_TS) isn't from this test run ($UNIQUE):"
+      echo "$LAST_MSG"
+      exit 11
+    fi
+
+    # get info about this message
+    kafkacat -Q -b $BOOTSTRAP -t test-basic-with-kafkacat:0:$LAST_TS
+
+    # We haven't asserted that the consumer works, so we'll just have to assume that it will exit if it fails
 
     exit 0
 
@@ -91,7 +115,7 @@ spec:
         - >
           echo "--- start $HOSTNAME $(date --iso-8601='ns' -u) ---" >> /shared/produce.tmp;
           tail -f /shared/produce.tmp |
-          kafkacat -P -b $BOOTSTRAP -t test-basic-with-kafkacat -v -T;
+          kafkacat -P -b $BOOTSTRAP -t test-basic-with-kafkacat -v -T -d broker;
         volumeMounts:
         - name: config
           mountPath: /test
@@ -106,7 +130,7 @@ spec:
         - /bin/bash
         - -cex
         - >
-          kafkacat -C -b $BOOTSTRAP -t test-basic-with-kafkacat -o -1 -f '[%p,%o] %s\n' -u
+          kafkacat -C -b $BOOTSTRAP -t test-basic-with-kafkacat -o -1 -f '[%p,%o] %s\n' -u -d broker;
         volumeMounts:
         - name: config
           mountPath: /test
@@ -116,7 +140,6 @@ spec:
         image: solsson/kafkacat@sha256:ebebf47061300b14a4b4c2e1e4303ab29f65e4b95d34af1b14bb8f7ec6da7cef
         env:
         - name: BOOTSTRAP
-          #value: kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
           value: kafka-0.broker.kafka.svc.cluster.local:9092
         command:
         - /bin/bash
@@ -139,6 +162,8 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /test
+        - name: shared
+          mountPath: /shared
       volumes:
       - name: config
         configMap:
