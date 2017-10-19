@@ -2,7 +2,7 @@
 kind: ConfigMap
 metadata:
   name: test-basic-with-kafkacat
-  namespace: default
+  namespace: test-kafka
 apiVersion: v1
 data:
 
@@ -64,7 +64,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: test-basic-with-kafkacat
-  namespace: default
+  namespace: test-kafka
 spec:
   template:
     spec:
@@ -89,7 +89,7 @@ apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
   name: test-basic-with-kafkacat
-  namespace: default
+  namespace: test-kafka
 spec:
   replicas: 1
   strategy:
