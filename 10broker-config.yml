@@ -252,10 +252,10 @@ data:
     whitelistObjectNames: ["kafka.server:*","java.lang:*"]
     rules:
       - pattern : kafka.server<type=ReplicaFetcherManager, name=MaxLag, clientId=(.+)><>Value
-      - pattern : kafka.server<type=BrokerTopicMetrics, name=(.+), topic=(.+)><>OneMinuteRate
+      - pattern : kafka.server<type=BrokerTopicMetrics, name=(BytesInPerSec|BytesOutPerSec|MessagesInPerSec), topic=(.+)><>OneMinuteRate
       - pattern : kafka.server<type=KafkaRequestHandlerPool, name=RequestHandlerAvgIdlePercent><>OneMinuteRate
       - pattern : kafka.server<type=Produce><>queue-size
-      - pattern : kafka.server<type=ReplicaManager, name=(.+)><>(Value|OneMinuteRate)
+      - pattern : kafka.server<type=ReplicaManager, name=(PartitionCount|UnderReplicatedPartitions)><>(Value|OneMinuteRate)
       - pattern : kafka.server<type=controller-channel-metrics, broker-id=(.+)><>(.*)
       - pattern : kafka.server<type=socket-server-metrics, networkProcessor=(.+)><>(.*)
       - pattern : kafka.server<type=Fetch><>queue-size
