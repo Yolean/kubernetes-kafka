@@ -22,6 +22,16 @@ data:
       else
         sed -i "s/#init#broker.rack=#init#/broker.rack=$ZONE/" /etc/kafka/server.properties
       fi
+
+      kubectl -n $POD_NAMESPACE label pod $POD_NAME kafka-broker-id=$KAFKA_BROKER_ID
+
+      OUTSIDE_HOST=$(kubectl get node "$NODE_NAME" -o jsonpath='{.status.addresses[?(@.type=="InternalIP")].address}')
+      if [ $? -ne 0 ]; then
+        echo "Outside (i.e. cluster-external access) host lookup command failed"
+      else
+        OUTSIDE_HOST=${OUTSIDE_HOST}:3240${KAFKA_BROKER_ID}
+        sed -i "s|#init#advertised.listeners=OUTSIDE://#init#|advertised.listeners=OUTSIDE://${OUTSIDE_HOST}|" /etc/kafka/server.properties
+      fi
     }
 
   server.properties: |-
@@ -61,14 +71,18 @@ data:
     #   EXAMPLE:
     #     listeners = PLAINTEXT://your.host.name:9092
     #listeners=PLAINTEXT://:9092
+    listeners=OUTSIDE://:9094,PLAINTEXT://:9092
 
     # Hostname and port the broker will advertise to producers and consumers. If not set,
     # it uses the value for "listeners" if configured.  Otherwise, it will use the value
     # returned from java.net.InetAddress.getCanonicalHostName().
     #advertised.listeners=PLAINTEXT://your.host.name:9092
+    #init#advertised.listeners=OUTSIDE://#init#,PLAINTEXT://:9092
 
     # Maps listener names to security protocols, the default is for them to be the same. See the config documentation for more details
     #listener.security.protocol.map=PLAINTEXT:PLAINTEXT,SSL:SSL,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL
+    listener.security.protocol.map=PLAINTEXT:PLAINTEXT,SSL:SSL,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL,OUTSIDE:PLAINTEXT
+    inter.broker.listener.name=PLAINTEXT
 
     # The number of threads that the server uses for receiving requests from the network and sending responses to the network
     num.network.threads=3
