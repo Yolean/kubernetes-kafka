@@ -1,34 +1,69 @@
 ---
 kind: ConfigMap
 metadata:
-  name: basic-with-kafkacat
+  name: test-basic-with-kafkacat
   namespace: test-kafka
 apiVersion: v1
 data:
 
   setup.sh: |-
     touch /tmp/testlog
+
     tail -f /tmp/testlog
 
-  continue.sh: |-
-    exit 0
-
-  run.sh: |-
+  test.sh: |-
     exec >> /tmp/testlog
     exec 2>&1
 
-    unique=$(date -Ins)
+    PC_WAIT=.2
+    MAX_AGE=5
 
-    echo "Test $unique" | kafkacat -P -b $BOOTSTRAP -t test-basic-with-kafkacat -v
-    kafkacat -C -b $BOOTSTRAP -t test-basic-with-kafkacat -o -1 -e | grep $unique
+    UNIQUE="${HOSTNAME}@$(date -u -Ins)"
+
+    echo "Test $UNIQUE" >> /shared/produce.tmp
+    sleep $PC_WAIT
+    LAST=$(tail -n 1 /shared/consumed.tmp)
+
+    LAST_TS=$(echo $LAST | awk -F';' '{print $1}')
+    LAST_MSG=$(echo $LAST | awk -F';' '{print $4}')
+    NOW=$(date -u +%s%3N)
+    DIFF_S=$((($NOW - $LAST_TS)/1000))
+    DIFF_MS=$((($NOW - $LAST_TS)%1000))
+    #echo "$NOW ($(date +%FT%H:%M:%S.%3N)):"
+    #echo "$LAST_TS"
+
+    if [ $DIFF_S -gt $MAX_AGE ]; then
+      echo "Last message is $DIFF_S.$DIFF_MS old:"
+      echo "$LAST_MSG"
+      exit 10
+    fi
+
+    if [[ "$LAST_MSG" != *"$UNIQUE" ]]; then
+      echo "Last message (at $LAST_TS) isn't from this test run ($UNIQUE):"
+      echo "$LAST_MSG"
+      exit 11
+    fi
+
+    # get info about this message
+    kafkacat -Q -b $BOOTSTRAP -t test-basic-with-kafkacat:0:$LAST_TS \
+      -X socket.timeout.ms=600 -X session.timeout.ms=300 -X request.timeout.ms=50 -X metadata.request.timeout.ms=600
+    [ $? -eq 0 ] || echo "At $(date +%FT%H:%M:%S.%3N) bootstrap broker(s) might be down"
+    # but don't fail the test; producer and consumer should keep going if there are other brokers
+
+    # We haven't asserted that the consumer works, so we'll just have to assume that it will exit if it fails
 
     exit 0
 
+  quit-on-nonzero-exit.sh: |-
+    exec >> /tmp/testlog
+    exec 2>&1
+
+    exit 0
 ---
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: basic-with-kafkacat
+  name: test-basic-with-kafkacat
   namespace: test-kafka
 spec:
   template:
@@ -53,51 +88,92 @@ spec:
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: basic-with-kafkacat
+  name: test-basic-with-kafkacat
   namespace: test-kafka
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
-        test-target: kafka
+        test-target: kube-test
         test-type: readiness
+        # for example:
+        # readonly - can be used in production
+        # isolated - read/write but in a manner that does not affect other services
+        # load - unsuitable for production because it uses significant resources
+        # chaos - unsuitable for production because it injects failure modes
+        #test-use:
     spec:
       containers:
-      - name: testcase
-        # common test images
-        #image: solsson/curl@sha256:8b0927b81d10043e70f3e05e33e36fb9b3b0cbfcbccdb9f04fd53f67a270b874
+      - name: producer
         image: solsson/kafkacat@sha256:ebebf47061300b14a4b4c2e1e4303ab29f65e4b95d34af1b14bb8f7ec6da7cef
-        #image: solsson/kubectl-kafkacat@sha256:3715a7ede3f168f677ee6faf311ff6887aff31f660cfeecad5d87b4f18516321
         env:
         - name: BOOTSTRAP
-          #value: kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
           value: kafka-0.broker.kafka.svc.cluster.local:9092
-        - name: ZOOKEEPER
-          value: zookeeper.kafka.svc.cluster.local:2181
-        # Test set up
+        command:
+        - /bin/bash
+        - -cex
+        - >
+          echo "--- start $HOSTNAME $(date --iso-8601='ns' -u) ---" >> /shared/produce.tmp
+          ;
+          tail -f /shared/produce.tmp |
+          kafkacat -P -b $BOOTSTRAP -t test-basic-with-kafkacat -v -T -d broker
+          ;
+        volumeMounts:
+        - name: config
+          mountPath: /test
+        - name: shared
+          mountPath: /shared
+      - name: consumer
+        image: solsson/kafkacat@sha256:ebebf47061300b14a4b4c2e1e4303ab29f65e4b95d34af1b14bb8f7ec6da7cef
+        env:
+        - name: BOOTSTRAP
+          value: kafka-0.broker.kafka.svc.cluster.local:9092
+        command:
+        - /bin/bash
+        - -cex
+        - >
+          kafkacat -C -b $BOOTSTRAP -t test-basic-with-kafkacat -o -1 -f '%T;%p;%o;%s\n' -u -d broker |
+          tee /shared/consumed.tmp
+          ;
+        volumeMounts:
+        - name: config
+          mountPath: /test
+        - name: shared
+          mountPath: /shared
+      - name: testcase
+        image: solsson/kafkacat@sha256:ebebf47061300b14a4b4c2e1e4303ab29f65e4b95d34af1b14bb8f7ec6da7cef
+        env:
+        - name: BOOTSTRAP
+          value: kafka-0.broker.kafka.svc.cluster.local:9092
         command:
         - /bin/bash
         - -e
         - /test/setup.sh
-        # Test run, again and again
         readinessProbe:
           exec:
             command:
             - /bin/bash
             - -e
-            - /test/run.sh
-        # Test quit on nonzero exit
+            - /test/test.sh
+          initialDelaySeconds: 10
+          periodSeconds: 10
         livenessProbe:
           exec:
             command:
             - /bin/bash
             - -e
-            - /test/continue.sh
+            - /test/quit-on-nonzero-exit.sh
         volumeMounts:
         - name: config
           mountPath: /test
+        - name: shared
+          mountPath: /shared
       volumes:
       - name: config
         configMap:
-          name: basic-with-kafkacat
+          name: test-basic-with-kafkacat
+      - name: shared
+        emptyDir: {}
