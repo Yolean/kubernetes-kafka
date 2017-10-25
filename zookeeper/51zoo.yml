@@ -16,6 +16,8 @@ spec:
         app: zookeeper
         storage: ephemeral
       annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "5556"
     spec:
       terminationGracePeriodSeconds: 10
       initContainers:
@@ -36,6 +38,8 @@ spec:
         env:
         - name: KAFKA_LOG4J_OPTS
           value: -Dlog4j.configuration=file:/etc/kafka/log4j.properties
+        - name: JMX_PORT
+          value: "5555"
         command:
         - ./bin/zookeeper-server-start.sh
         - /etc/kafka/zookeeper.properties
@@ -67,6 +71,27 @@ spec:
           mountPath: /etc/kafka
         - name: data
           mountPath: /var/lib/zookeeper/data
+      - name: metrics
+        image: solsson/kafka-prometheus-jmx-exporter@sha256:348b0f6510b08dff70ba468a16d25dc8def480fe79aca0e3c76f098d67b108a3
+        command:
+        - java
+        - -Xmx64M
+        - -XX:MaxMetaspaceSize=32m
+        - -jar
+        - jmx_prometheus_httpserver.jar
+        - "5556"
+        - /etc/kafka/jmx-zookeeper-prometheus.yaml
+        ports:
+        - containerPort: 5556
+        resources:
+          requests:
+            cpu: 0m
+            memory: 100Mi
+          limits:
+            memory: 150Mi
+        volumeMounts:
+        - name: config
+          mountPath: /etc/kafka
       volumes:
       - name: config
         configMap:
