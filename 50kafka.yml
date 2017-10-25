@@ -77,10 +77,9 @@ spec:
   volumeClaimTemplates:
   - metadata:
       name: data
-      annotations:
-        volume.beta.kubernetes.io/storage-class: kafka-broker
     spec:
       accessModes: [ "ReadWriteOnce" ]
+      storageClassName: kafka-broker
       resources:
         requests:
           storage: 200Gi

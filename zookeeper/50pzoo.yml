@@ -61,10 +61,9 @@ spec:
   volumeClaimTemplates:
   - metadata:
       name: data
-      annotations:
-        volume.beta.kubernetes.io/storage-class: kafka-zookeeper
     spec:
       accessModes: [ "ReadWriteOnce" ]
+      storageClassName: kafka-zookeeper
       resources:
         requests:
           storage: 1Gi
