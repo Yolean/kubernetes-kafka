@@ -31,7 +31,7 @@ Zookeeper at `zookeeper.kafka.svc.cluster.local:2181`.
 
 For Minikube run `kubectl create -f configure-minikube/`.
 
-There's a similar setup for GKE, in `configure-gke` of course. You might want to tweak it before creating.
+There's a similar setup for GKE, `configure/gke-*`. You might want to tweak it before creating.
 
 ## Start Zookeeper
 
