@@ -85,7 +85,7 @@ spec:
         -   "2"
       restartPolicy: Never
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
   name: test-basic-with-kafkacat
@@ -94,10 +94,14 @@ spec:
   replicas: 1
   strategy:
     type: Recreate
+  selector:
+    matchLabels:
+      test-target: kafka
+      test-type: readiness
   template:
     metadata:
       labels:
-        test-target: kube-test
+        test-target: kafka
         test-type: readiness
         # for example:
         # readonly - can be used in production
