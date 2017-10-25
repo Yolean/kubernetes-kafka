@@ -1,9 +1,14 @@
-apiVersion: apps/v1beta1
+apiVersion: apps/v1beta2
 kind: StatefulSet
 metadata:
   name: pzoo
   namespace: kafka
 spec:
+spec:
+  selector:
+    matchLabels:
+      app: zookeeper
+      storage: persistent
   serviceName: "pzoo"
   replicas: 3
   template:

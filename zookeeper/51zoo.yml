@@ -1,9 +1,13 @@
-apiVersion: apps/v1beta1
+apiVersion: apps/v1beta2
 kind: StatefulSet
 metadata:
   name: zoo
   namespace: kafka
 spec:
+  selector:
+    matchLabels:
+      app: zookeeper
+      storage: ephemeral
   serviceName: "zoo"
   replicas: 2
   template:
