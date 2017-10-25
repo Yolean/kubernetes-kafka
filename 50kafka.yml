@@ -48,8 +48,10 @@ spec:
         - name: JMX_PORT
           value: "5555"
         ports:
-        - containerPort: 9092
-        - containerPort: 9094
+        - name: inside
+          containerPort: 9092
+        - name: outside
+          containerPort: 9094
         command:
         - ./bin/kafka-server-start.sh
         - /etc/kafka/server.properties
