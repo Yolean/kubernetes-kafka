@@ -38,13 +38,17 @@ data:
     exit 0
 
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
   name: basic-produce-consume
   namespace: test-kafka
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      test-target: kafka
+      test-type: readiness
   template:
     metadata:
       labels:
