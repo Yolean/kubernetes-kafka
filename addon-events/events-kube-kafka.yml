@@ -30,8 +30,6 @@ spec:
         - /bin/bash
         - -ec
         - >
-          echo "Started at $(date -u +%FT%TZ) producing to $TOPIC"
-          ;
           curl
           -f
           -s
