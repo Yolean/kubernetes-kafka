@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: kafkacat-curl
-        image: solsson/kafkacat-curl@sha256:26b81296ba1d2c6b2cbce81c644b3b780ab5beab57bebbbb11f0d0a99e2d0d2b
+        image: solsson/kafkacat-curl@sha256:6ad61f2e6343359c3972d7a86815568c0a1d0560068134c5d702a152eb5123a0
         command:
         - /bin/bash
         - -ec
