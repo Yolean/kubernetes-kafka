@@ -28,7 +28,7 @@ spec:
           value: ops-kube-events-all-json-001
         command:
         - /bin/bash
-        - -ec
+        - -c
           # curl errors will go to kafka, kafkacat errors will got to log
         - >
           echo "Started at $(date -u +%FT%TZ) producing to $TOPIC"
@@ -46,3 +46,13 @@ spec:
           -z snappy
           -v
           -d broker,topic
+          ;
+          echo "Last message on topic:"
+          ;
+          kafkacat
+          -b $BOOTSTRAP
+          -t $TOPIC
+          -C
+          -o -1
+          -c 1
+          -z snappy
