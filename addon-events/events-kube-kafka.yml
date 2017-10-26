@@ -21,10 +21,18 @@ spec:
       containers:
       - name: kafkacat-curl
         image: solsson/kafkacat-curl@sha256:6ad61f2e6343359c3972d7a86815568c0a1d0560068134c5d702a152eb5123a0
+        env:
+        - name: BOOTSTRAP
+          value: kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
+        - name: TOPIC
+          value: ops-kube-events-all-json-001
         command:
         - /bin/bash
         - -ec
+          # curl errors will go to kafka, kafkacat errors will got to log
         - >
+          echo "Started at $(date -u +%FT%TZ) producing to $TOPIC"
+          ;
           curl
           -s
           --cacert /run/secrets/kubernetes.io/serviceaccount/ca.crt
@@ -32,7 +40,9 @@ spec:
           https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT/api/v1/watch/events
           |
           kafkacat
-          -b kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
-          -t ops-kube-events-all-json-001
+          -b $BOOTSTRAP
+          -t $TOPIC
           -P
           -z snappy
+          -v
+          -d broker,topic
