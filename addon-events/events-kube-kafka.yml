@@ -28,12 +28,12 @@ spec:
           value: ops-kube-events-all-json-001
         command:
         - /bin/bash
-        - -c
-          # curl errors will go to kafka, kafkacat errors will got to log
+        - -ec
         - >
           echo "Started at $(date -u +%FT%TZ) producing to $TOPIC"
           ;
           curl
+          -f
           -s
           --cacert /run/secrets/kubernetes.io/serviceaccount/ca.crt
           --header "Authorization: Bearer $(cat /run/secrets/kubernetes.io/serviceaccount/token)"
@@ -46,13 +46,3 @@ spec:
           -z snappy
           -v
           -d broker,topic
-          ;
-          echo "Last message on topic:"
-          ;
-          kafkacat
-          -b $BOOTSTRAP
-          -t $TOPIC
-          -C
-          -o -1
-          -c 1
-          -z snappy
