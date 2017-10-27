@@ -15,10 +15,10 @@ data:
     exec >> /tmp/testlog
     exec 2>&1
 
-    PREVIOUS=$(sha1sum /tmp/event || echo "")
+    PREVIOUS=$(sha1sum /tmp/event 2>/dev/null || echo "")
     kafkacat -b $BOOTSTRAP -t $TOPIC -C -o -1 -c 1 | tee /tmp/event
     CURRENT=$(sha1sum /tmp/event)
-    [ "$PREVIOUS" == "$CURRENT" ] && echo "{\"test-status\”: \"No new event in $TOPIC\"}" && exit 1
+    [ "$PREVIOUS" == "$CURRENT" ] && echo "{\"test-result\": \"No new event in $TOPIC\"}" && exit 1
 
     exit 0
 
