@@ -73,7 +73,7 @@ spec:
             - -e
             - /test/test.sh
           initialDelaySeconds: 10
-          periodSeconds: 10
+          periodSeconds: 60
         livenessProbe:
           exec:
             command:
