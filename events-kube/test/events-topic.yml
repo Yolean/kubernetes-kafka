@@ -1,10 +1,13 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
   name: events-topic
   namespace: test-kafka
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      test-target: events-topic
   template:
     metadata:
       labels:

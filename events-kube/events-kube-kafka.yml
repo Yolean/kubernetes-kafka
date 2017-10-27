@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: extensions/v1beta2
 kind: Deployment
 metadata:
   name: events-kube-kafka
@@ -11,6 +11,11 @@ spec:
       # prefer duplicate events over missed
       maxUnavailable: 0
       maxSurge: 1
+  selector:
+    matchLabels:
+      app: events
+      from: kube
+      to: kafka
   template:
     metadata:
       labels:
