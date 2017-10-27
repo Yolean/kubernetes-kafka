@@ -1,3 +1,34 @@
+---
+kind: ConfigMap
+metadata:
+  name: events-topic
+  namespace: test-kafka
+apiVersion: v1
+data:
+
+  setup.sh: |-
+    touch /tmp/testlog
+
+    tail -f /tmp/testlog
+
+  test.sh: |-
+    exec >> /tmp/testlog
+    exec 2>&1
+
+    PREVIOUS=$(sha1sum /tmp/event || echo "")
+    kafkacat -b $BOOTSTRAP -t $TOPIC -C -o -1 -c 1 | tee /tmp/event
+    CURRENT=$(sha1sum /tmp/event)
+    [ "$PREVIOUS" == "$CURRENT" ] && echo "{\"test-status\”: \"No new event in $TOPIC\"}" && exit 1
+
+    exit 0
+
+  quit-on-nonzero-exit.sh: |-
+    exec >> /tmp/testlog
+    exec 2>&1
+
+    exit 0
+
+---
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
@@ -5,23 +36,54 @@ metadata:
   namespace: test-kafka
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       test-target: events-topic
+      test-type: readiness
   template:
     metadata:
       labels:
         test-target: events-topic
-        # Would be a valid testcase if it verifies that >0 messages per some time unit have been produced
-        #test-type: readiness
+        test-type: readiness
+        # for example:
+        # readonly - can be used in production
+        # isolated - read/write but in a manner that does not affect other services
+        # load - unsuitable for production because it uses significant resources
+        # chaos - unsuitable for production because it injects failure modes
+        #test-use:
     spec:
       containers:
-      - name: kafkacat
-        image: solsson/kafkacat@sha256:36d1f191cc33a8365074280279205e6b4f52cd8cc8fb1b896bb4c943c9dee8f8
+      - name: testcase
+        image: solsson/kafkacat@sha256:ebebf47061300b14a4b4c2e1e4303ab29f65e4b95d34af1b14bb8f7ec6da7cef
+        env:
+        - name: BOOTSTRAP
+          value: kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
+        - name: TOPIC
+          value: ops-kube-events-all-json-001
         command:
-        - kafkacat
-        - -b
-        - kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
-        - -t
-        - ops-kube-events-all-json-001
-        - -C
+        - /bin/bash
+        - -e
+        - /test/setup.sh
+        readinessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -e
+            - /test/test.sh
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        livenessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -e
+            - /test/quit-on-nonzero-exit.sh
+        volumeMounts:
+        - name: config
+          mountPath: /test
+      volumes:
+      - name: config
+        configMap:
+          name: events-topic
