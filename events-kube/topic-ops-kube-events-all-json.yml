@@ -27,6 +27,6 @@ spec:
         - --replication-factor
         - "1"
         - --config
-        # this might be eight days
-        - retention.ms=69125000
+        # 8 days
+        - retention.ms=691200000  
       restartPolicy: Never
