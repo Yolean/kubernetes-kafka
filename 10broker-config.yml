@@ -49,9 +49,6 @@ data:
 
     #init#broker.rack=#init#
 
-    # Switch to enable topic deletion or not, default value is false
-    delete.topic.enable=true
-
     ############################# Socket Server Settings #############################
 
     # The address the socket server listens on. It will get the value returned from

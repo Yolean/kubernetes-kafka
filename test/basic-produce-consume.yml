@@ -53,7 +53,7 @@ spec:
     spec:
       containers:
       - name: testcase
-        image: solsson/kafka:0.11.0.1@sha256:1b6b25ea30a93d0d9dc69eb4531d7246d72df4015bbb5baa5bb551a77011bed5
+        image: solsson/kafka:1.0.0@sha256:17fdf1637426f45c93c65826670542e36b9f3394ede1cb61885c6a4befa8f72d
         env:
         - name: BOOTSTRAP
           value: kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
