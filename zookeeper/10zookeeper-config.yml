@@ -37,6 +37,10 @@ data:
     log4j.logger.org.apache.zookeeper.server.NIOServerCnxn=WARN
 
   jmx-zookeeper-prometheus.yaml: |+
+    lowercaseOutputName: true
+    jmxUrl: service:jmx:rmi:///jndi/rmi://localhost:5555/jmxrmi
+    ssl: false
+    whitelistObjectNames: ["org.apache.ZooKeeperService:*","java.lang:*"]
     rules:
     - pattern: "org.apache.ZooKeeperService<name0=ReplicatedServer_id(\\d)><>(\\w+)"
       name: "zookeeper_$2"
@@ -54,3 +58,6 @@ data:
       labels:
         replicaId: "$2"
         memberType: "$3"
+    - pattern : java.lang<type=OperatingSystem><>SystemCpuLoad
+    - pattern : java.lang<type=Memory><HeapMemoryUsage>used
+    - pattern : java.lang<type=OperatingSystem><>FreePhysicalMemorySize
