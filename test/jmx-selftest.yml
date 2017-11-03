@@ -1,5 +1,8 @@
 # Sets up a pod that monitors itself, to test resource usage etc.
-# kubectl exec -n test-kafka jmx-selftest-... -- /bin/sh -c 'apk add --no-cache curl && curl http://localhost:5556/metrics'
+# testpod=$(kubectl -n test-kafka get pods -l test-target=jmx-exporter -o=jsonpath={.items[*].metadata.name})
+# kubectl exec -n test-kafka $testpod -- apt-get update
+# kubectl exec -n test-kafka $testpod -- apt-get install -y --no-install-recommends curl
+# kubectl exec -n test-kafka $testpod -- curl http://localhost:5556/metrics
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
