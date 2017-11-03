@@ -72,8 +72,7 @@ spec:
         env:
         - name: BOOTSTRAP
           #value: kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
-          #value: kafka-0.broker.kafka.svc.cluster.local:9092
-          value: bootstrap.kafka.svc.cluster.local:9092
+          value: kafka-0.broker.kafka.svc.cluster.local:9092
         - name: ZOOKEEPER
           value: zookeeper.kafka.svc.cluster.local:2181
         # Test set up
