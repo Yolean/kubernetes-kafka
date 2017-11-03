@@ -59,7 +59,7 @@ spec:
         - name: data
           mountPath: /var/lib/zookeeper/data
       - name: metrics
-        image: solsson/kafka-prometheus-jmx-exporter@sha256:348b0f6510b08dff70ba468a16d25dc8def480fe79aca0e3c76f098d67b108a3
+        image: solsson/kafka-prometheus-jmx-exporter@sha256:40a6ab24ccac0ed5acb8c02dccfbb1f5924fd97f46c0450e0245686c24138b53
         command:
         - java
         - -Xmx64M
