@@ -96,7 +96,9 @@ spec:
           httpGet:
             path: /liveness
             port: 5556
-          periodSeconds: 60
+          timeoutSeconds: 60
+          initialDelaySeconds: 120
+          periodSeconds: 300
         resources:
           requests:
             cpu: 0m
