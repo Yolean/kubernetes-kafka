@@ -26,7 +26,7 @@ spec:
         - -c
         - /etc/filebeat/filebeat.yml
         - -d
-        - "service,beat,kubernetes"
+        - "service,beat"
         env:
         - name: TOPIC
           value: ops-kube-logs-filebeat-001
