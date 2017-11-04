@@ -51,11 +51,12 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 5
         resources:
-          limits:
-            memory: 100Mi
           requests:
-            cpu: 100m
-            memory: 100Mi
+            cpu: 2m
+            memory: 4Mi
+          limits:
+            cpu: 10m
+            memory: 4Mi
         volumeMounts:
         - name: varlog
           mountPath: /var/log
