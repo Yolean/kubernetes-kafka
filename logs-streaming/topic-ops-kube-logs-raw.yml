@@ -25,8 +25,7 @@ spec:
         - --partitions
         - "1"
         - --replication-factor
-        - "1"
+        - "2"
         - --config
-        # this might be eight days
-        - retention.ms=69125000
+        - retention.ms=6912500000
       restartPolicy: Never
