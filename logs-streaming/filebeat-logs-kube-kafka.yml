@@ -54,7 +54,7 @@ spec:
           name: filebeat-config
       - name: data
         hostPath:
-          path: /kubernets-filebeat-state
+          path: /tmp/kubernets-filebeat-state
       - name: varlog
         hostPath:
           path: /var/log
