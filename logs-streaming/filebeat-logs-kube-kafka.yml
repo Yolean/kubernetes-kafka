@@ -16,6 +16,7 @@ spec:
         version: v1
         kubernetes.io/cluster-service: "true"
     spec:
+      serviceAccountName: filebeat
       containers:
       - name: filebeat
         image: solsson/kafka-filebeat-kubernetes@sha256:c2a68766e718d354b565b20f92baf0f50047b4bdf90a5055a20107a1131bee80
