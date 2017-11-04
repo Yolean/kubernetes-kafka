@@ -11,14 +11,16 @@ data:
 
     tail -f /tmp/testlog
 
-  continue.sh: |-
+  test.sh: |-
+    exec >> /tmp/testlog
+    exec 2>&1
 
-    echo "{\"#---\":\"$(date -u --iso-8601='ns')\"}" >> /tmp/testlog
-    kafkacat -b $BOOTSTRAP -C -t $TOPIC -f '{"#topic":"%t","#partition":%p,"#offset":%o,"#key":"%k","=":%s}\n' -o -10 -e >> /tmp/testlog
+    echo "{\"#---\":\"$(date -u --iso-8601='ns')\"}"
+    kafkacat -b $BOOTSTRAP -C -t $TOPIC -f '{"#topic":"%t","#partition":%p,"#offset":%o,"#key":"%k","=":%s}\n' -o -10 -e
 
     exit 0
 
-  run.sh: |-
+  quit-on-nonzero-exit.sh: |-
     exit 0
 
 ---
@@ -43,25 +45,22 @@ spec:
           value: kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
         - name: TOPIC
           value: ops-kube-logs-raw-001
-        # Test set up
         command:
         - /bin/bash
         - -e
         - /test/setup.sh
-        # Test run, again and again
         readinessProbe:
           exec:
             command:
             - /bin/bash
             - -e
-            - /test/run.sh
-        # Test quit on nonzero exit
+            - /test/test.sh
         livenessProbe:
           exec:
             command:
             - /bin/bash
             - -e
-            - /test/continue.sh
+            - /test/quit-on-nonzero-exit.sh
         volumeMounts:
         - name: config
           mountPath: /test
