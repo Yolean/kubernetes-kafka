@@ -33,7 +33,9 @@ spec:
           -b kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
           -t ops-kube-logs-raw-001
           -P
-          #-z snappy
+          -z snappy
+          -v
+          -d broker,topic
         resources:
           limits:
             memory: 100Mi
