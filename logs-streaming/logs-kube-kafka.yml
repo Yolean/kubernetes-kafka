@@ -1,9 +1,14 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1beta2
 kind: DaemonSet
 metadata:
   name: logs-kafka
   namespace: kafka
 spec:
+  selector:
+    matchLabels:
+      k8s-app: logs-kafka
+      version: v1
+      kubernetes.io/cluster-service: "true"
   template:
     metadata:
       labels:
