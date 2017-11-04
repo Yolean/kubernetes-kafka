@@ -43,7 +43,7 @@ spec:
             - /bin/sh
             - -c
             - find /var/log/containers/ -maxdepth 1 -name *.log | diff - /tmp/start-list
-          initialDelaySeconds: 5
+          initialDelaySeconds: 15
           periodSeconds: 5
         resources:
           limits:
