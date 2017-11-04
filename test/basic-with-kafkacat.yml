@@ -10,9 +10,6 @@ data:
     touch /tmp/testlog
     tail -f /tmp/testlog
 
-  continue.sh: |-
-    exit 0
-
   run.sh: |-
     exec >> /tmp/testlog
     exec 2>&1
@@ -22,6 +19,9 @@ data:
     echo "Test $unique" | kafkacat -P -b $BOOTSTRAP -t test-basic-with-kafkacat -v
     kafkacat -C -b $BOOTSTRAP -t test-basic-with-kafkacat -o -1 -e | grep $unique
 
+    exit 0
+
+  continue.sh: |-
     exit 0
 
 ---
