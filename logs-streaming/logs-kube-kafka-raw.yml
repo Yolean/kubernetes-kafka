@@ -1,18 +1,22 @@
 apiVersion: apps/v1beta2
 kind: DaemonSet
 metadata:
-  name: logs-kafka
+  name: logs-kafka-raw
   namespace: kafka
 spec:
   selector:
     matchLabels:
       k8s-app: logs-kafka
+      log-wrapping: none
+      container-delimiters: tail
       version: v1
       kubernetes.io/cluster-service: "true"
   template:
     metadata:
       labels:
         k8s-app: logs-kafka
+        log-wrapping: none
+        container-delimiters: tail
         version: v1
         kubernetes.io/cluster-service: "true"
     spec:
@@ -43,7 +47,8 @@ spec:
             - /bin/sh
             - -c
             - find /var/log/containers/ -maxdepth 1 -name *.log | diff - /tmp/start-list
-          initialDelaySeconds: 15
+          failureThreshold: 1
+          initialDelaySeconds: 25
           periodSeconds: 5
         resources:
           limits:

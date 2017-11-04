@@ -1,7 +1,7 @@
 ---
 kind: ConfigMap
 metadata:
-  name: test-logs-aggregated
+  name: logs-raw
   namespace: test-kafka
 apiVersion: v1
 data:
@@ -28,18 +28,18 @@ data:
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: test-logs-aggregated
+  name: logs-raw
   namespace: test-kafka
 spec:
   replicas: 1
   selector:
     matchLabels:
-      test-target: logs-streaming
+      test-target: logs-streaming-raw
       test-type: readiness
   template:
     metadata:
       labels:
-        test-target: logs-streaming
+        test-target: logs-streaming-raw
         test-type: readiness
     spec:
       containers:
@@ -72,4 +72,4 @@ spec:
       volumes:
       - name: config
         configMap:
-          name: test-logs-aggregated
+          name: logs-raw
