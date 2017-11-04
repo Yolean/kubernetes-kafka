@@ -15,8 +15,9 @@ data:
     exec >> /tmp/testlog
     exec 2>&1
 
+    echo ""
     echo "{\"#---\":\"$(date -u --iso-8601='ns')\"}"
-    kafkacat -b $BOOTSTRAP -C -t $TOPIC -f '%t@%p [%o] %k: %s\n' -o -10 -e
+    kafkacat -b $BOOTSTRAP -C -t $TOPIC -f '\n%t@%p [%o] %k: %s\n' -o -10 -e
 
     exit 0
 
