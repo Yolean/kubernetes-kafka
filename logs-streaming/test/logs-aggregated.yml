@@ -24,17 +24,21 @@ data:
     exit 0
 
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
   name: test-logs-aggregated
   namespace: test-kafka
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      test-target: logs-streaming
+      test-type: readiness
   template:
     metadata:
       labels:
-        test-target: kafka
+        test-target: logs-streaming
         test-type: readiness
     spec:
       containers:
