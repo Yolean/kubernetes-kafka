@@ -37,20 +37,8 @@ data:
     log4j.logger.org.apache.zookeeper.server.NIOServerCnxn=WARN
 
   jmx-zookeeper-prometheus.yaml: |+
-    rules:
-    - pattern: "org.apache.ZooKeeperService<name0=ReplicatedServer_id(\\d)><>(\\w+)"
-      name: "zookeeper_$2"
-    - pattern: "org.apache.ZooKeeperService<name0=ReplicatedServer_id(\\d), name1=replica.(\\d)><>(\\w+)"
-      name: "zookeeper_$3"
-      labels:
-        replicaId: "$2"
-    - pattern: "org.apache.ZooKeeperService<name0=ReplicatedServer_id(\\d), name1=replica.(\\d), name2=(\\w+)><>(\\w+)"
-      name: "zookeeper_$4"
-      labels:
-        replicaId: "$2"
-        memberType: "$3"
-    - pattern: "org.apache.ZooKeeperService<name0=ReplicatedServer_id(\\d), name1=replica.(\\d), name2=(\\w+), name3=(\\w+)><>(\\w+)"
-      name: "zookeeper_$4_$5"
-      labels:
-        replicaId: "$2"
-        memberType: "$3"
+    startDelaySeconds: 0
+    jmxUrl: service:jmx:rmi:///jndi/rmi://127.0.0.1:5555/jmxrmi
+    ssl: false
+    lowercaseOutputName: false
+    lowercaseOutputLabelNames: false
