@@ -2,7 +2,7 @@ apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
   name: logs-kafka
-  namespace: kube-system
+  namespace: kafka
 spec:
   template:
     metadata:
