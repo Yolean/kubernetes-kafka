@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: kafkacat
-        image: solsson/kafkacat@sha256:36d1f191cc33a8365074280279205e6b4f52cd8cc8fb1b896bb4c943c9dee8f8
+        image: solsson/kafkacat@sha256:ebebf47061300b14a4b4c2e1e4303ab29f65e4b95d34af1b14bb8f7ec6da7cef
         command:
         - sh
         - -ec
