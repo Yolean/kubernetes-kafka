@@ -11,6 +11,7 @@ data:
       enabled: true
       paths:
         - /var/log/containers/*.log
+      # Logs say a lot of https://github.com/elastic/beats/blob/v6.0.0-rc2/filebeat/prospector/log/prospector.go#L250
       symlinks: true
       # reduce the risk for aggregation recursion: match pod names to exclude own's logs + test logs
       exclude_files: ['^(.*\/)?logs-','^(.*\/)?test-']
