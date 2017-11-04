@@ -23,6 +23,7 @@ spec:
         - sh
         - -ec
         - >
+          find /var/log/containers/ -maxdepth 1 -name *.log | tee /tmp/start-list;
           cd /var/log/containers/;
           tail
           -n 0
@@ -36,6 +37,14 @@ spec:
           -z snappy
           -v
           -d broker,topic
+        livenessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - find /var/log/containers/ -maxdepth 1 -name *.log | diff - /tmp/start-list
+          initialDelaySeconds: 5
+          periodSeconds: 5
         resources:
           limits:
             memory: 100Mi
