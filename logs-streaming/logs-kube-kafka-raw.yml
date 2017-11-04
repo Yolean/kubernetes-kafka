@@ -27,7 +27,7 @@ spec:
         - sh
         - -ec
         - >
-          find /var/log/containers/ -maxdepth 1 -name *.log | tee /tmp/start-list;
+          find /var/log/containers/ -maxdepth 1 -name *.log | grep -v "/$HOSTNAME" | tee /tmp/start-list;
           cd /var/log/containers/;
           tail
           -n 0
@@ -46,9 +46,9 @@ spec:
             command:
             - /bin/sh
             - -c
-            - find /var/log/containers/ -maxdepth 1 -name *.log | diff - /tmp/start-list
+            - find /var/log/containers/ -maxdepth 1 -name *.log | grep -v "/$HOSTNAME" | diff - /tmp/start-list
           failureThreshold: 1
-          initialDelaySeconds: 25
+          initialDelaySeconds: 5
           periodSeconds: 5
         resources:
           limits:
