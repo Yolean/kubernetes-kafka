@@ -31,11 +31,12 @@ spec:
         - name: TOPIC
           value: ops-kube-logs-filebeat-001
         resources:
-          limits:
-            memory: 100Mi
           requests:
-            cpu: 100m
-            memory: 100Mi
+            cpu: 2m
+            memory: 10Mi
+          limits:
+            cpu: 10m
+            memory: 20Mi
         volumeMounts:
         - name: config
           mountPath: /etc/filebeat
