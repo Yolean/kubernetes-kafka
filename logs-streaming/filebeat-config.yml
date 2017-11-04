@@ -13,7 +13,7 @@ data:
         - /var/lib/docker/containers/*/*.log
       symlinks: true
       # reduce the risk for aggregation recursion: match pod names to exclude own's logs + test logs
-      exclude_files: ['^(.*\/)?logs-','^(.*\/)?test-']
+      exclude_files: ['^(.*\/)?logs-','^(.*\/)?filebeat-','^(.*\/)?test-']
 
     processors:
     - add_kubernetes_metadata:
