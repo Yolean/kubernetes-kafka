@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: filebeat
-        image: solsson/kafka-filebeat-kubernetes@sha256:79b40d81b892ffb3b917eb249f4b3050badf57fadffbdc35272060c9b377209e
+        image: solsson/kafka-filebeat-kubernetes@sha256:c2a68766e718d354b565b20f92baf0f50047b4bdf90a5055a20107a1131bee80
         command:
         - filebeat
         - -e
