@@ -23,7 +23,6 @@ data:
     kafkacat -C -b $BOOTSTRAP -t test-basic-with-kafkacat -o -1 -e | grep $unique
 
     exit 0
-
 ---
 apiVersion: batch/v1
 kind: Job
@@ -47,7 +46,7 @@ spec:
         - --partitions
         -   "1"
         - --replication-factor
-        -   "1"
+        -   "2"
       restartPolicy: Never
 ---
 apiVersion: apps/v1beta1
