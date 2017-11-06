@@ -20,6 +20,8 @@ spec:
         version: v1
         kubernetes.io/cluster-service: "true"
     spec:
+      # maybe the /bin/sh does not forward signals?
+      terminationGracePeriodSeconds: 5
       containers:
       - name: kafkacat
         image: solsson/kafkacat@sha256:ebebf47061300b14a4b4c2e1e4303ab29f65e4b95d34af1b14bb8f7ec6da7cef
