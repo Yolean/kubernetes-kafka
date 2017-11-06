@@ -24,7 +24,12 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: kafkacat
-        image: solsson/kafkacat@sha256:ebebf47061300b14a4b4c2e1e4303ab29f65e4b95d34af1b14bb8f7ec6da7cef
+        image: solsson/kafkacat-fixedkey@sha256:c9c78aef3090519b64ecc279c06df6914c94720a27469200c079f1871b10fa8f
+        env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
         command:
         - sh
         - -ec
@@ -43,6 +48,7 @@ spec:
           -z snappy
           -v
           -d broker,topic
+          -F $NODE_NAME
         livenessProbe:
           exec:
             command:
