@@ -20,7 +20,7 @@ data:
 
     UNIQUE="${HOSTNAME}@$(date -u -Ins)"
 
-    echo "Test $UNIQUE" >> /shared/produce.tmp
+    echo "${UNIQUE: -41:5}:Test $UNIQUE" >> /shared/produce.tmp
     sleep $PC_WAIT
     LAST=$(tail -n 1 /shared/consumed.tmp)
 
@@ -112,7 +112,7 @@ spec:
     spec:
       containers:
       - name: producer
-        image: solsson/kafkacat@sha256:ebebf47061300b14a4b4c2e1e4303ab29f65e4b95d34af1b14bb8f7ec6da7cef
+        image: solsson/kafkacat-fixedkey@sha256:c9c78aef3090519b64ecc279c06df6914c94720a27469200c079f1871b10fa8f
         env:
         - name: BOOTSTRAP
           value: kafka-0.broker.kafka.svc.cluster.local:9092
@@ -123,7 +123,7 @@ spec:
           echo "--- start $HOSTNAME $(date --iso-8601='ns' -u) ---" >> /shared/produce.tmp
           ;
           tail -f /shared/produce.tmp |
-          kafkacat -P -b $BOOTSTRAP -t test-basic-with-kafkacat -v -T -d broker
+          kafkacat -P -b $BOOTSTRAP -t test-basic-with-kafkacat -v -T -d broker -K ':'
           ;
         volumeMounts:
         - name: config
@@ -139,7 +139,7 @@ spec:
         - /bin/bash
         - -cex
         - >
-          kafkacat -C -b $BOOTSTRAP -t test-basic-with-kafkacat -o -1 -f '%T;%p;%o;%s\n' -u -d broker |
+          kafkacat -C -b $BOOTSTRAP -t test-basic-with-kafkacat -o -1 -f '%T;%k:%p;%o;%s\n' -u -d broker |
           tee /shared/consumed.tmp
           ;
         volumeMounts:
