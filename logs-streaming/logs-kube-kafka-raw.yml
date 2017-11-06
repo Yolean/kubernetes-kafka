@@ -2,7 +2,7 @@ apiVersion: apps/v1beta2
 kind: DaemonSet
 metadata:
   name: logs-kafka-raw
-  namespace: kafka
+  namespace: logs-kafka
 spec:
   selector:
     matchLabels:
