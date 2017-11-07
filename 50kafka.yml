@@ -21,6 +21,14 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.nodeName
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
         command: ['/bin/bash', '/etc/kafka/init.sh']
         volumeMounts:
         - name: config
@@ -32,7 +40,10 @@ spec:
         - name: KAFKA_LOG4J_OPTS
           value: -Dlog4j.configuration=file:/etc/kafka/log4j.properties
         ports:
-        - containerPort: 9092
+        - name: inside
+          containerPort: 9092
+        - name: outside
+          containerPort: 9094
         command:
         - ./bin/kafka-server-start.sh
         - /etc/kafka/server.properties
