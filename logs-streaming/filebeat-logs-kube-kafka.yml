@@ -36,7 +36,7 @@ spec:
             memory: 10Mi
           limits:
             cpu: 10m
-            memory: 30Mi
+            memory: 40Mi
         volumeMounts:
         - name: config
           mountPath: /etc/filebeat
