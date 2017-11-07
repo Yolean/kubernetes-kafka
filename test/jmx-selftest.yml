@@ -1,0 +1,44 @@
+# Sets up a pod that monitors itself, to test resource usage etc.
+# testpod=$(kubectl -n test-kafka get pods -l test-target=jmx-exporter -o=jsonpath={.items[*].metadata.name})
+# kubectl exec -n test-kafka $testpod -- apt-get update
+# kubectl exec -n test-kafka $testpod -- apt-get install -y --no-install-recommends curl
+# kubectl exec -n test-kafka $testpod -- curl http://localhost:5556/metrics
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: jmx-selftest
+  namespace: test-kafka
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        test-target: jmx-exporter
+        test-type: readiness
+      # Uncomment to test with Prometheus
+      #annotations:
+      #  prometheus.io/scrape: "true"
+      #  prometheus.io/port: "5556"
+    spec:
+      containers:
+      - name: monitor
+        image: solsson/kafka-prometheus-jmx-exporter@sha256:40a6ab24ccac0ed5acb8c02dccfbb1f5924fd97f46c0450e0245686c24138b53
+        command:
+        - java
+        - -Dcom.sun.management.jmxremote.ssl=false
+        - -Dcom.sun.management.jmxremote.authenticate=false
+        - -Dcom.sun.management.jmxremote.port=5555
+        - -jar
+        - jmx_prometheus_httpserver.jar
+        - "5556"
+        - example_configs/httpserver_sample_config.yml
+        ports:
+        - name: jmx
+          containerPort: 5555
+        - name: slashmetrics
+          containerPort: 5556
+        # Test run, again and again
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: 5556
