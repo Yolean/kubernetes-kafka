@@ -112,7 +112,7 @@ spec:
     spec:
       containers:
       - name: producer
-        image: solsson/kafkacat-fixedkey@sha256:e23753bc0900e7b95d29f8c9cb05440eb27d854f367d407ce4ab2955093ad360
+        image: solsson/kafkacat-fixedkey@sha256:fb27acf4c7ca25eca6a6cffe145cb492ee4d4c87cba0459787fb43f8040f6d7b
         env:
         - name: BOOTSTRAP
           value: kafka-0.broker.kafka.svc.cluster.local:9092
