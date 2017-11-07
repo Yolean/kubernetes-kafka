@@ -74,7 +74,7 @@ spec:
         readinessProbe:
           tcpSocket:
             port: 9092
-          timeoutSeconds: 10
+          timeoutSeconds: 1
         volumeMounts:
         - name: config
           mountPath: /etc/kafka
