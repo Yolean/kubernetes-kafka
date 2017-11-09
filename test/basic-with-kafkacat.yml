@@ -112,7 +112,7 @@ spec:
     spec:
       containers:
       - name: producer
-        image: solsson/kafkacat-fixedkey@sha256:fb27acf4c7ca25eca6a6cffe145cb492ee4d4c87cba0459787fb43f8040f6d7b
+        image: solsson/kafkacat@sha256:b32eedf936f3cde44cd164ddc77dfcf7565a8af4e357ff6de1abe4389ca530c9
         env:
         - name: BOOTSTRAP
           value: kafka-0.broker.kafka.svc.cluster.local:9092
@@ -131,7 +131,7 @@ spec:
         - name: shared
           mountPath: /shared
       - name: consumer
-        image: solsson/kafkacat@sha256:ebebf47061300b14a4b4c2e1e4303ab29f65e4b95d34af1b14bb8f7ec6da7cef
+        image: solsson/kafkacat@sha256:b32eedf936f3cde44cd164ddc77dfcf7565a8af4e357ff6de1abe4389ca530c9
         env:
         - name: BOOTSTRAP
           value: kafka-0.broker.kafka.svc.cluster.local:9092
@@ -148,7 +148,7 @@ spec:
         - name: shared
           mountPath: /shared
       - name: testcase
-        image: solsson/kafkacat@sha256:ebebf47061300b14a4b4c2e1e4303ab29f65e4b95d34af1b14bb8f7ec6da7cef
+        image: solsson/kafkacat@sha256:b32eedf936f3cde44cd164ddc77dfcf7565a8af4e357ff6de1abe4389ca530c9
         env:
         - name: BOOTSTRAP
           value: kafka-0.broker.kafka.svc.cluster.local:9092
