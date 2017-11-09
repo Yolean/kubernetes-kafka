@@ -1,7 +1,7 @@
 ---
 kind: ConfigMap
 metadata:
-  name: test-kafkacat
+  name: kafkacat
   namespace: test-kafka
 apiVersion: v1
 data:
@@ -88,7 +88,7 @@ spec:
 apiVersion: apps/v1beta2
 kind: ReplicaSet
 metadata:
-  name: test-kafkacat
+  name: kafkacat
   namespace: test-kafka
 spec:
   replicas: 1
@@ -176,6 +176,6 @@ spec:
       volumes:
       - name: config
         configMap:
-          name: test-kafkacat
+          name: kafkacat
       - name: shared
         emptyDir: {}
