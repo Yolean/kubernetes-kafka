@@ -1,0 +1,49 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: brokers-prometheus
+  namespace: kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: metrics
+      type: exporter
+      target: kafka-broker
+      level: cluster
+  template:
+    metadata:
+      labels:
+        role: metrics
+        type: exporter
+        target: kafka-broker
+        level: cluster
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "5556"
+    spec:
+      containers:
+      - name: exporter
+        image: solsson/kafka-prometheus-jmx-exporter@sha256:40a6ab24ccac0ed5acb8c02dccfbb1f5924fd97f46c0450e0245686c24138b53
+        command:
+        - java
+        - -jar
+        - jmx_prometheus_httpserver.jar
+        - "5556"
+        - /etc/kafka/cluster-prometheus-jmx.yml
+        ports:
+        - containerPort: 5556
+        resources:
+          requests:
+            cpu: 0m
+            memory: 40Mi
+          limits:
+            cpu: 100m
+            memory: 80Mi
+        volumeMounts:
+        - name: config
+          mountPath: /etc/kafka
+      volumes:
+      - name: config
+        configMap:
+          name: monitoring-config

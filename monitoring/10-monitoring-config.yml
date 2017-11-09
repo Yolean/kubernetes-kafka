@@ -1,0 +1,14 @@
+kind: ConfigMap
+metadata:
+  name: monitoring-config
+  namespace: kafka
+apiVersion: v1
+data:
+  cluster-prometheus-jmx.yml: |+
+    #lowercaseOutputName: true
+    jmxUrl: service:jmx:rmi:///jndi/rmi://cluster-jmx:5555/jmxrmi
+    ssl: false
+    whitelistObjectNames:
+    - kafka.server:*
+    rules:
+    - pattern : kafka.server<type=ReplicaManager, name=(PartitionCount|UnderReplicatedPartitions)><>(Value|OneMinuteRate)
