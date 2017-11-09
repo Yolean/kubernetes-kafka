@@ -1,0 +1,166 @@
+---
+kind: ConfigMap
+metadata:
+  name: produce-consume
+  namespace: test-kafka
+apiVersion: v1
+data:
+
+  setup.sh: |-
+    touch /tmp/testlog
+
+    tail -f /tmp/testlog
+
+  test.sh: |-
+    exec >> /tmp/testlog
+    exec 2>&1
+
+    # As low as in kafkacat based test didn't work, but this value can likely be squeezed
+    PC_WAIT=2.0
+
+    UNIQUE="${HOSTNAME}@$(date -u -Ins)"
+
+    echo "Test $UNIQUE" >> /shared/produce.tmp
+    sleep $PC_WAIT
+    LAST=$(tail -n 1 /shared/consumed.tmp)
+    [ -z "$LAST" ] && echo "Nothing consumed yet" && exit 1
+
+    # Haven't found how to get message timestamp in console-consumer, see kafkacat based test instead
+    LAST_MSG=$LAST
+
+    if [[ "$LAST_MSG" != *"$UNIQUE" ]]; then
+      echo "Last message (at $(date +%FT%T)) isn't from this test run ($UNIQUE):"
+      echo "$LAST_MSG"
+      exit 11
+    fi
+
+    echo "OK ($LAST_MSG at $(date +%FT%T))"
+    # We haven't asserted that the consumer works, so we'll just have to assume that it will exit if it fails
+
+    exit 0
+
+  quit-on-nonzero-exit.sh: |-
+    exec >> /tmp/testlog
+    exec 2>&1
+
+    exit 0
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: topic-test-produce-consume
+  namespace: test-kafka
+spec:
+  template:
+    spec:
+      containers:
+      - name: topic-create
+        image: solsson/kafka:1.0.0@sha256:17fdf1637426f45c93c65826670542e36b9f3394ede1cb61885c6a4befa8f72d
+        command:
+        - ./bin/kafka-topics.sh
+        - --zookeeper
+        -   zookeeper.kafka.svc.cluster.local:2181
+        - --create
+        - --if-not-exists
+        - --topic
+        -   test-produce-consume
+        - --partitions
+        -   "1"
+        - --replication-factor
+        -   "2"
+      restartPolicy: Never
+---
+apiVersion: apps/v1beta2
+kind: ReplicaSet
+metadata:
+  name: produce-consume
+  namespace: test-kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      test-target: kafka-client-console
+      test-type: readiness
+  template:
+    metadata:
+      labels:
+        test-target: kafka-client-console
+        test-type: readiness
+        # for example:
+        # readonly - can be used in production
+        # isolated - read/write but in a manner that does not affect other services
+        # load - unsuitable for production because it uses significant resources
+        # chaos - unsuitable for production because it injects failure modes
+        #test-use:
+    spec:
+      containers:
+      - name: producer
+        image: solsson/kafka:1.0.0@sha256:17fdf1637426f45c93c65826670542e36b9f3394ede1cb61885c6a4befa8f72d
+        env:
+        - name: BOOTSTRAP
+          value: kafka-0.broker.kafka.svc.cluster.local:9092
+        command:
+        - /bin/bash
+        - -cex
+        - >
+          echo "--- start $HOSTNAME $(date --iso-8601='ns' -u) ---" >> /shared/produce.tmp
+          ;
+          tail -f /shared/produce.tmp |
+          ./bin/kafka-console-producer.sh --broker-list $BOOTSTRAP --topic test-produce-consume
+          ;
+        volumeMounts:
+        - name: config
+          mountPath: /test
+        - name: shared
+          mountPath: /shared
+      - name: consumer
+        image: solsson/kafka:1.0.0@sha256:17fdf1637426f45c93c65826670542e36b9f3394ede1cb61885c6a4befa8f72d
+        env:
+        - name: BOOTSTRAP
+          value: kafka-0.broker.kafka.svc.cluster.local:9092
+        command:
+        - /bin/bash
+        - -cex
+        - >
+          ./bin/kafka-console-consumer.sh --bootstrap-server $BOOTSTRAP --topic test-produce-consume |
+          tee /shared/consumed.tmp
+          ;
+        volumeMounts:
+        - name: config
+          mountPath: /test
+        - name: shared
+          mountPath: /shared
+      - name: testcase
+        image: solsson/kafkacat@sha256:ebebf47061300b14a4b4c2e1e4303ab29f65e4b95d34af1b14bb8f7ec6da7cef
+        env:
+        - name: BOOTSTRAP
+          value: kafka-0.broker.kafka.svc.cluster.local:9092
+        command:
+        - /bin/bash
+        - -e
+        - /test/setup.sh
+        readinessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -e
+            - /test/test.sh
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        livenessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -e
+            - /test/quit-on-nonzero-exit.sh
+        volumeMounts:
+        - name: config
+          mountPath: /test
+        - name: shared
+          mountPath: /shared
+      volumes:
+      - name: config
+        configMap:
+          name: produce-consume
+      - name: shared
+        emptyDir: {}

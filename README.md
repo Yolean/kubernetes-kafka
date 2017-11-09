@@ -78,5 +78,5 @@ Like the rest of this repo they have `kubectl` as the only local dependency.
 ```
 kubectl apply -f test/
 # Anything that isn't READY here is a failed test
-kubectl get pods -l test-target=kafka,test-type=readiness -w --all-namespaces
+kubectl get pods -l test-type=readiness -w --namespace=test-kafka
 ```
