@@ -1,4 +1,5 @@
-
+_Manifests here require Kubernetes 1.8 now.
+On earlier versions use [v2.1.0](https://github.com/Yolean/kubernetes-kafka/tree/v2.1.0)._
 
 # Kafka on Kubernetes
 
@@ -49,7 +50,7 @@ To support automatic migration in the face of availability zone unavailability w
 ## Start Kafka
 
 ```
-kubectl apply -f ./
+kubectl apply -f ./kafka/
 ```
 
 You might want to verify in logs that Kafka found its own DNS name(s) correctly. Look for records like:
@@ -61,7 +62,6 @@ kubectl -n kafka logs kafka-0 | grep "Registered broker"
 That's it. Just add business value :wink:.
 For clients we tend to use [librdkafka](https://github.com/edenhill/librdkafka)-based drivers like [node-rdkafka](https://github.com/Blizzard/node-rdkafka).
 To use [Kafka Connect](http://kafka.apache.org/documentation/#connect) and [Kafka Streams](http://kafka.apache.org/documentation/streams/) you may want to take a look at our [sample](https://github.com/solsson/dockerfiles/tree/master/connect-files) [Dockerfile](https://github.com/solsson/dockerfiles/tree/master/streams-logfilter)s.
-And don't forget the [addon](https://github.com/Yolean/kubernetes-kafka/labels/addon)s.
 
 ## RBAC
 
@@ -75,8 +75,6 @@ kubectl apply -f rbac-namespace-default/
 Tests are based on the [kube-test](https://github.com/Yolean/kube-test) concept.
 Like the rest of this repo they have `kubectl` as the only local dependency.
 
-```
-kubectl apply -f test/
-# Anything that isn't READY here is a failed test
-kubectl get pods -l test-type=readiness -w --namespace=test-kafka
-```
+Run self-tests or not. They do generate some load, but indicate if the platform is working or not.
+ * To include tests, replace `apply -f` with `apply -R -f` in your `kubectl`s above.
+ * Anything that isn't READY in `kubectl get pods -l test-type=readiness --namespace=test-kafka` is a failed test.

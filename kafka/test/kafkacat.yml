@@ -23,8 +23,10 @@ data:
     echo "${UNIQUE: -41:5}:Test $UNIQUE" >> /shared/produce.tmp
     sleep $PC_WAIT
     LAST=$(tail -n 1 /shared/consumed.tmp)
+    [ -z "$LAST" ] && echo "Nothing consumed" && exit 1
 
     LAST_TS=$(echo $LAST | awk -F';' '{print $1}')
+    [ -z "$LAST_TS" ] && echo "Failed to get timestamp for message: $LAST" && exit 1
     LAST_MSG=$(echo $LAST | awk -F';' '{print $4}')
     NOW=$(date -u +%s%3N)
     DIFF_S=$((($NOW - $LAST_TS)/1000))
