@@ -79,6 +79,7 @@ spec:
       name: data
     spec:
       accessModes: [ "ReadWriteOnce" ]
+      storageClassName: kafka-broker
       resources:
         requests:
           storage: 200Gi

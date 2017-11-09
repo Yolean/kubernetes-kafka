@@ -30,6 +30,12 @@ The goal is to provide [Bootstrap servers](http://kafka.apache.org/documentation
 
 Zookeeper at `zookeeper.kafka.svc.cluster.local:2181`.
 
+## Prepare storage classes
+
+For Minikube run `kubectl apply -f configure/minikube-storageclass-broker.yml; kubectl apply -f configure/minikube-storageclass-zookeeper.yml`.
+
+There's a similar setup for GKE, `configure/gke-*`. You might want to tweak it before creating.
+
 ## Start Zookeeper
 
 The [Kafka book](https://www.confluent.io/resources/kafka-definitive-guide-preview-edition/) recommends that Kafka has its own Zookeeper cluster with at least 5 instances.
@@ -63,14 +69,6 @@ For clusters that enfoce [RBAC](https://kubernetes.io/docs/admin/authorization/r
 ```
 kubectl apply -f rbac-namespace-default/
 ```
-
-## Caution: `Delete` Reclaim Policy is default
-
-In production you likely want to [manually set Reclaim Policy](https://kubernetes.io/docs/tasks/administer-cluster/change-pv-reclaim-policy/),
-or your data will be gone if the generated [volume claim](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims)s are deleted.
-
-This can't be done [in manifests](https://github.com/Yolean/kubernetes-kafka/pull/50),
-at least not [until Kubernetes 1.8](https://github.com/kubernetes/features/issues/352).
 
 ## Tests
 
