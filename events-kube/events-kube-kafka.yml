@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: kafkacat-curl
-        image: solsson/kafkacat-curl@sha256:6ad61f2e6343359c3972d7a86815568c0a1d0560068134c5d702a152eb5123a0
+        image: solsson/kafkacat-curl@sha256:65568eb5b0c22d360546c7591d1efdee7ce919e4b299be33c0e4b47ff997c1e8
         env:
         - name: BOOTSTRAP
           value: kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
