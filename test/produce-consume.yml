@@ -48,7 +48,7 @@ data:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: produce-consume
+  name: topic-test-produce-consume
   namespace: test-kafka
 spec:
   template:

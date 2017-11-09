@@ -63,7 +63,7 @@ data:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: test-kafkacat
+  name: topic-test-kafkacat
   namespace: test-kafka
 spec:
   template:
