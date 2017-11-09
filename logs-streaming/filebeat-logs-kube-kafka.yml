@@ -1,0 +1,65 @@
+apiVersion: apps/v1beta2
+kind: DaemonSet
+metadata:
+  name: filebeat-kube-kafka
+  namespace: logs-kafka
+spec:
+  selector:
+    matchLabels:
+      k8s-app: filebeat-kube-kafka
+      version: v1
+      kubernetes.io/cluster-service: "true"
+  template:
+    metadata:
+      labels:
+        k8s-app: filebeat-kube-kafka
+        version: v1
+        kubernetes.io/cluster-service: "true"
+    spec:
+      serviceAccountName: filebeat
+      containers:
+      - name: filebeat
+        image: solsson/kafka-filebeat-kubernetes@sha256:c2a68766e718d354b565b20f92baf0f50047b4bdf90a5055a20107a1131bee80
+        command:
+        - filebeat
+        - -e
+        - -c
+        - /etc/filebeat/filebeat.yml
+        - -d
+        - "service,beat"
+        env:
+        - name: TOPIC
+          value: ops-kube-logs-filebeat-001
+        resources:
+          requests:
+            cpu: 2m
+            memory: 10Mi
+          limits:
+            cpu: 10m
+            memory: 40Mi
+        volumeMounts:
+        - name: config
+          mountPath: /etc/filebeat
+          readOnly: true
+        - name: data
+          mountPath: /data
+        - name: varlog
+          mountPath: /var/log
+          readOnly: true
+        - name: varlibdockercontainers
+          mountPath: /var/lib/docker/containers
+          readOnly: true
+      terminationGracePeriodSeconds: 10
+      volumes:
+      - name: config
+        configMap:
+          name: filebeat-config
+      - name: data
+        hostPath:
+          path: /tmp/kubernets-filebeat-state
+      - name: varlog
+        hostPath:
+          path: /var/log
+      - name: varlibdockercontainers
+        hostPath:
+          path: /var/lib/docker/containers

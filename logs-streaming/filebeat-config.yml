@@ -1,0 +1,34 @@
+kind: ConfigMap
+metadata:
+  name: filebeat-config
+  namespace: logs-kafka
+apiVersion: v1
+data:
+  filebeat.yml: |+
+
+    filebeat.prospectors:
+    - type: log
+      enabled: true
+      paths:
+        - /var/lib/docker/containers/*/*.log
+      symlinks: true
+      # reduce the risk for aggregation recursion: match pod names to exclude own's logs + test logs
+      exclude_files: ['^(.*\/)?logs-','^(.*\/)?filebeat-','^(.*\/)?test-']
+
+    processors:
+    - add_kubernetes_metadata:
+        in_cluster: true
+        namespace: logs-kafka
+
+    output.kafka:
+      hosts: ["kafka-0.broker.kafka.svc.cluster.local:9092", "kafka-1.broker.kafka.svc.cluster.local:9092", "kafka-2.broker.kafka.svc.cluster.local:9092"]
+      topic: ${TOPIC}
+
+      partition.round_robin:
+        reachable_only: false
+
+      client_id: filebeat-kubernetes
+      version: 0.11.0.0
+      required_acks: 1
+      compression: gzip
+      max_message_bytes: 1000000
