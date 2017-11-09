@@ -96,12 +96,12 @@ spec:
     type: Recreate
   selector:
     matchLabels:
-      test-target: kafka
+      test-target: kafka-client-kafkacat
       test-type: readiness
   template:
     metadata:
       labels:
-        test-target: kafka
+        test-target: kafka-client-kafkacat
         test-type: readiness
         # for example:
         # readonly - can be used in production
