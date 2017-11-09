@@ -1,9 +1,7 @@
-
+_Manifests here require Kubernetes 1.8 now.
+On earlier versions use [v2.1.0](https://github.com/Yolean/kubernetes-kafka/tree/v2.1.0)._
 
 # Kafka on Kubernetes
-
-_Manifests here now require Kubernetes 1.8.
-On earlier versions use [v2.1.0](https://github.com/Yolean/kubernetes-kafka/tree/v2.1.0)._
 
 Transparent Kafka setup that you can grow with.
 Good for both experiments and production.
