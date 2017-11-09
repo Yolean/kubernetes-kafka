@@ -11,6 +11,8 @@ spec:
       storage: persistent
   serviceName: "pzoo"
   replicas: 3
+  updateStrategy:
+    type: OnDelete
   template:
     metadata:
       labels:
