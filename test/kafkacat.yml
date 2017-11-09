@@ -86,14 +86,12 @@ spec:
       restartPolicy: Never
 ---
 apiVersion: apps/v1beta2
-kind: Deployment
+kind: ReplicaSet
 metadata:
   name: test-kafkacat
   namespace: test-kafka
 spec:
   replicas: 1
-  strategy:
-    type: Recreate
   selector:
     matchLabels:
       test-target: kafka-client-kafkacat
