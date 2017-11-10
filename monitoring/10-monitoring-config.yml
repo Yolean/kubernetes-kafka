@@ -11,4 +11,4 @@ data:
     whitelistObjectNames:
     - kafka.server:type=ReplicaManager,*
     rules:
-    - pattern: kafka.server<type=ReplicaManager, name=(.*)><>(.*)
+    - pattern: kafka.server<type=ReplicaManager, name=(.*)><>(Value|Count)
