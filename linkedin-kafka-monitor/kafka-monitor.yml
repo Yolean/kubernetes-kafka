@@ -1,0 +1,23 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: kafka-monitor
+  namespace: kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-monitor
+  template:
+    metadata:
+      labels:
+        app: kafka-monitor
+    spec:
+      containers:
+      - name: kafka-monitor
+        image: solsson/kafka-monitor@sha256:12992f67379bc0850c977069d0283a9fb844e2f1b5530ca9525eea044b7f6b25
+        ports:
+        - name: http
+          containerPort: 8000
+        - name: metrics
+          containerPort: 8778
