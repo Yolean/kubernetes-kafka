@@ -9,6 +9,6 @@ data:
     jmxUrl: service:jmx:rmi:///jndi/rmi://cluster-jmx:5555/jmxrmi
     ssl: false
     whitelistObjectNames:
-    - kafka.server:*
+    - kafka.server:type=ReplicaManager,*
     rules:
-    - pattern : kafka.server<type=ReplicaManager, name=(PartitionCount|UnderReplicatedPartitions)><>(Value|OneMinuteRate)
+    - pattern: kafka.server<type=ReplicaManager, name=(.*)><>(.*)
