@@ -1,0 +1,75 @@
+---
+kind: ConfigMap
+metadata:
+  name: logs-fluentbit
+  namespace: test-kafka
+apiVersion: v1
+data:
+
+  setup.sh: |-
+    touch /tmp/testlog
+
+    tail -f /tmp/testlog
+
+  test.sh: |-
+    exec >> /tmp/testlog
+    exec 2>&1
+
+    echo ""
+    echo "{\"#---\":\"$(date -u --iso-8601='ns')\"}"
+    kafkacat -b $BOOTSTRAP -C -t $TOPIC -f '{"#topic":"%t","#partition":%p,"#offset":%o,"#key":"%k","=":%s}\n' -o -10 -e -q
+
+    exit 0
+
+  quit-on-nonzero-exit.sh: |-
+    exit 0
+
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: logs-fluentbit
+  namespace: test-kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      test-target: logs-streaming-fluentbit
+      test-type: readiness
+  template:
+    metadata:
+      labels:
+        test-target: logs-streaming-fluentbit
+        test-type: readiness
+    spec:
+      containers:
+      - name: testcase
+        image: solsson/kafkacat@sha256:ebebf47061300b14a4b4c2e1e4303ab29f65e4b95d34af1b14bb8f7ec6da7cef
+        env:
+        - name: BOOTSTRAP
+          value: kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
+        - name: TOPIC
+          value: ops-kube-logs-fluentbit-001
+        command:
+        - /bin/bash
+        - -e
+        - /test/setup.sh
+        readinessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -e
+            - /test/test.sh
+        livenessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -e
+            - /test/quit-on-nonzero-exit.sh
+        volumeMounts:
+        - name: config
+          mountPath: /test
+      volumes:
+      - name: config
+        configMap:
+          name: logs-fluentbit

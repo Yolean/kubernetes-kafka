@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: topic-ops-kube-logs-fluentbit
+  # same namespace as https://github.com/fluent/fluent-bit-kubernetes-logging
+  namespace: logging
+spec:
+  template:
+    metadata:
+      labels:
+        app: topic-create
+        topic-id: ops-kube-logs-fluentbit
+        topic-gen: "001"
+    spec:
+      containers:
+      - name: kafka
+        image: solsson/kafka:1.0.0@sha256:17fdf1637426f45c93c65826670542e36b9f3394ede1cb61885c6a4befa8f72d
+        command:
+        - ./bin/kafka-topics.sh
+        - --zookeeper
+        - zookeeper.kafka:2181
+        - --create
+        - --if-not-exists
+        - --topic
+        - ops-kube-logs-fluentbit-001
+        - --partitions
+        - "1"
+        - --replication-factor
+        - "2"
+        - --config
+        - retention.ms=6912500000
+      restartPolicy: Never
