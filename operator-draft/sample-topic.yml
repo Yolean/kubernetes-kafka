@@ -6,13 +6,13 @@ metadata:
 spec:
   partitions: 1
   replication: min
-  messageFormat: json
+  format: json
   schema: |
     {
       "properties": {
         "id": {
           "type": "string"
         }
-      }
+      },
       "additionalProperties": true
     }

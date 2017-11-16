@@ -31,7 +31,7 @@ spec:
                 - min
                 # current cluster's recommended replication for production data
                 - prod
-            messageFormat:
+            format:
               type: string
               enum:
                 - blob
