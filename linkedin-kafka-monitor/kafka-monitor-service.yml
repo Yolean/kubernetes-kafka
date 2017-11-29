@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: kafka-monitor
+  namespace: kafka
+spec:
+  selector:
+    app: kafka-monitor
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
