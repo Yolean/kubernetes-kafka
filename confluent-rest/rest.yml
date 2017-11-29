@@ -13,11 +13,11 @@ spec:
   template:
     metadata:
       labels:
-        app: kafka-rest
+        app: rest-proxy
     spec:
       containers:
       - name: cp
-        image: solsson/kafka-cp@sha256:89e5b3b326bf8ef888efa9501cd22fb941ca7b5ccef8dfc2f44a1e218f4427e1
+        image: solsson/kafka-cp@sha256:2797da107f477ede2e826c29b2589f99f22d9efa2ba6916b63e07c7045e15044
         env:
         - name: KAFKAREST_LOG4J_OPTS
           value: -Dlog4j.configuration=file:/etc/kafka-rest/log4j.properties

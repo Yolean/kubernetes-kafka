@@ -7,4 +7,4 @@ spec:
   ports:
   - port: 80
   selector:
-    app: kafka-rest
+    app: rest-proxy
