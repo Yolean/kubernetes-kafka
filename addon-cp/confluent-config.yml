@@ -1,0 +1,68 @@
+kind: ConfigMap
+metadata:
+  name: confluent-config
+  namespace: kafka
+apiVersion: v1
+data:
+  schema-registry.properties: |-
+    # Copyright 2014 Confluent Inc.
+    #
+    # Licensed under the Apache License, Version 2.0 (the "License");
+    # you may not use this file except in compliance with the License.
+    # You may obtain a copy of the License at
+    #
+    # http://www.apache.org/licenses/LICENSE-2.0
+    #
+    # Unless required by applicable law or agreed to in writing, software
+    # distributed under the License is distributed on an "AS IS" BASIS,
+    # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    # See the License for the specific language governing permissions and
+    # limitations under the License.
+
+    listeners=http://0.0.0.0:80
+    #kafkastore.bootstrap.servers
+    kafkastore.connection.url=zookeeper:2181
+    kafkastore.topic=_schemas
+    debug=false
+
+  kafka-rest.properties: |-
+    ##
+    # Copyright 2015 Confluent Inc.
+    #
+    # Licensed under the Apache License, Version 2.0 (the "License");
+    # you may not use this file except in compliance with the License.
+    # You may obtain a copy of the License at
+    #
+    # http://www.apache.org/licenses/LICENSE-2.0
+    #
+    # Unless required by applicable law or agreed to in writing, software
+    # distributed under the License is distributed on an "AS IS" BASIS,
+    # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    # See the License for the specific language governing permissions and
+    # limitations under the License.
+    ##
+
+    #id=kafka-rest-test-server
+    listeners=http://0.0.0.0:80
+    bootstrap.servers=kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
+    zookeeper.connect=zookeeper:2181
+    schema.registry.url=http://schemas.kafka.svc.cluster.local:80
+    #
+    # Configure interceptor classes for sending consumer and producer metrics to Confluent Control Center
+    # Make sure that monitoring-interceptors-<version>.jar is on the Java class path
+    #consumer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor
+    #producer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor
+
+  log4j.properties: |-
+    log4j.rootLogger=INFO, stdout
+
+    log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+    log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+    log4j.appender.stdout.layout.ConversionPattern=[%d] %p %m (%c:%L)%n
+
+    log4j.logger.kafka=ERROR, stdout
+    log4j.logger.org.apache.zookeeper=ERROR, stdout
+    log4j.logger.org.apache.kafka=ERROR, stdout
+    log4j.logger.org.I0Itec.zkclient=ERROR, stdout
+    log4j.additivity.kafka.server=false
+    log4j.additivity.kafka.consumer.ZookeeperConsumerConnector=false

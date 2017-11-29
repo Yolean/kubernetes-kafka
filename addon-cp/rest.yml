@@ -1,0 +1,43 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: rest
+  namespace: kafka
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: kafka-rest
+    spec:
+      containers:
+      - name: cp
+        image: solsson/kafka-cp@sha256:89e5b3b326bf8ef888efa9501cd22fb941ca7b5ccef8dfc2f44a1e218f4427e1
+        env:
+        - name: KAFKAREST_LOG4J_OPTS
+          value: -Dlog4j.configuration=file:/etc/kafka-rest/log4j.properties
+        command:
+        - kafka-rest-start
+        - /etc/kafka-rest/kafka-rest.properties
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: config
+          mountPath: /etc/kafka-rest
+      volumes:
+      - name: config
+        configMap:
+          name: confluent-config

@@ -1,0 +1,182 @@
+---
+kind: ConfigMap
+metadata:
+  name: rest-curl
+  namespace: test-kafka
+apiVersion: v1
+data:
+
+  setup.sh: |-
+    touch /tmp/testlog
+
+    # Keep starting up until rest proxy is up and running
+    curl --retry 10 --retry-delay 30 --retry-connrefused -I -s $REST
+
+    curl -s -H 'Accept: application/vnd.kafka.v2+json' $REST/brokers | egrep '."brokers":.0'
+
+    curl -s -H 'Accept: application/vnd.kafka.v2+json' $REST/topics
+    echo ""
+
+    curl -s -H 'Accept: application/vnd.kafka.v2+json' $REST/topics/$TOPIC
+    echo ""
+
+    curl -X POST \
+      -H "Content-Type: application/vnd.kafka.json.v2+json" -H "Accept: application/vnd.kafka.v2+json" \
+      --data "{\"records\":[{\"value\":\"Test from $HOSTNAME at $(date -u -Iseconds)\"}]}" \
+      $REST/topics/$TOPIC
+    echo ""
+
+    curl -s -H 'Accept: application/vnd.kafka.v2+json' $REST/topics/$TOPIC/partitions
+    echo ""
+
+    curl -X POST \
+      -H "Content-Type: application/vnd.kafka.v2+json" \
+      --data '{"name": "my_consumer_instance", "format": "json", "auto.offset.reset": "earliest"}' \
+      $REST/consumers/my_json_consumer
+    echo ""
+
+    curl -X POST \
+      -H "Content-Type: application/vnd.kafka.v2+json" \
+      --data "{\"topics\":[\"$TOPIC\"]}" \
+      $REST/consumers/my_json_consumer/instances/my_consumer_instance/subscription \
+      -w "%{http_code}"
+    echo ""
+
+    curl -X GET \
+      -H "Accept: application/vnd.kafka.json.v2+json" \
+      $REST/consumers/my_json_consumer/instances/my_consumer_instance/records
+
+    curl -X DELETE \
+      -H "Content-Type: application/vnd.kafka.v2+json" \
+      $REST/consumers/my_json_consumer/instances/my_consumer_instance
+
+    # schema-registry
+
+    curl -X GET $SCHEMAS/subjects
+    echo ""
+
+    curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" \
+      --data '{"schema": "{\"type\": \"string\"}"}' \
+      $SCHEMAS/subjects/$TOPIC-key/versions
+    echo ""
+
+    curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" \
+      --data '{"schema": "{\"type\": \"string\"}"}' \
+      $SCHEMAS/subjects/$TOPIC-value/versions
+    echo ""
+
+    curl -X GET $SCHEMAS/schemas/ids/1
+    echo ""
+
+    curl -X GET $SCHEMAS/subjects/$TOPIC-value/versions/1
+    echo ""
+
+    # rest + schema
+    # TODO new topic needed because this breaks json consumer above
+
+    curl -X POST -H "Content-Type: application/vnd.kafka.avro.v2+json" \
+      -H "Accept: application/vnd.kafka.v2+json" \
+      --data '{"value_schema": "{\"type\": \"record\", \"name\": \"User\", \"fields\": [{\"name\": \"name\", \"type\": \"string\"}]}", "records": [{"value": {"name": "testUser"}}]}' \
+      $REST/topics/$TOPIC
+    echo ""
+
+    curl -X POST  -H "Content-Type: application/vnd.kafka.v2+json" \
+      --data '{"name": "my_consumer_instance", "format": "avro", "auto.offset.reset": "earliest"}' \
+      $REST/consumers/my_avro_consumer
+    echo ""
+
+    curl -X POST -H "Content-Type: application/vnd.kafka.v2+json" \
+      --data "{\"topics\":[\"$TOPIC\"]}" \
+      $REST/consumers/my_avro_consumer/instances/my_consumer_instance/subscription
+
+    curl -X GET -H "Accept: application/vnd.kafka.avro.v2+json" \
+      $REST/consumers/my_avro_consumer/instances/my_consumer_instance/records
+
+    tail -f /tmp/testlog
+
+  continue.sh: |-
+    exit 0
+
+  run.sh: |-
+    exec >> /tmp/testlog
+    exec 2>&1
+
+    exit 0
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: rest-curl
+  namespace: test-kafka
+spec:
+  template:
+    spec:
+      containers:
+      - name: topic-create
+        image: solsson/kafka:0.11.0.0@sha256:b27560de08d30ebf96d12e74f80afcaca503ad4ca3103e63b1fd43a2e4c976ce
+        command:
+        - ./bin/kafka-topics.sh
+        - --zookeeper
+        -   zookeeper.kafka.svc.cluster.local:2181
+        - --create
+        - --if-not-exists
+        - --topic
+        -   test-rest-curl
+        - --partitions
+        -   "1"
+        - --replication-factor
+        -   "1"
+      restartPolicy: Never
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: rest-curl
+  namespace: test-kafka
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        test-target: kafka
+        test-type: readiness
+    spec:
+      containers:
+      - name: testcase
+        image: solsson/curl@sha256:8c0c5d669b3dd67932da934024252af59fb9d0fa0e5118b5a737b35c5e1487bf
+        env:
+        - name: SCHEMAS
+          value: http://schemas.kafka.svc.cluster.local
+        - name: REST
+          value: http://rest.kafka.svc.cluster.local
+        - name: TOPIC
+          value: test-rest-curl
+        # Test set up
+        command:
+        - /bin/bash
+        - -e
+        - /test/setup.sh
+        # Test run, again and again
+        readinessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -e
+            - /test/run.sh
+          # We haven't worked on timing
+          periodSeconds: 60
+        # Test quit on nonzero exit
+        livenessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -e
+            - /test/continue.sh
+        volumeMounts:
+        - name: config
+          mountPath: /test
+      volumes:
+      - name: config
+        configMap:
+          name: rest-curl
