@@ -12,6 +12,9 @@ spec:
       "properties": {
         "id": {
           "type": "string"
+        },
+        "name": {
+          "type": "string"
         }
       },
       "additionalProperties": true
