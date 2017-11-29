@@ -1,10 +1,13 @@
-apiVersion: apps/v1beta1
+apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
   name: schemas
   namespace: kafka
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: schema-registry
   strategy:
     type: RollingUpdate
     rollingUpdate:
