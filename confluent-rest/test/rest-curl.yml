@@ -114,7 +114,7 @@ spec:
     spec:
       containers:
       - name: topic-create
-        image: solsson/kafka:0.11.0.0@sha256:b27560de08d30ebf96d12e74f80afcaca503ad4ca3103e63b1fd43a2e4c976ce
+        image: solsson/kafka:1.0.0@sha256:17fdf1637426f45c93c65826670542e36b9f3394ede1cb61885c6a4befa8f72d
         command:
         - ./bin/kafka-topics.sh
         - --zookeeper
@@ -129,22 +129,26 @@ spec:
         -   "1"
       restartPolicy: Never
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
   name: rest-curl
   namespace: test-kafka
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      test-target: kafka-confluent-rest
+      test-type: readiness
   template:
     metadata:
       labels:
-        test-target: kafka
+        test-target: kafka-confluent-rest
         test-type: readiness
     spec:
       containers:
       - name: testcase
-        image: solsson/curl@sha256:8c0c5d669b3dd67932da934024252af59fb9d0fa0e5118b5a737b35c5e1487bf
+        image: solsson/curl@sha256:523319afd39573746e8f5a7c98d4a6cd4b8cbec18b41eb30c8baa13ede120ce3
         env:
         - name: SCHEMAS
           value: http://schemas.kafka.svc.cluster.local

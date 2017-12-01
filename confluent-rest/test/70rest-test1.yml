@@ -4,21 +4,22 @@ metadata:
   name: rest-test1
   namespace: kafka
 spec:
+  backoffLimit: 1
   template:
     metadata:
       name: rest-test1
     spec:
       containers:
       - name: curl
-        image: solsson/curl@sha256:8b0927b81d10043e70f3e05e33e36fb9b3b0cbfcbccdb9f04fd53f67a270b874
+        image: solsson/curl@sha256:523319afd39573746e8f5a7c98d4a6cd4b8cbec18b41eb30c8baa13ede120ce3
         env:
         - name: REST
           value: http://rest.kafka.svc.cluster.local
         - name: TOPIC
           value: test1
         command:
-        - /bin/sh
-        - -c
+        - /bin/bash
+        - -ce
         - >
           curl --retry 10 --retry-delay 30 --retry-connrefused -I $REST;
 
