@@ -5,51 +5,20 @@ metadata:
 apiVersion: v1
 data:
   schema-registry.properties: |-
-    # Copyright 2014 Confluent Inc.
-    #
-    # Licensed under the Apache License, Version 2.0 (the "License");
-    # you may not use this file except in compliance with the License.
-    # You may obtain a copy of the License at
-    #
-    # http://www.apache.org/licenses/LICENSE-2.0
-    #
-    # Unless required by applicable law or agreed to in writing, software
-    # distributed under the License is distributed on an "AS IS" BASIS,
-    # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    # See the License for the specific language governing permissions and
-    # limitations under the License.
-
     listeners=http://0.0.0.0:80
     kafkastore.bootstrap.servers=PLAINTEXT://bootstrap.kafka:9092
     kafkastore.topic=_schemas
     debug=false
 
   kafka-rest.properties: |-
-    ##
-    # Copyright 2015 Confluent Inc.
-    #
-    # Licensed under the Apache License, Version 2.0 (the "License");
-    # you may not use this file except in compliance with the License.
-    # You may obtain a copy of the License at
-    #
-    # http://www.apache.org/licenses/LICENSE-2.0
-    #
-    # Unless required by applicable law or agreed to in writing, software
-    # distributed under the License is distributed on an "AS IS" BASIS,
-    # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    # See the License for the specific language governing permissions and
-    # limitations under the License.
-    ##
-
     #id=kafka-rest-test-server
     listeners=http://0.0.0.0:80
     bootstrap.servers=PLAINTEXT://bootstrap.kafka:9092
     schema.registry.url=http://schemas.kafka:80
-    #
-    # Configure interceptor classes for sending consumer and producer metrics to Confluent Control Center
-    # Make sure that monitoring-interceptors-<version>.jar is on the Java class path
-    #consumer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor
-    #producer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor
+
+    # https://github.com/Landoop/kafka-topics-ui#common-issues
+    access.control.allow.methods=GET,POST,PUT,DELETE,OPTIONS
+    access.control.allow.origin=*
 
   log4j.properties: |-
     log4j.rootLogger=INFO, stdout
