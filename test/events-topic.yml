@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: events-topic
+  namespace: test-kafka
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        test-target: events-topic
+        # Would be a valid testcase if it verifies that >0 messages per some time unit have been produced
+        #test-type: readiness
+    spec:
+      containers:
+      - name: kafkacat
+        image: solsson/kafkacat@sha256:36d1f191cc33a8365074280279205e6b4f52cd8cc8fb1b896bb4c943c9dee8f8
+        command:
+        - kafkacat
+        - -b
+        - kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
+        - -t
+        - ops-kube-events-all-json-001
+        - -C

@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: topic-ops-kube-events-all-json
+  namespace: kafka
+spec:
+  template:
+    metadata:
+      labels:
+        app: topic-create
+        topic-id: ops-kube-events-all-json
+        topic-gen: "001"
+    spec:
+      containers:
+      - name: kafka
+        image: solsson/kafka:0.11.0.0@sha256:b27560de08d30ebf96d12e74f80afcaca503ad4ca3103e63b1fd43a2e4c976ce
+        command:
+        - ./bin/kafka-topics.sh
+        - --zookeeper
+        - zookeeper:2181
+        - --create
+        - --if-not-exists
+        - --topic
+        - ops-kube-events-all-json-001
+        - --partitions
+        - "1"
+        - --replication-factor
+        - "1"
+        - --config
+        # 8 days
+        - retention.ms=691200000  
+      restartPolicy: Never
