@@ -63,8 +63,6 @@ spec:
         -   log.retention.hours=-1
         - --override
         -   log.dirs=/var/lib/kafka/data/topics
-        - --override
-        -   auto.create.topics.enable=true
         resources:
           requests:
             cpu: 100m
