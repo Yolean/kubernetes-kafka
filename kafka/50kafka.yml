@@ -60,8 +60,6 @@ spec:
         - --override
         -   zookeeper.connect=zookeeper:2181
         - --override
-        -   log.retention.hours=-1
-        - --override
         -   log.dirs=/var/lib/kafka/data/topics
         resources:
           requests:
