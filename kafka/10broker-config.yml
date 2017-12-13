@@ -38,7 +38,7 @@ data:
     ############################# Log Basics #############################
 
     # A comma seperated list of directories under which to store log files
-    log.dirs=/tmp/kafka-logs
+    log.dirs=/var/lib/kafka/data/topics
 
     # The default number of log partitions per topic. More partitions allow greater
     # parallelism for consumption, but this will also result in more files across

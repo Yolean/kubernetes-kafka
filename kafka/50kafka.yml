@@ -59,8 +59,6 @@ spec:
         - /etc/kafka/server.properties
         - --override
         -   zookeeper.connect=zookeeper:2181
-        - --override
-        -   log.dirs=/var/lib/kafka/data/topics
         resources:
           requests:
             cpu: 100m
