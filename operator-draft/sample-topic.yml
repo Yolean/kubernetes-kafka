@@ -1,0 +1,21 @@
+apiVersion: "streamingmicroservicesplatform.github.com/v1"
+kind: KafkaTopic
+metadata:
+  name: sample-topic-json-001
+  namespace: kafka
+spec:
+  partitions: 1
+  replication: min
+  format: json
+  schema: |
+    {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    }
