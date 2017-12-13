@@ -57,8 +57,6 @@ spec:
         command:
         - ./bin/kafka-server-start.sh
         - /etc/kafka/server.properties
-        - --override
-        -   zookeeper.connect=zookeeper:2181
         resources:
           requests:
             cpu: 100m
