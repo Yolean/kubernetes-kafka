@@ -5,6 +5,7 @@ metadata:
 apiVersion: v1
 data:
   schema-registry.properties: |-
+    port=80
     listeners=http://0.0.0.0:80
     kafkastore.bootstrap.servers=PLAINTEXT://bootstrap.kafka:9092
     kafkastore.topic=_schemas
