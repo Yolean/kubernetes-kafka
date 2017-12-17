@@ -38,3 +38,5 @@ data:
     log4j.logger.org.I0Itec.zkclient=ERROR, stdout
     log4j.additivity.kafka.server=false
     log4j.additivity.kafka.consumer.ZookeeperConsumerConnector=false
+
+    log4j.logger.org.apache.kafka.clients.Metadata=DEBUG, stdout
