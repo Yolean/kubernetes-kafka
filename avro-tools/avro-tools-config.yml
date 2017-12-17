@@ -40,3 +40,4 @@ data:
     log4j.additivity.kafka.consumer.ZookeeperConsumerConnector=false
 
     log4j.logger.org.apache.kafka.clients.Metadata=DEBUG, stdout
+    log4j.logger.org.apache.kafka.clients.consumer.internals.AbstractCoordinator=INFO, stdout

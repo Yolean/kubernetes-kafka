@@ -35,6 +35,7 @@ spec:
           httpGet:
             path: /
             port: 80
+          initialDelaySeconds: 60
         ports:
         - containerPort: 80
         volumeMounts:
