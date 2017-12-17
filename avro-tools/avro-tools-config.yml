@@ -1,6 +1,6 @@
 kind: ConfigMap
 metadata:
-  name: confluent-config
+  name: avro-tools-config
   namespace: kafka
 apiVersion: v1
 data:
