@@ -1,7 +1,7 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: rest
+  name: avro-rest
   namespace: kafka
 spec:
   replicas: 1
