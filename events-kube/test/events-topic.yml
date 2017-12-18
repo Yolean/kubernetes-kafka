@@ -1,0 +1,89 @@
+---
+kind: ConfigMap
+metadata:
+  name: events-topic
+  namespace: test-kafka
+apiVersion: v1
+data:
+
+  setup.sh: |-
+    touch /tmp/testlog
+
+    tail -f /tmp/testlog
+
+  test.sh: |-
+    exec >> /tmp/testlog
+    exec 2>&1
+
+    PREVIOUS=$(sha1sum /tmp/event 2>/dev/null || echo "")
+    kafkacat -b $BOOTSTRAP -t $TOPIC -C -o -1 -c 1 | tee /tmp/event
+    CURRENT=$(sha1sum /tmp/event)
+    [ "$PREVIOUS" == "$CURRENT" ] && echo "{\"test-result\": \"No new event in $TOPIC\"}" && exit 1
+
+    exit 0
+
+  quit-on-nonzero-exit.sh: |-
+    exec >> /tmp/testlog
+    exec 2>&1
+
+    exit 0
+
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: events-topic
+  namespace: test-kafka
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      test-target: events-topic
+      test-type: readiness
+  template:
+    metadata:
+      labels:
+        test-target: events-topic
+        test-type: readiness
+        # for example:
+        # readonly - can be used in production
+        # isolated - read/write but in a manner that does not affect other services
+        # load - unsuitable for production because it uses significant resources
+        # chaos - unsuitable for production because it injects failure modes
+        #test-use:
+    spec:
+      containers:
+      - name: testcase
+        image: solsson/kafkacat@sha256:2c539e4f58960ab7872976ebc664dd92de18cf27e7cbbeb296d654a2351f6ca4
+        env:
+        - name: BOOTSTRAP
+          value: bootstrap.kafka:9092
+        - name: TOPIC
+          value: ops.kube-events-all.stream.json.001
+        command:
+        - /bin/bash
+        - -e
+        - /test/setup.sh
+        readinessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -e
+            - /test/test.sh
+          initialDelaySeconds: 10
+          periodSeconds: 60
+        livenessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -e
+            - /test/quit-on-nonzero-exit.sh
+        volumeMounts:
+        - name: config
+          mountPath: /test
+      volumes:
+      - name: config
+        configMap:
+          name: events-topic

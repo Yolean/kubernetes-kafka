@@ -1,0 +1,51 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: events-kube-kafka
+  namespace: kafka
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      # prefer duplicate events over missed
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: events
+      from: kube
+      to: kafka
+  template:
+    metadata:
+      labels:
+        app: events
+        from: kube
+        to: kafka
+    spec:
+      containers:
+      - name: kafkacat-curl
+        image: solsson/kafkacat-curl@sha256:b5484379301937129e67550331782a0f7ac030a4b913a254d084faea4bcf44a2
+        env:
+        - name: BOOTSTRAP
+          value: bootstrap.kafka:9092
+        - name: TOPIC
+          value: ops.kube-events-all.stream.json.001
+        command:
+        - /bin/bash
+        - -ec
+        - >
+          curl
+          -f
+          -s
+          --cacert /run/secrets/kubernetes.io/serviceaccount/ca.crt
+          --header "Authorization: Bearer $(cat /run/secrets/kubernetes.io/serviceaccount/token)"
+          https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT/api/v1/watch/events
+          |
+          kafkacat
+          -b $BOOTSTRAP
+          -t $TOPIC
+          -P
+          -z snappy
+          -v
+          -d broker,topic

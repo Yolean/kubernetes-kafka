@@ -1,0 +1,30 @@
+# If events-kube-kafka-* goes crashlooping you probably need this
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: events-watcher
+  labels:
+    origin: github.com_Yolean_kubernetes-kafka
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - watch
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: kafka-events-watcher
+  labels:
+    origin: github.com_Yolean_kubernetes-kafka
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: events-watcher
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: kafka
