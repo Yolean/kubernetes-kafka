@@ -68,6 +68,8 @@ For clusters that enfoce [RBAC](https://kubernetes.io/docs/admin/authorization/r
 kubectl apply -f rbac-namespace-default/
 ```
 
+For example rack awareness can fail without this, `logs -c init-config` showing `Error from server (Forbidden): pods "kafka-0" is forbidden: User "system:serviceaccount:kafka:default" cannot get pods in the namespace "kafka": Unknown user "system:serviceaccount:kafka:default"`.
+
 ## Tests
 
 Tests are based on the [kube-test](https://github.com/Yolean/kube-test) concept.
