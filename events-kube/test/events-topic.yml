@@ -56,12 +56,12 @@ spec:
     spec:
       containers:
       - name: testcase
-        image: solsson/kafkacat@sha256:ebebf47061300b14a4b4c2e1e4303ab29f65e4b95d34af1b14bb8f7ec6da7cef
+        image: solsson/kafkacat@sha256:2c539e4f58960ab7872976ebc664dd92de18cf27e7cbbeb296d654a2351f6ca4
         env:
         - name: BOOTSTRAP
-          value: kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
+          value: bootstrap.kafka:9092
         - name: TOPIC
-          value: ops-kube-events-all-json-001
+          value: ops.kube-events-all.stream.json.001
         command:
         - /bin/bash
         - -e

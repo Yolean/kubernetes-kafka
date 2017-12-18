@@ -25,12 +25,12 @@ spec:
     spec:
       containers:
       - name: kafkacat-curl
-        image: solsson/kafkacat-curl@sha256:65568eb5b0c22d360546c7591d1efdee7ce919e4b299be33c0e4b47ff997c1e8
+        image: solsson/kafkacat-curl@sha256:b5484379301937129e67550331782a0f7ac030a4b913a254d084faea4bcf44a2
         env:
         - name: BOOTSTRAP
-          value: kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
+          value: bootstrap.kafka:9092
         - name: TOPIC
-          value: ops-kube-events-all-json-001
+          value: ops.kube-events-all.stream.json.001
         command:
         - /bin/bash
         - -ec
