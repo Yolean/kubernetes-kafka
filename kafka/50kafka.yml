@@ -4,7 +4,6 @@ metadata:
   name: kafka
   namespace: kafka
 spec:
-spec:
   selector:
     matchLabels:
       app: kafka

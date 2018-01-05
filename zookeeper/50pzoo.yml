@@ -4,7 +4,6 @@ metadata:
   name: pzoo
   namespace: kafka
 spec:
-spec:
   selector:
     matchLabels:
       app: zookeeper

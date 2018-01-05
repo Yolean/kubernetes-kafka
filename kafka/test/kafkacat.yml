@@ -115,7 +115,7 @@ spec:
         image: solsson/kafkacat@sha256:b32eedf936f3cde44cd164ddc77dfcf7565a8af4e357ff6de1abe4389ca530c9
         env:
         - name: BOOTSTRAP
-          value: kafka-0.broker.kafka.svc.cluster.local:9092
+          value: bootstrap.kafka:9092
         command:
         - /bin/bash
         - -cex
@@ -134,7 +134,7 @@ spec:
         image: solsson/kafkacat@sha256:b32eedf936f3cde44cd164ddc77dfcf7565a8af4e357ff6de1abe4389ca530c9
         env:
         - name: BOOTSTRAP
-          value: kafka-0.broker.kafka.svc.cluster.local:9092
+          value: bootstrap.kafka:9092
         command:
         - /bin/bash
         - -cex
