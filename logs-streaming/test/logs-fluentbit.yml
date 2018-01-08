@@ -47,9 +47,9 @@ spec:
         image: solsson/kafkacat@sha256:ebebf47061300b14a4b4c2e1e4303ab29f65e4b95d34af1b14bb8f7ec6da7cef
         env:
         - name: BOOTSTRAP
-          value: kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
+          value: bootstrap.kafka:9092
         - name: TOPIC
-          value: ops-kube-logs-fluentbit-001
+          value: ops.kube-logs-fluentbit.stream.json.001
         command:
         - /bin/bash
         - -e
