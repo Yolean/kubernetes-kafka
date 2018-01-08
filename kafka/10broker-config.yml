@@ -11,6 +11,8 @@ data:
     KAFKA_BROKER_ID=${HOSTNAME##*-}
     sed -i "s/#init#broker.id=#init#/broker.id=$KAFKA_BROKER_ID/" /etc/kafka/server.properties
 
+    LABELS="kafka-broker-id=$KAFKA_BROKER_ID"
+
     hash kubectl 2>/dev/null || {
       sed -i "s/#init#broker.rack=#init#/#init#broker.rack=# kubectl not found in path/" /etc/kafka/server.properties
     } && {
@@ -21,10 +23,8 @@ data:
         sed -i "s/#init#broker.rack=#init#/#init#broker.rack=# zone label not found for node $NODE_NAME/" /etc/kafka/server.properties
       else
         sed -i "s/#init#broker.rack=#init#/broker.rack=$ZONE/" /etc/kafka/server.properties
-        kubectl -n $POD_NAMESPACE label pod $POD_NAME kafka-broker-rack=$ZONE
+        LABELS="$LABELS kafka-broker-rack=$ZONE"
       fi
-
-      kubectl -n $POD_NAMESPACE label pod $POD_NAME kafka-broker-id=$KAFKA_BROKER_ID
 
       OUTSIDE_HOST=$(kubectl get node "$NODE_NAME" -o jsonpath='{.status.addresses[?(@.type=="InternalIP")].address}')
       if [ $? -ne 0 ]; then
@@ -32,8 +32,11 @@ data:
       else
         OUTSIDE_PORT=3240${KAFKA_BROKER_ID}
         sed -i "s|#init#advertised.listeners=OUTSIDE://#init#|advertised.listeners=OUTSIDE://${OUTSIDE_HOST}:${OUTSIDE_PORT}|" /etc/kafka/server.properties
-        kubectl -n $POD_NAMESPACE label pod $POD_NAME kafka-listener-outside-host=$OUTSIDE_HOST
-        kubectl -n $POD_NAMESPACE label pod $POD_NAME kafka-listener-outside-port=$OUTSIDE_PORT
+        LABELS="$LABELS kafka-listener-outside-host=$OUTSIDE_HOST kafka-listener-outside-port=$OUTSIDE_PORT"
+      fi
+
+      if [ ! -z "$LABELS" ]; then
+        kubectl -n $POD_NAMESPACE label pod $POD_NAME $LABELS || echo "Failed to label $POD_NAMESPACE.$POD_NAME - RBAC issue?"
       fi
     }
 

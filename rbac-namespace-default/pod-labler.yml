@@ -2,7 +2,6 @@
 #
 # $ kubectl -n kafka logs kafka-2 -c init-config
 # ...
-# + kubectl -n kafka label pod kafka-2 kafka-broker-id=2
 # Error from server (Forbidden): pods "kafka-2" is forbidden: User "system:serviceaccount:kafka:default" cannot get pods in the namespace "kafka": Unknown user "system:serviceaccount:kafka:default"
 #
 ---
