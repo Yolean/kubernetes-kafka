@@ -58,9 +58,9 @@ data:
     # the brokers.
     num.partitions=1
 
-    default.replication.factor=3
+    default.replication.factor=2
 
-    min.insync.replicas=2
+    min.insync.replicas=1
 
     auto.create.topics.enable=true
 

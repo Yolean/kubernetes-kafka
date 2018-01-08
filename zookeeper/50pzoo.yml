@@ -9,7 +9,7 @@ spec:
       app: zookeeper
       storage: persistent
   serviceName: "pzoo"
-  replicas: 3
+  replicas: 2
   updateStrategy:
     type: OnDelete
   template:
