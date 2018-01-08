@@ -23,7 +23,6 @@ data:
         sed -i "s/#init#broker.rack=#init#/broker.rack=$ZONE/" /etc/kafka/server.properties
       fi
 
-      # This requires additional RBAC, and won't be needed after https://github.com/kubernetes/kubernetes/pull/55329
       kubectl -n $POD_NAMESPACE label pod $POD_NAME kafka-broker-id=$KAFKA_BROKER_ID
 
       OUTSIDE_HOST=$(kubectl get node "$NODE_NAME" -o jsonpath='{.status.addresses[?(@.type=="InternalIP")].address}')
