@@ -25,7 +25,7 @@ spec:
         command:
         - /heapster
         - --source=kubernetes:https://kubernetes.default
-        - --sink=influxdb:http://monitoring-influxdb.kube-system.svc:8086
+        - --sink="kafka:?brokers=bootstrap.kafka:9092"
 ---
 apiVersion: v1
 kind: Service
