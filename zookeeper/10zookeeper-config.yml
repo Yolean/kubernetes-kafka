@@ -22,9 +22,7 @@ data:
     syncLimit=2
     server.1=pzoo-0.pzoo:2888:3888:participant
     server.2=pzoo-1.pzoo:2888:3888:participant
-    server.3=pzoo-2.pzoo:2888:3888:participant
     server.4=zoo-0.zoo:2888:3888:participant
-    server.5=zoo-1.zoo:2888:3888:participant
 
   log4j.properties: |-
     log4j.rootLogger=INFO, stdout
