@@ -1,0 +1,41 @@
+# To see if init containers need RBAC:
+#
+# $ kubectl exec kafka-0 -- cat /etc/kafka/server.properties | grep broker.rack
+# #init#broker.rack=# zone lookup failed, see -c init-config logs
+# $ kubectl logs -c init-config kafka-0
+# ++ kubectl get node some-node '-o=go-template={{index .metadata.labels "failure-domain.beta.kubernetes.io/zone"}}'
+# Error from server (Forbidden): User "system:serviceaccount:kafka:default" cannot get nodes at the cluster scope.: "Unknown user \"system:serviceaccount:kafka:default\""
+#
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: pod-labler
+  namespace: kafka
+  labels:
+    origin: github.com_Yolean_kubernetes-kafka
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - update
+  - patch
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: kafka-pod-labler
+  namespace: kafka
+  labels:
+    origin: github.com_Yolean_kubernetes-kafka
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: pod-labler
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: kafka
