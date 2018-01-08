@@ -21,6 +21,7 @@ data:
         sed -i "s/#init#broker.rack=#init#/#init#broker.rack=# zone label not found for node $NODE_NAME/" /etc/kafka/server.properties
       else
         sed -i "s/#init#broker.rack=#init#/broker.rack=$ZONE/" /etc/kafka/server.properties
+        kubectl -n $POD_NAMESPACE label pod $POD_NAME kafka-broker-rack=$ZONE
       fi
 
       kubectl -n $POD_NAMESPACE label pod $POD_NAME kafka-broker-id=$KAFKA_BROKER_ID
@@ -29,8 +30,10 @@ data:
       if [ $? -ne 0 ]; then
         echo "Outside (i.e. cluster-external access) host lookup command failed"
       else
-        OUTSIDE_HOST=${OUTSIDE_HOST}:3240${KAFKA_BROKER_ID}
-        sed -i "s|#init#advertised.listeners=OUTSIDE://#init#|advertised.listeners=OUTSIDE://${OUTSIDE_HOST}|" /etc/kafka/server.properties
+        OUTSIDE_PORT=3240${KAFKA_BROKER_ID}
+        sed -i "s|#init#advertised.listeners=OUTSIDE://#init#|advertised.listeners=OUTSIDE://${OUTSIDE_HOST}:${OUTSIDE_PORT}|" /etc/kafka/server.properties
+        kubectl -n $POD_NAMESPACE label pod $POD_NAME kafka-listener-outside-host=$OUTSIDE_HOST
+        kubectl -n $POD_NAMESPACE label pod $POD_NAME kafka-listener-outside-port=$OUTSIDE_PORT
       fi
     }
 
