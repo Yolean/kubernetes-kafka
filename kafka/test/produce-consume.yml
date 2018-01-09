@@ -74,6 +74,9 @@ spec:
         env:
         - name: BOOTSTRAP
           value: bootstrap.kafka:9092
+        - name: ACKS
+          # -1 means use brokers' min.insync.replicas
+          value: "-1"
         command:
         - /bin/bash
         - -cex
@@ -83,7 +86,7 @@ spec:
           ./bin/kafka-topics.sh --zookeeper zookeeper.kafka:2181 --describe --topic test-produce-consume
           ;
           tail -f /shared/produce.tmp |
-          ./bin/kafka-console-producer.sh --broker-list $BOOTSTRAP --topic test-produce-consume
+          ./bin/kafka-console-producer.sh --broker-list $BOOTSTRAP --topic test-produce-consume --producer-property "acks=$ACKS"
           ;
         volumeMounts:
         - name: config
