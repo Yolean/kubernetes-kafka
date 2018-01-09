@@ -62,31 +62,6 @@ data:
 
     exit 0
 ---
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: topic-test-kafkacat
-  namespace: test-kafka
-spec:
-  template:
-    spec:
-      containers:
-      - name: topic-create
-        image: solsson/kafka:1.0.0@sha256:17fdf1637426f45c93c65826670542e36b9f3394ede1cb61885c6a4befa8f72d
-        command:
-        - ./bin/kafka-topics.sh
-        - --zookeeper
-        -   zookeeper.kafka.svc.cluster.local:2181
-        - --create
-        - --if-not-exists
-        - --topic
-        -   test-kafkacat
-        - --partitions
-        -   "1"
-        - --replication-factor
-        -   "2"
-      restartPolicy: Never
----
 apiVersion: apps/v1beta2
 kind: ReplicaSet
 metadata:
