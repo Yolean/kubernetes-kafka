@@ -12,14 +12,14 @@ data:
 
     [cluster.local]
     class-name="kafka"
-    servers=[ "kafka:9092" ]
+    servers=[ "kafka-0.broker:9092", "kafka-1.broker:9092", "kafka-2.broker:9092" ]
     topic-refresh=60
     offset-refresh=30
 
     [consumer.local]
     class-name="kafka"
     cluster="local"
-    servers=[ "kafka:9092" ]
+    servers=[ "kafka-0.broker:9092", "kafka-1.broker:9092", "kafka-2.broker:9092" ]
     group-blacklist="^(console-consumer-|python-kafka-consumer-).*$"
     group-whitelist=""
 
