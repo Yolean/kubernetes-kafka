@@ -12,6 +12,9 @@ spec:
     metadata:
       labels:
         app: burrow
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
     spec:
       containers:
       - name: burrow
@@ -21,6 +24,17 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /etc/burrow
+      - name: prom
+        image: solsson/burrow-exporter@sha256:2358412bc4757b7bd459452a9d759a923fc5ba93b26f5fb5b3d1ed8a0189417c
+        ports:
+        - containerPort: 8080
+        env:
+        - name: BURROW_ADDR
+          value: http://localhost:8000
+        - name: METRICS_ADDR
+          value: 0.0.0.0:8080
+        - name: INTERVAL
+          value: "30"
       volumes:
       - name: config
         configMap:
