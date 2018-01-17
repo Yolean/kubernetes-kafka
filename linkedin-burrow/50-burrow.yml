@@ -14,7 +14,7 @@ spec:
         app: burrow
     spec:
       containers:
-      - name: kafka-manager
+      - name: burrow
         image: solsson/burrow@sha256:1f17cb48ba4062b2f796fdf250dce6b6a9d5127b42e15ef2fbc79c68c34ad0ef
         ports:
         - containerPort: 8000
