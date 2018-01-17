@@ -25,7 +25,7 @@ spec:
         - name: config
           mountPath: /etc/burrow
       - name: prom
-        image: solsson/burrow-exporter@sha256:2358412bc4757b7bd459452a9d759a923fc5ba93b26f5fb5b3d1ed8a0189417c
+        image: solsson/burrow-exporter:api-v3@sha256:4407616c5720e8a3397f668eec1aaa31df751b3614c0adfc56cae231f2eaeee2
         ports:
         - containerPort: 8080
         env:
