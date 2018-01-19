@@ -1,3 +1,5 @@
+# meant to be applied using
+# kubectl --namespace kafka patch statefulset kafka --patch "$(cat jmx/50kafka.yml)"
 apiVersion: apps/v1beta2
 kind: StatefulSet
 metadata:
