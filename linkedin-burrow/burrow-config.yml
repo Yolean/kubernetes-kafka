@@ -20,7 +20,7 @@ data:
     class-name="kafka"
     cluster="local"
     servers=[ "kafka-0.broker:9092", "kafka-1.broker:9092", "kafka-2.broker:9092" ]
-    group-blacklist="^(console-consumer-|python-kafka-consumer-).*$"
+    group-blacklist=""
     group-whitelist=""
 
     [consumer.local_zk]
@@ -29,7 +29,7 @@ data:
     servers=[ "zookeeper:2181" ]
     zookeeper-path="/local"
     zookeeper-timeout=30
-    group-blacklist="^(console-consumer-|python-kafka-consumer-).*$"
+    group-blacklist=""
     group-whitelist=""
 
     [httpserver.default]
