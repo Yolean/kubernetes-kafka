@@ -34,7 +34,7 @@ spec:
         - name: config
           mountPath: /etc/burrow
       - name: prom
-        image: solsson/burrow-exporter:api-v3@sha256:4407616c5720e8a3397f668eec1aaa31df751b3614c0adfc56cae231f2eaeee2
+        image: solsson/burrow-exporter:api-v3@sha256:dd690c04ae31c62e4d7d5398f24f368fb2c48046ec3ae68bbc7582c114819a7b
         ports:
         - name: prometheus
           containerPort: 8080
