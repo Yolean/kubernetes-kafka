@@ -35,9 +35,9 @@ spec:
         resources:
           requests:
             cpu: 0m
-            memory: 60Mi
+            memory: 100Mi
           limits:
-            memory: 120Mi
+            memory: 150Mi
         volumeMounts:
         - name: jmx-config
           mountPath: /etc/jmx-kafka
