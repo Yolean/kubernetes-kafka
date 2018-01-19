@@ -23,6 +23,11 @@ spec:
         - /etc/jmx-kafka/jmx-kafka-prometheus.yml
         ports:
         - containerPort: 5556
+        livenessProbe:
+          httpGet:
+            path: /liveness
+            port: 5556
+          periodSeconds: 60
         resources:
           requests:
             cpu: 0m
