@@ -17,8 +17,10 @@ spec:
         image: solsson/kafka-prometheus-jmx-exporter@sha256:a23062396cd5af1acdf76512632c20ea6be76885dfc20cd9ff40fb23846557e8
         command:
         - java
-        - -Xmx64M
-        - -XX:MaxMetaspaceSize=32m
+        - -XX:+UnlockExperimentalVMOptions
+        - -XX:+UseCGroupMemoryLimitForHeap
+        - -XX:MaxRAMFraction=1
+        - -XshowSettings:vm
         - -jar
         - jmx_prometheus_httpserver.jar
         - "5556"
