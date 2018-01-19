@@ -1,5 +1,5 @@
 # meant to be applied using
-# kubectl --namespace kafka patch statefulset kafka --patch "$(cat jmx/50kafka.yml)"
+# kubectl --namespace kafka patch statefulset kafka --patch "$(cat prometheus/50-kafka-jmx-exporter-patch.yml )"
 apiVersion: apps/v1beta2
 kind: StatefulSet
 metadata:
