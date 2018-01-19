@@ -7,6 +7,12 @@ spec:
   selector:
     app: burrow
   ports:
-  - protocol: TCP
+  - name: web
+    protocol: TCP
     port: 80
-    targetPort: 8000
+  - name: api
+    protocol: TCP
+    port: 8000
+  - name: prometheus
+    protocol: TCP
+    port: 8080
