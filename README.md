@@ -35,7 +35,7 @@ Zookeeper at `zookeeper.kafka.svc.cluster.local:2181`.
 
 For Minikube run `kubectl apply -f configure/minikube-storageclass-broker.yml; kubectl apply -f configure/minikube-storageclass-zookeeper.yml`.
 
-There's a similar setup for GKE, `configure/gke-*`. You might want to tweak it before creating.
+There's a similar setup for AKS under `configure/aks-*` and for GKE under `configure/gke-*`. You might want to tweak it before creating.
 
 ## Start Zookeeper
 

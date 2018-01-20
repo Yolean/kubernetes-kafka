@@ -1,0 +1,9 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: kafka-broker
+provisioner: kubernetes.io/azure-disk
+reclaimPolicy: Retain
+parameters:
+  kind: "Managed"
+  storageaccounttype: Premium_LRS
