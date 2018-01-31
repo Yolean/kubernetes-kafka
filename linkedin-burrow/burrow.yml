@@ -1,0 +1,60 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: burrow
+  namespace: kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: burrow
+  template:
+    metadata:
+      labels:
+        app: burrow
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+    spec:
+      containers:
+      - name: burrow
+        image: solsson/burrow@sha256:a6fe5d1268a7e7d58f7f960697fc8fda3e6861a2653fe71135a2207c9cf18cf0
+        ports:
+        - name: api
+          containerPort: 8000
+        readinessProbe:
+          httpGet:
+            path: /burrow/admin
+            port: 8000
+        livenessProbe:
+          httpGet:
+            path: /burrow/admin
+            port: 8000
+        volumeMounts:
+        - name: config
+          mountPath: /etc/burrow
+      - name: prom
+        image: solsson/burrow-exporter:api-v3@sha256:dd690c04ae31c62e4d7d5398f24f368fb2c48046ec3ae68bbc7582c114819a7b
+        ports:
+        - name: prometheus
+          containerPort: 8080
+        env:
+        - name: BURROW_ADDR
+          value: http://localhost:8000
+        - name: METRICS_ADDR
+          value: 0.0.0.0:8080
+        - name: INTERVAL
+          value: "30"
+      - name: dashboard
+        image: joway/burrow-dashboard@sha256:b4cce87c8264119d73f9a6df5d787ea811ce2138d39ca6cd56525bcfbb5169bf
+        env:
+          - name: BURROW_BACKEND
+            value: http://localhost:8000
+        ports:
+        - name: web
+          containerPort: 80
+          protocol: TCP
+      volumes:
+      - name: config
+        configMap:
+          name: burrow-config
