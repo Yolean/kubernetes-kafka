@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: burrow
-        image: solsson/burrow@sha256:1f17cb48ba4062b2f796fdf250dce6b6a9d5127b42e15ef2fbc79c68c34ad0ef
+        image: solsson/burrow@sha256:a6fe5d1268a7e7d58f7f960697fc8fda3e6861a2653fe71135a2207c9cf18cf0
         ports:
         - name: api
           containerPort: 8000
