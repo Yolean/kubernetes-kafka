@@ -63,7 +63,7 @@ That's it. Just add business value :wink:.
 
 ## RBAC
 
-For clusters that enfoce [RBAC](https://kubernetes.io/docs/admin/authorization/rbac/) there's a minimal set of policies in
+For clusters that enforce [RBAC](https://kubernetes.io/docs/admin/authorization/rbac/) there's a minimal set of policies in
 ```
 kubectl apply -f rbac-namespace-default/
 ```
