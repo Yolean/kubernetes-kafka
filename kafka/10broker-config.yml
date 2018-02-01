@@ -57,7 +57,6 @@ data:
     num.partitions=1
 
     default.replication.factor=3
-    offsets.topic.replication.factor=3
 
     min.insync.replicas=2
 
@@ -114,7 +113,7 @@ data:
     ############################# Internal Topic Settings  #############################
     # The replication factor for the group metadata internal topics "__consumer_offsets" and "__transaction_state"
     # For anything other than development testing, a value greater than 1 is recommended for to ensure availability such as 3.
-    offsets.topic.replication.factor=1
+    #offsets.topic.replication.factor=1
     transaction.state.log.replication.factor=1
     transaction.state.log.min.isr=1
 
