@@ -69,7 +69,7 @@ metadata:
   name: kafkacat-consumergroup
   namespace: test-kafka
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       test-target: kafka-client-kafkacat-consumergroup
