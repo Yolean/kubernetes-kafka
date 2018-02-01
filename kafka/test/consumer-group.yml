@@ -94,12 +94,12 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      test-target: kafka-client-kafkacat
+      test-target: kafka-client-kafkacat-consumergroup
       test-type: readiness
   template:
     metadata:
       labels:
-        test-target: kafka-client-kafkacat
+        test-target: kafka-client-kafkacat-consumergroup
         test-type: readiness
         # for example:
         # readonly - can be used in production
