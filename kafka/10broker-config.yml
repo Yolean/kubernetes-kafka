@@ -57,6 +57,7 @@ data:
     num.partitions=1
 
     default.replication.factor=3
+    offsets.topic.replication.factor=3
 
     min.insync.replicas=2
 
