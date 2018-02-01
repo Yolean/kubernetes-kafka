@@ -19,14 +19,15 @@ data:
 
     UNIQUE="${HOSTNAME}@$(date -u -Ins)"
 
-    PREVIOUS=$(tail -n 1 /shared/consumed.tmp)
     echo "${UNIQUE: -41:5}:Test $UNIQUE" >> /shared/produce.tmp
     sleep $PC_WAIT
-    LAST=$(tail -n 1 /shared/consumed.tmp)
+    PREVIOUS=$(cat /shared/consumed.tmp | grep -v '%' || echo "-1")
+    kafkacat -b $BOOTSTRAP -G test-kafkacat-consumergroup test-kafkacat-consumergroup -f '%o\n' -u -c 1 | tee /shared/consumed.tmp
+    LAST=$(cat /shared/consumed.tmp | grep -v '%')
     [ -z "$LAST" ] && echo "Nothing consumed" && exit 1
 
     # should fail if the test has only one replica
-    if (( (N + 1) > M )); then
+    if (( ($PREVIOUS + 1) == $LAST )); then
       echo "Consumed offset increased from $PREVIOUS to $LAST. Diff should be >1 when there's more than 1 replica in the consumer group."
       exit 10
     fi
@@ -105,23 +106,6 @@ spec:
           mountPath: /test
         - name: shared
           mountPath: /shared
-      - name: consumer
-        image: solsson/kafkacat@sha256:b32eedf936f3cde44cd164ddc77dfcf7565a8af4e357ff6de1abe4389ca530c9
-        env:
-        - name: BOOTSTRAP
-          value: bootstrap.kafka:9092
-        command:
-        - /bin/bash
-        - -cex
-        - >
-          kafkacat -b $BOOTSTRAP -G test-kafkacat-consumergroup test-kafkacat-consumergroup -f '%o\n' -u -d broker |
-          tee /shared/consumed.tmp
-          ;
-        volumeMounts:
-        - name: config
-          mountPath: /test
-        - name: shared
-          mountPath: /shared
       - name: testcase
         image: solsson/kafkacat@sha256:b32eedf936f3cde44cd164ddc77dfcf7565a8af4e357ff6de1abe4389ca530c9
         env:
@@ -138,7 +122,7 @@ spec:
             - -e
             - /test/test.sh
           initialDelaySeconds: 10
-          periodSeconds: 10
+          periodSeconds: 35
         livenessProbe:
           exec:
             command:
