@@ -28,5 +28,5 @@ See https://github.com/Yolean/kubernetes-kafka/pull/140
 Use the `replication-factor-increase-job.yml`, after editing `TOPICS` and `BROKERS`.
 
 The affected topics may end up without a preferred replica. See above to fix that,
-or to affect only your selected topics use [Kafka Manager's](https://github.com/Yolean/kubernetes-kafka/pull/83) topic screen,
-Generate Partition Assignments followed by Reassigned Partitions.
+or to affect only your selected topics use [Kafka Manager](https://github.com/Yolean/kubernetes-kafka/pull/83)'s topic screen,
+Generate Partition Assignments followed by Reassign Partitions.
