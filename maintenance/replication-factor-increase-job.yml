@@ -45,6 +45,7 @@ spec:
 
           tail -n 1 /tmp/generated.txt > /tmp/proposed-reassignment.json;
 
+          sleep 1;
           echo "# proposed-reassignment.json";
           cat /tmp/proposed-reassignment.json;
 
