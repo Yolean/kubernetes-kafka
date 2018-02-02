@@ -51,9 +51,10 @@ spec:
 
           sed -i 's/"replicas":\[.\]/"replicas":[0,1,2]/g' /tmp/proposed-reassignment.json;
           sed -i 's/,"log_dirs":\["any"\]//g' /tmp/proposed-reassignment.json;
-          echo "# proposed-reassignment.json";
+          echo "# proposed-reassignment.json modified to affect replication factor";
           cat /tmp/proposed-reassignment.json;
 
+          echo "# Triggering kafka-reassign-partitions.sh"
           ./bin/kafka-reassign-partitions.sh
           --zookeeper=$ZOOKEEPER
           --execute
