@@ -1,0 +1,65 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: replication-factor-increase
+  namespace: kafka
+spec:
+  template:
+    metadata:
+      name: replication-factor-increase
+    spec:
+      containers:
+      - name: kafka
+        image: solsson/kafka:1.0.0@sha256:17fdf1637426f45c93c65826670542e36b9f3394ede1cb61885c6a4befa8f72d
+        env:
+        - name: ZOOKEEPER
+          value: zookeeper.kafka:2181
+        # the following must be edited per job
+        - name: TOPICS
+          value: ""
+        - name: BROKERS
+          value: 0,1,2
+        command:
+        - /bin/bash
+        - -ce
+        - >
+          if [ -z "$TOPICS" ];  then
+            echo "Please set the TOPICS env (comma-separated) and re-create the job"
+            tail -f /dev/null
+          fi
+
+          echo '{"topics":[' > /tmp/reassign-topics.json;
+          echo -n ' {"topic":"' >> /tmp/reassign-topics.json;
+          echo -n $TOPICS | sed 's/,/"},\n {"topic":"/g' >> /tmp/reassign-topics.json;
+          echo '"}' >> /tmp/reassign-topics.json;
+          echo ']}' >> /tmp/reassign-topics.json;
+
+          echo "# reassign-topics.json";
+          cat /tmp/reassign-topics.json;
+
+          ./bin/kafka-reassign-partitions.sh
+          --zookeeper=$ZOOKEEPER
+          --generate
+          --topics-to-move-json-file=/tmp/reassign-topics.json
+          --broker-list=$BROKERS > /tmp/generated.txt;
+
+          tail -n 1 /tmp/generated.txt > /tmp/proposed-reassignment.json;
+
+          sleep 1;
+          echo "# proposed-reassignment.json";
+          cat /tmp/proposed-reassignment.json;
+
+          sed -i 's/"replicas":\[.\]/"replicas":[0,1,2]/g' /tmp/proposed-reassignment.json;
+          sed -i 's/,"log_dirs":\["any"\]//g' /tmp/proposed-reassignment.json;
+          echo "# proposed-reassignment.json modified to affect replication factor";
+          cat /tmp/proposed-reassignment.json;
+
+          echo "# Triggering kafka-reassign-partitions.sh"
+          ./bin/kafka-reassign-partitions.sh
+          --zookeeper=$ZOOKEEPER
+          --execute
+          --reassignment-json-file=/tmp/proposed-reassignment.json;
+
+          echo "# Reassignment exited. Upon success you may want to run preferred-replica-election."
+      restartPolicy: Never
+  backoffLimit: 3
