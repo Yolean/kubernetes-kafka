@@ -20,3 +20,13 @@ Create the `preferred-replica-election-job.yml` resource, after deleting any pre
 _-- Neha Narkhede, Gwen Shapira, and Todd Palino. ”Kafka: The Definitive Guide”_
 
 Use the `reassign-paritions-job.yml`, after editing `TOPICS` and `BROKERS`.
+
+## Increase a topic's replication factor
+
+See https://github.com/Yolean/kubernetes-kafka/pull/140
+
+Use the `replication-factor-increase-job.yml`, after editing `TOPICS` and `BROKERS`.
+
+The affected topics may end up without a preferred replica. See above to fix that,
+or to affect only your selected topics use [Kafka Manager's](https://github.com/Yolean/kubernetes-kafka/pull/83) topic screen,
+Generate Partition Assignments followed by Reassigned Partitions.
