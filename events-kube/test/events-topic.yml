@@ -1,3 +1,5 @@
+# Note that this test is scaled to zero
+# because it will only stay healthy when there are cluster events, at least 1 per periodSeconds
 ---
 kind: ConfigMap
 metadata:
@@ -35,7 +37,7 @@ metadata:
   name: events-topic
   namespace: test-kafka
 spec:
-  replicas: 1
+  replicas: 0
   strategy:
     type: Recreate
   selector:
@@ -47,12 +49,6 @@ spec:
       labels:
         test-target: events-topic
         test-type: readiness
-        # for example:
-        # readonly - can be used in production
-        # isolated - read/write but in a manner that does not affect other services
-        # load - unsuitable for production because it uses significant resources
-        # chaos - unsuitable for production because it injects failure modes
-        #test-use:
     spec:
       containers:
       - name: testcase

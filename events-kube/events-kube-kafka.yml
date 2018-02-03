@@ -38,6 +38,7 @@ spec:
           curl
           -f
           -s
+          -S
           --cacert /run/secrets/kubernetes.io/serviceaccount/ca.crt
           --header "Authorization: Bearer $(cat /run/secrets/kubernetes.io/serviceaccount/token)"
           https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT/api/v1/watch/events
