@@ -1,0 +1,50 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: replicated-partitions
+  namespace: test-kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      test-type: readiness
+      test-target: under-replicated-partitions
+  template:
+    metadata:
+      labels:
+        test-type: readiness
+        test-target: under-replicated-partitions
+    spec:
+      containers:
+      - name: kafka
+        image: solsson/kafka:1.0.0@sha256:17fdf1637426f45c93c65826670542e36b9f3394ede1cb61885c6a4befa8f72d
+        command:
+        - /bin/bash
+        - -ec
+        - >
+          touch /tmp/testlog;
+          tail -f /tmp/testlog
+        readinessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -c
+            - >
+              echo "### $(date -Ins -u) ###" >> /tmp/testlog
+              &&
+              [
+              $(
+              ./bin/kafka-topics.sh
+              --zookeeper zookeeper.kafka:2181
+              --describe
+              --under-replicated-partitions
+              |
+              tee -a /tmp/testlog
+              |
+              wc -l
+              )
+              -eq
+              0
+              ]
+          periodSeconds: 30
+          timeoutSeconds: 29

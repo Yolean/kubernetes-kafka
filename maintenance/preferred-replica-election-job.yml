@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: preferred-replica-election
+  namespace: kafka
+spec:
+  template:
+    metadata:
+      name: preferred-replica-election
+    spec:
+      containers:
+      - name: kafka
+        image: solsson/kafka:1.0.0@sha256:17fdf1637426f45c93c65826670542e36b9f3394ede1cb61885c6a4befa8f72d
+        command:
+        - ./bin/kafka-preferred-replica-election.sh
+        - --zookeeper
+        - zookeeper:2181
+      restartPolicy: Never
+  backoffLimit: 3
