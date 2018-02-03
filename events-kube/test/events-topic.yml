@@ -49,12 +49,6 @@ spec:
       labels:
         test-target: events-topic
         test-type: readiness
-        # for example:
-        # readonly - can be used in production
-        # isolated - read/write but in a manner that does not affect other services
-        # load - unsuitable for production because it uses significant resources
-        # chaos - unsuitable for production because it injects failure modes
-        #test-use:
     spec:
       containers:
       - name: testcase
