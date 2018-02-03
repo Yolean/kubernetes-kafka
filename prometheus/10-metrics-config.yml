@@ -9,9 +9,8 @@ data:
     lowercaseOutputName: true
     jmxUrl: service:jmx:rmi:///jndi/rmi://127.0.0.1:5555/jmxrmi
     ssl: false
-    whitelistObjectNames: ["kafka.controller:*","kafka.server:*","java.lang:*"]
+    whitelistObjectNames: ["kafka.server:*","kafka.controller:*","java.lang:*"]
     rules:
-      - pattern : kafka.controller<type=KafkaController, name=(.+)><>(.*)
       - pattern : kafka.server<type=ReplicaFetcherManager, name=MaxLag, clientId=(.+)><>Value
       - pattern : kafka.server<type=BrokerTopicMetrics, name=(BytesInPerSec|BytesOutPerSec|MessagesInPerSec), topic=(.+)><>OneMinuteRate
       - pattern : kafka.server<type=KafkaRequestHandlerPool, name=RequestHandlerAvgIdlePercent><>OneMinuteRate
@@ -21,6 +20,7 @@ data:
       - pattern : kafka.server<type=socket-server-metrics, networkProcessor=(.+)><>(.*)
       - pattern : kafka.server<type=Fetch><>queue-size
       - pattern : kafka.server<type=SessionExpireListener, name=(.+)><>OneMinuteRate
+      - pattern : kafka.controller<type=KafkaController, name=(.+)><>(.*)
       - pattern : java.lang<type=OperatingSystem><>SystemCpuLoad
       - pattern : java.lang<type=Memory><HeapMemoryUsage>used
       - pattern : java.lang<type=OperatingSystem><>FreePhysicalMemorySize
