@@ -20,7 +20,7 @@ data:
       - pattern : kafka.server<type=socket-server-metrics, networkProcessor=(.+)><>(.*)
       - pattern : kafka.server<type=Fetch><>queue-size
       - pattern : kafka.server<type=SessionExpireListener, name=(.+)><>OneMinuteRate
-      - pattern : kafka.controller<type=KafkaController, name=(.+)><>(.*)
+      - pattern : kafka.controller<type=KafkaController, name=(.+)><>Value
       - pattern : java.lang<type=OperatingSystem><>SystemCpuLoad
       - pattern : java.lang<type=Memory><HeapMemoryUsage>used
       - pattern : java.lang<type=OperatingSystem><>FreePhysicalMemorySize
