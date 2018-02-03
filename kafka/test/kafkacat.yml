@@ -91,6 +91,7 @@ metadata:
   name: kafkacat
   namespace: test-kafka
 spec:
+  # Note that this test sets a consumer group, but asserts assume that the tests gets its own messages
   replicas: 1
   selector:
     matchLabels:
@@ -101,12 +102,6 @@ spec:
       labels:
         test-target: kafka-client-kafkacat
         test-type: readiness
-        # for example:
-        # readonly - can be used in production
-        # isolated - read/write but in a manner that does not affect other services
-        # load - unsuitable for production because it uses significant resources
-        # chaos - unsuitable for production because it injects failure modes
-        #test-use:
     spec:
       containers:
       - name: producer
@@ -133,11 +128,13 @@ spec:
         env:
         - name: BOOTSTRAP
           value: bootstrap.kafka:9092
+        - name: CONSUMER_GROUP_ID
+          value: test-kafkacat-group
         command:
         - /bin/bash
         - -cex
         - >
-          kafkacat -C -b $BOOTSTRAP -t test-kafkacat -o -1 -f '%T;%k:%p;%o;%s\n' -u -d broker |
+          kafkacat -b $BOOTSTRAP -G $CONSUMER_GROUP_ID test-kafkacat -o -1 -f '%T;%k:%p;%o;%s\n' -u -d broker |
           tee /shared/consumed.tmp
           ;
         volumeMounts:

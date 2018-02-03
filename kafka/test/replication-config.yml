@@ -1,0 +1,98 @@
+# https://github.com/Yolean/kubernetes-kafka/pull/140
+---
+kind: ConfigMap
+metadata:
+  name: replication-config
+  namespace: test-kafka
+apiVersion: v1
+data:
+
+  setup.sh: |-
+    touch /tmp/testlog
+
+    tail -f /tmp/testlog
+
+  test.sh: |-
+    exec >> /tmp/testlog
+    exec 2>&1
+    set -e
+
+    kafkacat -L -b $BOOTSTRAP > /tmp/metadata
+    BROKERS=$(cat /tmp/metadata | grep -E ' [0-9]+ brokers:' | awk '{print $1}')
+    if (( $BROKERS == 1 )); then
+      echo "Only one broker; no need to check for >1 replication config."
+      exit 0
+    fi
+
+    WITH_TWO_OR_MORE=$(cat /tmp/metadata | grep -E ' replicas: [0-9]+,[0-9]+' | wc -l)
+    WITH_ONE=$(cat /tmp/metadata | grep -E ' replicas: [0-9]+, ' | wc -l)
+    if (( $WITH_TWO_OR_MORE == 0 )); then
+      echo "No partitions have >1 replica, so this is probably normal."
+      exit 0
+    fi
+
+    if (( $WITH_ONE > $MAX_SINGLE_REPLICA_PARTITIONS )); then
+      echo "$(date --iso-8601='ns') There are $WITH_ONE partitions with only one replica. Alerts for under-replicated partitions won't catch that."
+      exit 10
+    fi
+
+    echo "$(date --iso-8601='ns') $WITH_ONE partitions have one replica and WITH_TWO_OR_MORE have more"
+    exit 0
+
+  quit-on-nonzero-exit.sh: |-
+    exec >> /tmp/testlog
+    exec 2>&1
+
+    exit 0
+---
+apiVersion: apps/v1beta2
+kind: ReplicaSet
+metadata:
+  name: replication-config
+  namespace: test-kafka
+spec:
+  # Note that this test sets a consumer group, but asserts assume that the tests gets its own messages
+  replicas: 1
+  selector:
+    matchLabels:
+      test-target: kafka-replication-config
+      test-type: readiness
+  template:
+    metadata:
+      labels:
+        test-target: kafka-replication-config
+        test-type: readiness
+    spec:
+      containers:
+      - name: testcase
+        image: solsson/kafkacat@sha256:b32eedf936f3cde44cd164ddc77dfcf7565a8af4e357ff6de1abe4389ca530c9
+        env:
+        - name: BOOTSTRAP
+          value: bootstrap.kafka:9092
+        - name: MAX_SINGLE_REPLICA_PARTITIONS
+          value: "0"
+        command:
+        - /bin/bash
+        - -e
+        - /test/setup.sh
+        readinessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -e
+            - /test/test.sh
+          initialDelaySeconds: 30
+          periodSeconds: 60
+        livenessProbe:
+          exec:
+            command:
+            - /bin/bash
+            - -e
+            - /test/quit-on-nonzero-exit.sh
+        volumeMounts:
+        - name: config
+          mountPath: /test
+      volumes:
+      - name: config
+        configMap:
+          name: replication-config
