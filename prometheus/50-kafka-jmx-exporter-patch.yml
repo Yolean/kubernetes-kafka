@@ -1,0 +1,42 @@
+# meant to be applied using
+# kubectl --namespace kafka patch statefulset kafka --patch "$(cat prometheus/50-kafka-jmx-exporter-patch.yml )"
+apiVersion: apps/v1beta2
+kind: StatefulSet
+metadata:
+  name: kafka
+  namespace: kafka
+spec:
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "5556"
+    spec:
+      containers:
+      - name: metrics
+        image: solsson/kafka-prometheus-jmx-exporter@sha256:a23062396cd5af1acdf76512632c20ea6be76885dfc20cd9ff40fb23846557e8
+        command:
+        - java
+        - -XX:+UnlockExperimentalVMOptions
+        - -XX:+UseCGroupMemoryLimitForHeap
+        - -XX:MaxRAMFraction=1
+        - -XshowSettings:vm
+        - -jar
+        - jmx_prometheus_httpserver.jar
+        - "5556"
+        - /etc/jmx-kafka/jmx-kafka-prometheus.yml
+        ports:
+        - containerPort: 5556
+        resources:
+          requests:
+            cpu: 0m
+            memory: 60Mi
+          limits:
+            memory: 120Mi
+        volumeMounts:
+        - name: jmx-config
+          mountPath: /etc/jmx-kafka
+      volumes:
+      - name: jmx-config
+        configMap:
+          name: jmx-config
