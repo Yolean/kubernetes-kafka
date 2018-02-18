@@ -30,6 +30,8 @@ RUN set -ex; \
   chmod u+x $CONFIG_MOUNT_PATH/init.sh; \
   rm $CONFIG_MOUNT_PATH/10broker-config.yml; \
   \
+  rm /usr/local/bin/yq; \
+  \
   curl -sLS -o k.tar.gz -k https://dl.k8s.io/v${KUBERNETES_VERSION}/kubernetes-client-linux-amd64.tar.gz; \
   echo "$KUBERNETES_CLIENTS_SHA256  k.tar.gz" | sha256sum -c; \
   tar -xvzf k.tar.gz -C /usr/local/bin/ --strip-components=3 kubernetes/client/bin/kubectl; \
