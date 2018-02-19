@@ -8,7 +8,7 @@ RUN set -ex; \
 ENV \
   CONFIG_MOUNT_PATH=/etc/kafka \
   KUBERNETES_VERSION=1.9.3 \
-  KUBERNETES_CLIENTS_SHA256=2f509c05f0c4e1c1ac9e98879a1924f24546905349457904344d79dc639217be
+  KUBERNETES_CLIENT_SHA256=2f509c05f0c4e1c1ac9e98879a1924f24546905349457904344d79dc639217be
 
 COPY 10broker-config.yml $CONFIG_MOUNT_PATH/10broker-config.yml
 
@@ -33,7 +33,7 @@ RUN set -ex; \
   rm /usr/local/bin/yq; \
   \
   curl -sLS -o k.tar.gz -k https://dl.k8s.io/v${KUBERNETES_VERSION}/kubernetes-client-linux-amd64.tar.gz; \
-  echo "$KUBERNETES_CLIENTS_SHA256  k.tar.gz" | sha256sum -c; \
+  echo "$KUBERNETES_CLIENT_SHA256  k.tar.gz" | sha256sum -c; \
   tar -xvzf k.tar.gz -C /usr/local/bin/ --strip-components=3 kubernetes/client/bin/kubectl; \
   rm k.tar.gz; \
   \
