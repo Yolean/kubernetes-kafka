@@ -27,8 +27,10 @@ RUN set -ex; \
   chmod u+x /usr/local/bin/yq; \
   \
   for F in init.sh server.properties log4j.properties; do yq r -j $CONFIG_MOUNT_PATH/10broker-config.yml "data[$F]" | jq -r . | tee $CONFIG_MOUNT_PATH/$F; done; \
-  chmod u+x $CONFIG_MOUNT_PATH/init.sh; \
   rm $CONFIG_MOUNT_PATH/10broker-config.yml; \
+  \
+  chmod u+x $CONFIG_MOUNT_PATH/init.sh; \
+  sed -i "2i$CONFIG_MOUNT_PATH/init.sh" ./bin/kafka-server-start.sh; \
   \
   rm /usr/local/bin/yq; \
   \
