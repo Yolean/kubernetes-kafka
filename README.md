@@ -49,7 +49,8 @@ Have a look at:
 
 Available for:
 
- * [Brokers](./outside-services/)
+ * [Brokers](./outside-services/broker)
+ * [Schema Registry](./outside-services/schema-registry)
 
 ## Fewer than three nodes?
 

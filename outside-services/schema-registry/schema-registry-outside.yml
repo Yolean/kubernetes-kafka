@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: schema-registry-outside
+  namespace: kafka
+spec:
+  selector:
+    app: schema-registry
+  ports:
+  - protocol: TCP
+    targetPort: 80
+    port: 31111
+    nodePort: 31111
+  type: NodePort
