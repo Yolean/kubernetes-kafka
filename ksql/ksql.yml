@@ -1,0 +1,37 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: ksql
+  namespace: kafka
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: ksql
+    spec:
+      containers:
+      - name: ksql
+        image: solsson/kafka-ksql@sha256:0ecd9e9042f422ac5856a306c7ada0c52046cbe9e0612cba6ed75b6260f2c101
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: config
+          mountPath: /etc/ksql-rest-app
+      volumes:
+      - name: config
+        configMap:
+          name: ksql-config
