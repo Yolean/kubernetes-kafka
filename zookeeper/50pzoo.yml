@@ -23,8 +23,10 @@ spec:
       initContainers:
       - name: init-config
         image: solsson/kafka:1.0.1@sha256:1a4689d49d6274ac59b9b740f51b0408e1c90a9b66d16ad114ee9f7193bab111
-        command: ['/bin/bash', '/etc/kafka/init.sh']
+        command: ['/bin/bash', '/etc/kafka-configmap/init.sh']
         volumeMounts:
+        - name: configmap
+          mountPath: /etc/kafka-configmap
         - name: config
           mountPath: /etc/kafka
         - name: data
@@ -61,9 +63,11 @@ spec:
         - name: data
           mountPath: /var/lib/zookeeper/data
       volumes:
-      - name: config
+      - name: configmap
         configMap:
           name: zookeeper-config
+      - name: config
+        emptyDir: {}
   volumeClaimTemplates:
   - metadata:
       name: data
