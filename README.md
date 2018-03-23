@@ -28,6 +28,7 @@ If you begin to rely on this kafka setup we recommend you fork, for example to e
 
 | tag   | k8s ≥ | highlights |
 | ----- | ------ | ---------- |
+| master | 1.9.4 | Required for read-only ConfigMaps, k8s 1.9.4+ |
 | v3.1  | 1.8    | The painstaking path to `min.insync.replicas`=2 |
 | v3.0  | 1.8    | [Outside access](#78), [modern manifests](#84), [bootstrap.kafka](#52) |
 | v2.1  | 1.5    | Kafka 1.0, the init script concept |
