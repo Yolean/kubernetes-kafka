@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ksql
+  namespace: kafka
+  labels:
+    app: ksql-cli
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ksql-cli
+  template:
+    metadata:
+      labels:
+        app: ksql-cli
+    spec:
+      containers:
+      - name: ksql-cli
+        image: confluentinc/ksql-cli:0.5@sha256:e86a32edefdfc5c4aa0b0015f6a62eacc8a3ead175362450dbd4786d6ad4851f
+        ports:
+        - containerPort: 80
+        env:
+        - name: KSQL_CONFIG_DIR
+          value: /etc/ksql
+        - name: KSQL_LOG4J_OPTS
+          value: -Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties
+        - name: STREAMS_BOOTSTRAP_SERVERS
+          value: bootstrap.kafka:9092
+        - name: STREAMS_SCHEMA_REGISTRY_HOST
+          value: avro-schemas
+        - name: STREAMS_SCHEMA_REGISTRY_PORT
+          value: "80"
