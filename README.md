@@ -9,7 +9,7 @@ To quote [@arthurk](https://github.com/Yolean/kubernetes-kafka/issues/82#issueco
 
 > thanks for creating and maintaining this Kubernetes files, they're up-to-date (unlike the kubernetes contrib files, don't require helm and work great!
 
-## Gettings started
+## Getting started
 
 We suggest you `apply -f` manifests in the following order:
  * You choice of storage classes from [./configure](./configure/)
