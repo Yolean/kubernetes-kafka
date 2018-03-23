@@ -24,7 +24,7 @@ spec:
         - name: KSQL_CONFIG_DIR
           value: /etc/ksql
         - name: KSQL_LOG4J_OPTS
-          value: -Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties
+          value: -Dlog4j.configuration=file:/etc/ksql/log4j.properties
         - name: STREAMS_BOOTSTRAP_SERVERS
           value: bootstrap.kafka:9092
         - name: STREAMS_SCHEMA_REGISTRY_HOST
