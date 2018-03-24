@@ -9,7 +9,7 @@ To quote [@arthurk](https://github.com/Yolean/kubernetes-kafka/issues/82#issueco
 
 > thanks for creating and maintaining this Kubernetes files, they're up-to-date (unlike the kubernetes contrib files, don't require helm and work great!
 
-## Gettings started
+## Getting started
 
 We suggest you `apply -f` manifests in the following order:
  * You choice of storage classes from [./configure](./configure/)
@@ -28,6 +28,7 @@ If you begin to rely on this kafka setup we recommend you fork, for example to e
 
 | tag   | k8s ≥ | highlights |
 | ----- | ------ | ---------- |
+| master | 1.9.4, 1.8.9, 1.7.14 | Required for read-only ConfigMaps [#162](https://github.com/Yolean/kubernetes-kafka/issues/162) [#163](https://github.com/Yolean/kubernetes-kafka/pull/163) [k8s #58720](https://github.com/kubernetes/kubernetes/pull/58720) |
 | v3.1  | 1.8    | The painstaking path to `min.insync.replicas`=2 |
 | v3.0  | 1.8    | [Outside access](#78), [modern manifests](#84), [bootstrap.kafka](#52) |
 | v2.1  | 1.5    | Kafka 1.0, the init script concept |
