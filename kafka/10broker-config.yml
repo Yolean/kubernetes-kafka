@@ -46,7 +46,7 @@ data:
     printf '%s\n' "${SEDS[@]}" > /tmp/kafka-init-config.sed
     sed -f /tmp/kafka-init-config.sed /etc/kafka-configmap/server.properties > /etc/kafka/server.properties
 
-    echo "Completed initial config. Staying alive to support Kafka 1.1.0 dynamic config updates"
+    echo "Completed initial config. Staying alive to support Kafka 1.1+ dynamic config updates"
     tail -f /dev/null
 
   server.properties: |-
