@@ -44,10 +44,9 @@ data:
       fi
     }
     printf '%s\n' "${SEDS[@]}" > /tmp/kafka-init-config.sed
-    sed -f /tmp/kafka-init-config.sed /etc/kafka-configmap/server.properties > /etc/kafka/server.properties
-
-    echo "Completed initial config. Staying alive to support Kafka 1.1+ dynamic config updates"
-    tail -f /dev/null
+    sed -f /tmp/kafka-init-config.sed /etc/kafka-configmap/server.properties > /etc/kafka/server.properties.tmp
+    [ $? -eq 0 ] && mv /etc/kafka/server.properties.tmp /etc/kafka/server.properties
+    [ -f /etc/kafka/server.properties ] && echo "Ready for Kafka start" && tail -f /dev/null
 
   server.properties: |-
     ############################# Log Basics #############################
