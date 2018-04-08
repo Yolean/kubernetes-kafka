@@ -75,7 +75,7 @@ data:
 
     ############################# Socket Server Settings #############################
 
-    # The address the socket server listens on. It will get the value returned from
+    # The address the socket server listens on. It will get the value returned from 
     # java.net.InetAddress.getCanonicalHostName() if not configured.
     #   FORMAT:
     #     listeners = listener_name://host_name:port
@@ -84,7 +84,7 @@ data:
     #listeners=PLAINTEXT://:9092
     listeners=OUTSIDE://:9094,PLAINTEXT://:9092
 
-    # Hostname and port the broker will advertise to producers and consumers. If not set,
+    # Hostname and port the broker will advertise to producers and consumers. If not set, 
     # it uses the value for "listeners" if configured.  Otherwise, it will use the value
     # returned from java.net.InetAddress.getCanonicalHostName().
     #advertised.listeners=PLAINTEXT://your.host.name:9092
@@ -124,7 +124,7 @@ data:
     # There are a few important trade-offs here:
     #    1. Durability: Unflushed data may be lost if you are not using replication.
     #    2. Latency: Very large flush intervals may lead to latency spikes when the flush does occur as there will be a lot of data to flush.
-    #    3. Throughput: The flush is generally the most expensive operation, and a small flush interval may lead to exceessive seeks.
+    #    3. Throughput: The flush is generally the most expensive operation, and a small flush interval may lead to excessive seeks.
     # The settings below allow one to configure the flush policy to flush data after a period of time or
     # every N messages (or both). This can be done globally and overridden on a per-topic basis.
 
@@ -144,8 +144,8 @@ data:
     # The minimum age of a log file to be eligible for deletion due to age
     log.retention.hours=-1
 
-    # A size-based retention policy for logs. Segments are pruned from the log as long as the remaining
-    # segments don't drop below log.retention.bytes. Functions independently of log.retention.hours.
+    # A size-based retention policy for logs. Segments are pruned from the log unless the remaining
+    # segments drop below log.retention.bytes. Functions independently of log.retention.hours.
     #log.retention.bytes=1073741824
 
     # The maximum size of a log segment file. When this size is reached a new log segment will be created.
