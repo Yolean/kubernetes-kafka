@@ -13,6 +13,7 @@ To quote [@arthurk](https://github.com/Yolean/kubernetes-kafka/issues/82#issueco
 
 We suggest you `apply -f` manifests in the following order:
  * Your choice of storage classes from [./configure](./configure/)
+ * [namespace](./00-namespace.yml)
  * [./rbac-namespace-default](./rbac-namespace-default/)
  * [./zookeeper](./zookeeper/)
  * [./kafka](./kafka/)
