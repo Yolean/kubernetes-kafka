@@ -36,7 +36,7 @@ data:
       exit 10
     fi
 
-    echo "$(date --iso-8601='ns') $WITH_ONE partitions have one replica and WITH_TWO_OR_MORE have more"
+    echo "$(date --iso-8601='ns') $WITH_ONE partitions have one replica and $WITH_TWO_OR_MORE have more"
     exit 0
 
   quit-on-nonzero-exit.sh: |-
