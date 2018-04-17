@@ -45,7 +45,6 @@ data:
     }
     printf '%s\n' "${SEDS[@]}" | sed -f - /etc/kafka-configmap/server.properties > /etc/kafka/server.properties.tmp
     [ $? -eq 0 ] && mv /etc/kafka/server.properties.tmp /etc/kafka/server.properties
-    [ -f /etc/kafka/server.properties ] && echo "Ready for Kafka start" && tail -f /dev/null
 
   server.properties: |-
     ############################# Log Basics #############################
