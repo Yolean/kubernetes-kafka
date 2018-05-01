@@ -66,6 +66,8 @@ spec:
         -   test-produce-consume
         - --partitions
         -   "1"
+        - --replication-factor
+        -   "3"
       restartPolicy: Never
 ---
 apiVersion: apps/v1beta2
