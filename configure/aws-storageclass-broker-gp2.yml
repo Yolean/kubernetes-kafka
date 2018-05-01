@@ -6,5 +6,6 @@ metadata:
     k8s-addon: storage-aws.addons.k8s.io
 provisioner: kubernetes.io/aws-ebs
 reclaimPolicy: Retain
+allowVolumeExpansion: true
 parameters:
   type: gp2
