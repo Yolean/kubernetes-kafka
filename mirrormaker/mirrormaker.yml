@@ -22,7 +22,31 @@ spec:
       containers:
       - name: kafka
         image: solsson/kafka:1.1@sha256:ba863ca7dc28563930584e37f93d57c2cbf3f46b1c1fa104fe8af7bcc0c31df4
+        resources:
+          requests:
+            cpu: 0m
+            memory: 80Mi
+          limits:
+            cpu: 20m
+            memory: 200Mi
+        env:
+        - name: TARGET_BOOTSTRAP
+          value: bootstrap.kafka:9092
+        - name: SOURCE_BOOTSTRAP
+          value: mirror-from.kafka:32400,mirror-from.kafka:32401,mirror-from.kafka:32402
+        - name: WHITELIST
+          value: .*yolean.*yolean.*operations.*
+        - name: GROUP_ID
+          value: mirror-to-4
         command:
-        - tail
-        - -f
-        - /dev/null
+        - bash
+        - -cex
+        - >
+          echo "bootstrap.servers=$SOURCE_BOOTSTRAP" >  ./config/consumer.properties;
+          echo "group.id=$GROUP_ID"                  >> ./config/consumer.properties;
+          echo "auto.offset.reset=earliest"          >> ./config/consumer.properties;
+          echo "bootstrap.servers=$TARGET_BOOTSTRAP" >  ./config/producer.properties;
+          echo "log4j.logger.org.apache.kafka.clients.Metadata=DEBUG"                              >> ./config/tools-log4j.properties;
+          echo "log4j.logger.org.apache.kafka.clients.consumer.internals.AbstractCoordinator=INFO" >> ./config/tools-log4j.properties;
+          echo "log4j.logger.org.apache.kafka.clients.NetworkClient=INFO"                          >> ./config/tools-log4j.properties;
+          ./bin/kafka-mirror-maker.sh --consumer.config ./config/consumer.properties --producer.config ./config/producer.properties --whitelist "$WHITELIST"

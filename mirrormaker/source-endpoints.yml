@@ -1,0 +1,32 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: mirror-from
+  namespace: kafka
+spec:
+  ports:
+  - name: outside-0
+    port: 32400
+  - name: outside-1
+    port: 32401
+  - name: outside-2
+    port: 32402
+---
+kind: Endpoints
+apiVersion: v1
+metadata:
+  name: mirror-from
+  namespace: kafka
+subsets:
+- addresses:
+  # source cluster: kubectl -n kafka get pods -l app=kafka -o yaml | grep outside
+  - ip: 10.132.0.13
+  - ip: 10.132.0.9
+  - ip: 10.132.0.10
+  ports:
+  - name: outside-0
+    port: 32400
+  - name: outside-1
+    port: 32401
+  - name: outside-2
+    port: 32402
