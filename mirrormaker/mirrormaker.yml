@@ -35,7 +35,7 @@ spec:
         - name: SOURCE_BOOTSTRAP
           value: mirror-from.kafka:32400,mirror-from.kafka:32401,mirror-from.kafka:32402
         - name: WHITELIST
-          value: .*yolean.*yolean.*operations.*
+          value: .*yolean.*operations.*
         - name: GROUP_ID
           value: mirror-to-4
         command:
