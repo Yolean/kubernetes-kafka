@@ -44,7 +44,7 @@ spec:
         - >
           echo "bootstrap.servers=$SOURCE_BOOTSTRAP" >  ./config/consumer.properties;
           echo "group.id=$GROUP_ID"                  >> ./config/consumer.properties;
-          echo "auto.offset.reset=earliest"          >> ./config/consumer.properties;
+          echo "auto.offset.reset=none"              >> ./config/consumer.properties;
           echo "bootstrap.servers=$TARGET_BOOTSTRAP" >  ./config/producer.properties;
           echo "log4j.logger.org.apache.kafka.clients.Metadata=DEBUG"                              >> ./config/tools-log4j.properties;
           echo "log4j.logger.org.apache.kafka.clients.consumer.internals.AbstractCoordinator=INFO" >> ./config/tools-log4j.properties;
