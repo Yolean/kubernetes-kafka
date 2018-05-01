@@ -30,7 +30,7 @@ If you begin to rely on this kafka setup we recommend you fork, for example to e
 | tag   | k8s ≥ | highlights |
 | ----- | ------ | ---------- |
 | 4.x  | 1.9+    | Kafka 1.1 dynamic config |
-| v4.1 | 1.9+    | Kafka 1.0.1 new (default)[#148] (config)[#170] |
+| v4.1 | 1.9+    | Kafka 1.0.1 new [default](#148) [config](#170) |
 | v3.2 | 1.9.4, 1.8.9, 1.7.14 | Required for read-only ConfigMaps [#162](https://github.com/Yolean/kubernetes-kafka/issues/162) [#163](https://github.com/Yolean/kubernetes-kafka/pull/163) [k8s #58720](https://github.com/kubernetes/kubernetes/pull/58720) |
 | v3.1  | 1.8    | The painstaking path to `min.insync.replicas`=2 |
 | v3.0  | 1.8    | [Outside access](#78), [modern manifests](#84), [bootstrap.kafka](#52) |
