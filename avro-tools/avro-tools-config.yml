@@ -20,6 +20,7 @@ data:
     listeners=http://0.0.0.0:80
     bootstrap.servers=PLAINTEXT://bootstrap.kafka:9092
     schema.registry.url=http://avro-schemas.kafka:80
+    zookeeper.connect=zookeeper.kafka:2181
 
     # https://github.com/Landoop/kafka-topics-ui#common-issues
     access.control.allow.methods=GET,POST,PUT,DELETE,OPTIONS

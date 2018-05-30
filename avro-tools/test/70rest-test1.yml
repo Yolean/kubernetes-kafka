@@ -14,7 +14,7 @@ spec:
         image: solsson/curl@sha256:523319afd39573746e8f5a7c98d4a6cd4b8cbec18b41eb30c8baa13ede120ce3
         env:
         - name: REST
-          value: http://rest.kafka.svc.cluster.local
+          value: http://avro-rest.kafka.svc.cluster.local
         - name: TOPIC
           value: test1
         command:
