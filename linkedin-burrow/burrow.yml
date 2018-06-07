@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: burrow
-        image: solsson/burrow@sha256:a6fe5d1268a7e7d58f7f960697fc8fda3e6861a2653fe71135a2207c9cf18cf0
+        image: solsson/burrow:v1.1.0@sha256:9acac985a1b7b0f4c5697694606258d654ed1a454f0bb8e992f21f8a5e3f6c0e
         ports:
         - name: api
           containerPort: 8000
@@ -34,19 +34,21 @@ spec:
         - name: config
           mountPath: /etc/burrow
       - name: prom
-        image: solsson/burrow-exporter@sha256:379199629e22a25e140a391f0a52bb5e222e6a639ce2314d8a995d0eeecb6c3f
+        image: solsson/burrow-exporter@sha256:7db7cb4d09df51c786c338d1a60d57b02f69efed294e4db68c1c5ba04d22a3a8
         ports:
         - name: prometheus
           containerPort: 8080
         env:
         - name: BURROW_ADDR
           value: http://localhost:8000
+        - name: API_VERSION
+          value: "3"
         - name: METRICS_ADDR
           value: 0.0.0.0:8080
         - name: INTERVAL
           value: "30"
       - name: dashboard
-        image: joway/burrow-dashboard@sha256:b4cce87c8264119d73f9a6df5d787ea811ce2138d39ca6cd56525bcfbb5169bf
+        image: joway/burrow-dashboard:1.0.3@sha256:97b6a55c3fadb56c6cf46f8ed6c1497714577c9f8e589cf49b51a96107d90ec0
         env:
           - name: BURROW_BACKEND
             value: http://localhost:8000
