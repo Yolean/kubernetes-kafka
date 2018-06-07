@@ -34,13 +34,15 @@ spec:
         - name: config
           mountPath: /etc/burrow
       - name: prom
-        image: solsson/burrow-exporter:v0.0.5@sha256:c67d5123fda9f439925036a25ed54f493579fc6097400f52e04b68e796e16e67
+        image: solsson/burrow-exporter@sha256:029d358f07048de091eed45d40a6e746e92ed5deba2f186f6fdc9b1aa16c99d0
         ports:
         - name: prometheus
           containerPort: 8080
         env:
         - name: BURROW_ADDR
           value: http://localhost:8000
+        - name: API_VERSION
+          value: "3"
         - name: METRICS_ADDR
           value: 0.0.0.0:8080
         - name: INTERVAL
