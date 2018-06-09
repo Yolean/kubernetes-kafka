@@ -20,3 +20,11 @@ spec:
         image: mailgun/kafka-pixy:0.15.0@sha256:088210d53945a0db5f93921ceff3a79c012449b7845baebe8898452741764e7c
         ports:
         - containerPort: 80
+        command:
+        - kafka-pixy
+        - -kafkaPeers
+        - bootstrap.kafka:9092
+        - -zookeeperPeers
+        - zookeeper.kafka:2181
+        - -tcpAddr
+        - 0.0.0.0:80
