@@ -36,8 +36,8 @@ spec:
             memory: "5Mi"
             cpu: "2m"
           limits:
-            memory: "10Mi"
-            cpu: "10m"
+            memory: "20Mi"
+            cpu: "100m"
         volumeMounts:
         - name: config-volume
           mountPath: /etc/eventrouter
