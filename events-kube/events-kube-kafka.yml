@@ -5,6 +5,8 @@ metadata:
   namespace: kube-system
   labels:
     app: eventrouter
+  annotations:
+    origin: github.com/Yolean/kubernetes-kafka
 spec:
   replicas: 1
   strategy:

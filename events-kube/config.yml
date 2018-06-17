@@ -3,6 +3,8 @@ apiVersion: v1
 metadata:
   name: eventrouter-cm
   namespace: kube-system
+  annotations:
+    origin: github.com/Yolean/kubernetes-kafka
 data:
   config.json: |- 
     {
