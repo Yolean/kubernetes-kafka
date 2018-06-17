@@ -1,8 +1,10 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: events-kube-kafka
-  namespace: kafka
+  name: eventrouter
+  namespace: kube-system
+  labels:
+    app: eventrouter
 spec:
   replicas: 1
   strategy:
@@ -13,40 +15,22 @@ spec:
       maxSurge: 1
   selector:
     matchLabels:
-      app: events
-      from: kube
-      to: kafka
+      app: eventrouter
   template:
     metadata:
       labels:
-        app: events
-        from: kube
-        to: kafka
+        app: eventrouter
+        tier: control-plane-addons
     spec:
       containers:
-      - name: kafkacat-curl
-        image: solsson/kafkacat-curl@sha256:b5484379301937129e67550331782a0f7ac030a4b913a254d084faea4bcf44a2
-        env:
-        - name: BOOTSTRAP
-          value: bootstrap.kafka:9092
-        - name: TOPIC
-          value: ops.kube-events-all.stream.json.001
-        command:
-        - /bin/bash
-        - -ec
-        - >
-          curl
-          -f
-          -s
-          -S
-          --cacert /run/secrets/kubernetes.io/serviceaccount/ca.crt
-          --header "Authorization: Bearer $(cat /run/secrets/kubernetes.io/serviceaccount/token)"
-          https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT/api/v1/watch/events
-          |
-          kafkacat
-          -b $BOOTSTRAP
-          -t $TOPIC
-          -P
-          -z snappy
-          -v
-          -d broker,topic
+      - name: kube-eventrouter
+        image: gcr.io/heptio-images/eventrouter@sha256:30e36ce7bad4a7c539e0a0cb1833d309089919fb0ef0c165ee28aabe97740d02
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/eventrouter
+      serviceAccount: eventrouter
+      volumes:
+      - name: config-volume
+        configMap:
+          name: eventrouter-cm
