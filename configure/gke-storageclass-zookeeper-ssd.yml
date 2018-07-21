@@ -4,5 +4,6 @@ metadata:
   name: kafka-zookeeper
 provisioner: kubernetes.io/gce-pd
 reclaimPolicy: Retain
+allowVolumeExpansion: true
 parameters:
   type: pd-ssd
