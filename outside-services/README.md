@@ -16,7 +16,8 @@ in [kafka/10broker-config.yml](../kafka/10broker-config.yml) switch to
 * `OUTSIDE_HOST=$(kubectl get node "$NODE_NAME" -o jsonpath='{.status.addresses[?(@.type=="ExternalIP")].address}')`
 * `OUTSIDE_PORT=${OutsidePort}`
 and in [kafka/50kafka.yml ](../kafka/50kafka.yml) add the hostport:
-```        - name: outside
+```        
+        - name: outside
           containerPort: 9094
           hostPort: 9094
 ```
