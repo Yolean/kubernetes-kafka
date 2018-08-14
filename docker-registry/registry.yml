@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: v2
@@ -19,7 +19,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: docker-v2
-        image: registry:2.6.2@sha256:d837de65fd9bdb81d74055f1dc9cc9154ad5d8d5328f42f57f273000c402c76d
+        image: registry:2.6.2@sha256:672d519d7fd7bbc7a448d17956ebeefe225d5eb27509d8dc5ce67ecb4a0bce54
         resources:
           requests:
             cpu: 1m
@@ -34,8 +34,13 @@ spec:
           # On GKE this enables pull from 127.0.0.1:5000 but not from localhost
           hostPort: 5000
         env:
-        - name: REGISTRY_HTTP_ADDR
-          value: :5000
         # Required when we run 2 or more replicas
         - name: REGISTRY_HTTP_SECRET
           value: veryrandom
+        volumeMounts:
+        - name: etc-registry
+          mountPath: /etc/docker/registry
+      volumes:
+      - name: etc-registry
+        configMap:
+          name: registry-config
