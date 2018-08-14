@@ -27,7 +27,8 @@ data:
       endpoints:
       - name: kafka-through-pixy
         disabled: false
-        url: http://pixy.kafka/topics/ops.docker-registry.json/messages
+        #url: http://pixy.kafka/topics/ops.docker-registry.json/messages
+        url: http://requestbin.requestbin/1kk9jgk1
         headers:
           Content-Type: [application/json]
         # we should probably reduce timeout and backof once this is up and running
