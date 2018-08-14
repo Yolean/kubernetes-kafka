@@ -1,0 +1,34 @@
+kind: ConfigMap
+metadata:
+  name: registry-config
+  namespace: registry
+apiVersion: v1
+data:
+  config.yml: |-
+    version: 0.1
+    log:
+      fields:
+        service: registry
+    storage:
+      cache:
+        blobdescriptor: inmemory
+      filesystem:
+        rootdirectory: /var/lib/registry
+    http:
+      addr: :5000
+      headers:
+        X-Content-Type-Options: [nosniff]
+    health:
+      storagedriver:
+        enabled: true
+        interval: 10s
+        threshold: 3
+    notifications:
+      endpoints:
+      - name: kafka-through-pixy
+        disabled: false
+        url: http://pixy.kafka/topics/ops.docker-registry.json/messages
+        # we should probably reduce timeout and backof once this is up and running
+        timeout: 3000ms
+        threshold: 3
+        backoff: 5s

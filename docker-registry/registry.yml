@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: v2
+  namespace: registry
+spec:
+  selector:
+    matchLabels:
+      app: registry
+      k8s-app: kube-registry
+      kubernetes.io/cluster-service: "true"
+  template:
+    metadata:
+      labels:
+        app: registry
+        k8s-app: kube-registry
+        kubernetes.io/cluster-service: "true"
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: docker-v2
+        image: registry:2.6.2@sha256:672d519d7fd7bbc7a448d17956ebeefe225d5eb27509d8dc5ce67ecb4a0bce54
+        resources:
+          requests:
+            cpu: 1m
+            memory: 16Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 5000
+          name: registry
+          protocol: TCP
+          # On GKE this enables pull from 127.0.0.1:5000 but not from localhost
+          hostPort: 5000
+        env:
+        # Required when we run 2 or more replicas
+        - name: REGISTRY_HTTP_SECRET
+          value: veryrandom
+        volumeMounts:
+        - name: etc-registry
+          mountPath: /etc/docker/registry
+      volumes:
+      - name: etc-registry
+        configMap:
+          name: registry-config
