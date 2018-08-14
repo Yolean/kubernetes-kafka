@@ -16,6 +16,9 @@ spec:
       - name: git-repo-clones
         configMap:
           name: build-test-tarballs
+      - name: docker-sock
+        hostPath:
+          path: /var/run/docker.sock
       initContainers:
       - name: emulate-git-clone
         image: solsson/build-contract@sha256:d6be997e6e76bafcc732cb3ffb9e741b7af849cd28136e1e873e544b69e39083
@@ -34,8 +37,8 @@ spec:
       - name: build-contract
         image: solsson/build-contract@sha256:d6be997e6e76bafcc732cb3ffb9e741b7af849cd28136e1e873e544b69e39083
         env:
-        - name: DOCKER_HOST
-          value: tcp://docker.build:4243
+        #- name: DOCKER_HOST
+        #  value: tcp://docker.build:4243
         - name: PUSH_TAG
           value: latest
         - name: PROJECT_NAME
@@ -44,3 +47,5 @@ spec:
         volumeMounts:
         - name: source
           mountPath: "/source"
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
