@@ -1,7 +1,7 @@
 ---
 kind: ConfigMap
 metadata:
-  name: produce-consume
+  name: kafkacat-bootstrapbrokers
   namespace: test-kafka
 apiVersion: v1
 data:
@@ -15,26 +15,43 @@ data:
     exec >> /tmp/testlog
     exec 2>&1
 
-    # As low as in kafkacat based test didn't work, but this value can likely be squeezed
-    PC_WAIT=2.0
+    PC_WAIT=.2
+    MAX_AGE=5
 
     UNIQUE="${HOSTNAME}@$(date -u -Ins)"
 
-    echo "Test $UNIQUE" >> /shared/produce.tmp
+    echo "${UNIQUE: -41:5}:Test $UNIQUE" >> /shared/produce.tmp
     sleep $PC_WAIT
     LAST=$(tail -n 1 /shared/consumed.tmp)
-    [ -z "$LAST" ] && echo "Nothing consumed yet" && exit 1
+    [ -z "$LAST" ] && echo "Nothing consumed" && exit 1
 
-    # Haven't found how to get message timestamp in console-consumer, see kafkacat based test instead
-    LAST_MSG=$LAST
+    LAST_TS=$(echo $LAST | awk -F';' '{print $1}')
+    [ -z "$LAST_TS" ] && echo "Failed to get timestamp for message: $LAST" && exit 1
+    LAST_MSG=$(echo $LAST | awk -F';' '{print $4}')
+    NOW=$(date -u +%s%3N)
+    DIFF_S=$((($NOW - $LAST_TS)/1000))
+    DIFF_MS=$((($NOW - $LAST_TS)%1000))
+    #echo "$NOW ($(date +%FT%H:%M:%S.%3N)):"
+    #echo "$LAST_TS"
+
+    if [ $DIFF_S -gt $MAX_AGE ]; then
+      echo "Last message is $DIFF_S.$DIFF_MS old:"
+      echo "$LAST_MSG"
+      exit 10
+    fi
 
     if [[ "$LAST_MSG" != *"$UNIQUE" ]]; then
-      echo "Last message (at $(date +%FT%T)) isn't from this test run ($UNIQUE):"
+      echo "Last message (at $LAST_TS) isn't from this test run ($UNIQUE):"
       echo "$LAST_MSG"
       exit 11
     fi
 
-    echo "OK ($LAST_MSG at $(date +%FT%T))"
+    # get info about this message
+    kafkacat -Q -b $BOOTSTRAP -t test-kafkacat-bootstrapbrokers:0:$LAST_TS \
+      -X socket.timeout.ms=600 -X session.timeout.ms=300 -X request.timeout.ms=50 -X metadata.request.timeout.ms=600
+    [ $? -eq 0 ] || echo "At $(date +%FT%H:%M:%S.%3N) bootstrap broker(s) might be down"
+    # but don't fail the test; producer and consumer should keep going if there are other brokers
+
     # We haven't asserted that the consumer works, so we'll just have to assume that it will exit if it fails
 
     exit 0
@@ -45,46 +62,21 @@ data:
 
     exit 0
 ---
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: topic-test-produce-consume
-  namespace: test-kafka
-spec:
-  template:
-    spec:
-      containers:
-      - name: topic-create
-        image: solsson/kafka:1.0.2@sha256:7fdb326994bcde133c777d888d06863b7c1a0e80f043582816715d76643ab789
-        command:
-        - ./bin/kafka-topics.sh
-        - --zookeeper
-        -   zookeeper.kafka.svc.cluster.local:2181
-        - --create
-        - --if-not-exists
-        - --topic
-        -   test-produce-consume
-        - --partitions
-        -   "1"
-        - --replication-factor
-        -   "3"
-      restartPolicy: Never
----
 apiVersion: apps/v1beta2
 kind: ReplicaSet
 metadata:
-  name: produce-consume
+  name: kafkacat-bootstrapbrokers
   namespace: test-kafka
 spec:
   replicas: 1
   selector:
     matchLabels:
-      test-target: kafka-client-console
+      test-target: kafka-client-kafkacat-bootstrapbrokers
       test-type: readiness
   template:
     metadata:
       labels:
-        test-target: kafka-client-console
+        test-target: kafka-client-kafkacat-bootstrapbrokers
         test-type: readiness
         # for example:
         # readonly - can be used in production
@@ -95,10 +87,10 @@ spec:
     spec:
       containers:
       - name: producer
-        image: solsson/kafka:1.0.2@sha256:7fdb326994bcde133c777d888d06863b7c1a0e80f043582816715d76643ab789
+        image: solsson/kafkacat@sha256:b32eedf936f3cde44cd164ddc77dfcf7565a8af4e357ff6de1abe4389ca530c9
         env:
         - name: BOOTSTRAP
-          value: bootstrap.kafka:9092
+          value: kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
         command:
         - /bin/bash
         - -cex
@@ -106,7 +98,7 @@ spec:
           echo "--- start $HOSTNAME $(date --iso-8601='ns' -u) ---" >> /shared/produce.tmp
           ;
           tail -f /shared/produce.tmp |
-          ./bin/kafka-console-producer.sh --broker-list $BOOTSTRAP --topic test-produce-consume --request-required-acks all
+          kafkacat -P -b $BOOTSTRAP -t test-kafkacat-bootstrapbrokers -v -T -d broker -K ':'
           ;
         volumeMounts:
         - name: config
@@ -114,15 +106,15 @@ spec:
         - name: shared
           mountPath: /shared
       - name: consumer
-        image: solsson/kafka:1.0.2@sha256:7fdb326994bcde133c777d888d06863b7c1a0e80f043582816715d76643ab789
+        image: solsson/kafkacat@sha256:b32eedf936f3cde44cd164ddc77dfcf7565a8af4e357ff6de1abe4389ca530c9
         env:
         - name: BOOTSTRAP
-          value: bootstrap.kafka:9092
+          value: kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
         command:
         - /bin/bash
         - -cex
         - >
-          ./bin/kafka-console-consumer.sh --bootstrap-server $BOOTSTRAP --topic test-produce-consume |
+          kafkacat -C -b $BOOTSTRAP -t test-kafkacat-bootstrapbrokers -o -1 -f '%T;%k:%p;%o;%s\n' -u -d broker |
           tee /shared/consumed.tmp
           ;
         volumeMounts:
@@ -131,10 +123,10 @@ spec:
         - name: shared
           mountPath: /shared
       - name: testcase
-        image: solsson/kafkacat@sha256:ebebf47061300b14a4b4c2e1e4303ab29f65e4b95d34af1b14bb8f7ec6da7cef
+        image: solsson/kafkacat@sha256:b32eedf936f3cde44cd164ddc77dfcf7565a8af4e357ff6de1abe4389ca530c9
         env:
         - name: BOOTSTRAP
-          value: bootstrap.kafka:9092
+          value: kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
         command:
         - /bin/bash
         - -e
@@ -161,6 +153,6 @@ spec:
       volumes:
       - name: config
         configMap:
-          name: produce-consume
+          name: kafkacat-bootstrapbrokers
       - name: shared
         emptyDir: {}
