@@ -1,0 +1,46 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: build-test
+  namespace: build
+spec:
+  template:
+    metadata:
+      name: build-test
+    spec:
+      restartPolicy: Never
+      activeDeadlineSeconds: 3600
+      volumes:
+      - name: source
+        emptyDir: {}
+      - name: git-repo-clones
+        configMap:
+          name: build-test-tarballs
+      initContainers:
+      - name: emulate-git-clone
+        image: solsson/build-contract@sha256:d6be997e6e76bafcc732cb3ffb9e741b7af849cd28136e1e873e544b69e39083
+        command:
+        - /bin/bash
+        - -cex
+        - >
+          tar xvzf /tarballs/build-contract-test.tgz;
+        workingDir: /source
+        volumeMounts:
+        - name: source
+          mountPath: "/source"
+        - name: git-repo-clones
+          mountPath: "/tarballs"
+      containers:
+      - name: build-contract
+        image: solsson/build-contract@sha256:d6be997e6e76bafcc732cb3ffb9e741b7af849cd28136e1e873e544b69e39083
+        env:
+        - name: DOCKER_HOST
+          value: tcp://docker.build:4243
+        - name: PUSH_TAG
+          value: latest
+        - name: PROJECT_NAME
+          value: build-test
+        workingDir: /source
+        volumeMounts:
+        - name: source
+          mountPath: "/source"
