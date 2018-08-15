@@ -1,0 +1,18 @@
+version: "3.4"
+services:
+  aservice:
+    image: localhost:5000/test/build-test:${PUSH_TAG:-dev}
+    build:
+      context: ../
+      args:
+        GitCommit: $GIT_COMMIT
+    labels:
+    - com.yolean.build-target
+  atest:
+    image: alpine:3.8@sha256:7043076348bf5040220df6ad703798fd8593a0918d06d3ce30c6c93be117e430
+    labels:
+    - com.yolean.build-contract
+    entrypoint:
+    - /bin/sh
+    - -cex
+    - echo "Testing nothing."
