@@ -2,7 +2,10 @@ version: "3.4"
 services:
   aservice:
     image: localhost:5000/test/build-test:${PUSH_TAG:-dev}
-    build: ../
+    build:
+      context: ../
+      args:
+        GitCommit: $GIT_COMMIT
     labels:
     - com.yolean.build-target
   atest:
