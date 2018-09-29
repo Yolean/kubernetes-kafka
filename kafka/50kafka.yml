@@ -58,6 +58,10 @@ spec:
         command:
         - ./bin/kafka-server-start.sh
         - /etc/kafka/server.properties
+        lifecycle:
+          preStop:
+            exec:
+             command: ["./bin/kafka-server-stop.sh"]
         resources:
           requests:
             cpu: 100m
