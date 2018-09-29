@@ -42,7 +42,7 @@ spec:
           mountPath: /etc/kafka
       containers:
       - name: broker
-        image: solsson/kafka:2.0.0@sha256:8bc5ccb5a63fdfb977c1e207292b72b34370d2c9fe023bdc0f8ce0d8e0da1670
+        image: solsson/kafka:2.0@sha256:b6db39a1039c5bb2f8e5c11bb71756dcc3c5ab3758703ca6229e8387199e04f0
         env:
         - name: KAFKA_LOG4J_OPTS
           value: -Dlog4j.configuration=file:/etc/kafka/log4j.properties
