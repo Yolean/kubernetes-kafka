@@ -61,7 +61,7 @@ spec:
         lifecycle:
           preStop:
             exec:
-             command: ["./bin/kafka-server-stop.sh"]
+             command: ["sh", "-ce", "kill -s TERM 1; while $(kill -0 1 2>/dev/null); do sleep 1; done"]
         resources:
           requests:
             cpu: 100m
