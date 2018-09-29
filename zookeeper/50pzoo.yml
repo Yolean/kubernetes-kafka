@@ -40,6 +40,10 @@ spec:
         command:
         - ./bin/zookeeper-server-start.sh
         - /etc/kafka/zookeeper.properties
+        lifecycle:
+          preStop:
+            exec:
+             command: ["sh", "-ce", "kill -s TERM 1; while $(kill -0 1 2>/dev/null); do sleep 1; done"]
         ports:
         - containerPort: 2181
           name: client
