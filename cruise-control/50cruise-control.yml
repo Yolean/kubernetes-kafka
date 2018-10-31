@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cruise-control
+  namespace: kafka
+spec:
+  selector:
+    matchLabels:
+      app: cruise-control
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: cruise-control
+      annotations:
+    spec:
+      terminationGracePeriodSeconds: 30
+      initContainers:
+      - name: init-config
+        image: alpine:3.8
+        command: ['/bin/sh']
+        args: [ '-c', 'cp /etc/cruise-control-configmap/* /opt/cruise-control/config']
+        volumeMounts:
+        - name: configmap
+          mountPath: /etc/cruise-control-configmap
+        - name: config
+          mountPath: /opt/cruise-control/config
+      containers:
+      - name: cruise-control
+        image: pdouble16/kafka-cruise-control:2.0.6
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: api
+          containerPort: 8090
+        resources:
+          requests:
+            cpu: 100m
+            memory: 512Mi
+        readinessProbe:
+          tcpSocket:
+            port: 8090
+          timeoutSeconds: 1
+        volumeMounts:
+        - name: config
+          mountPath: /opt/cruise-control/config
+      volumes:
+      - name: configmap
+        configMap:
+          name: broker-cruise-control-config
+      - name: config
+        emptyDir: {}
