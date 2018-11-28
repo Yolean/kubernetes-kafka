@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: topic-create-event-kube
+  namespace: kafka
+spec:
+  template:
+    spec:
+      containers:
+      - name: topic-create
+        image: solsson/kafka:2.1.0@sha256:ac3f06d87d45c7be727863f31e79fbfdcb9c610b51ba9cf03c75a95d602f15e1
+        command:
+        - ./bin/kafka-topics.sh
+        - --zookeeper
+        -   zookeeper.kafka.svc.cluster.local:2181
+        - --create
+        - --if-not-exists
+        - --topic
+        -   ops.kube-events.stream.json
+        - --partitions
+        -   "12"
+        - --replication-factor
+        -   "2"
+        resources:
+          limits:
+            cpu: 200m
+            memory: 100Mi
+      restartPolicy: Never
