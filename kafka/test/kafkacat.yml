@@ -120,6 +120,9 @@ spec:
         env:
         - name: BOOTSTRAP
           value: bootstrap.kafka:9092
+        - name: ACKS
+          # -1 means use brokers' min.insync.replicas
+          value: "-1"
         command:
         - /bin/bash
         - -cex
@@ -127,7 +130,7 @@ spec:
           echo "--- start $HOSTNAME $(date --iso-8601='ns' -u) ---" >> /shared/produce.tmp
           ;
           tail -f /shared/produce.tmp |
-          kafkacat -P -b $BOOTSTRAP -t test-kafkacat -v -T -d broker -K ':' -X request.required.acks=-1
+          kafkacat -P -b $BOOTSTRAP -t test-kafkacat -v -T -d broker -K ':' -X request.required.acks=$ACKS
           ;
         volumeMounts:
         - name: config
