@@ -136,7 +136,7 @@ spec:
         - name: shared
           mountPath: /shared
       - name: testcase
-        image: solsson/kafkacat@sha256:ebebf47061300b14a4b4c2e1e4303ab29f65e4b95d34af1b14bb8f7ec6da7cef
+        image: solsson/kafkacat@sha256:7a5961f861ddad53c25227511b9f36a5c13bc43296470b383be2f3e8e3a506f4
         env:
         - name: BOOTSTRAP
           value: bootstrap.kafka:9092
