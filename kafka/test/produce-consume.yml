@@ -117,6 +117,10 @@ spec:
           tail -f /shared/produce.tmp |
           ./bin/kafka-console-producer.sh --broker-list $BOOTSTRAP --topic test-produce-consume --producer-property "acks=$ACKS"
           ;
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
         volumeMounts:
         - name: config
           mountPath: /test
@@ -134,6 +138,10 @@ spec:
           ./bin/kafka-console-consumer.sh --bootstrap-server $BOOTSTRAP --topic test-produce-consume |
           tee /shared/consumed.tmp
           ;
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
         volumeMounts:
         - name: config
           mountPath: /test
@@ -162,6 +170,10 @@ spec:
             - /bin/bash
             - -e
             - /test/quit-on-nonzero-exit.sh
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
         volumeMounts:
         - name: config
           mountPath: /test
