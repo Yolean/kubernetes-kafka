@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: kafka-monitor
-        image: solsson/kafka-monitor@sha256:e1ce20e14ffd5d94e9a7d4cb285bdc777593e9b224ccb72ade9258f264a97c98
+        image: solsson/kafka-monitor@sha256:93e8e53da8611b63b991278ed54f52c828ba1c90285b704d4c3fef1c7d4d23d9
         ports:
         - name: http
           containerPort: 8000
