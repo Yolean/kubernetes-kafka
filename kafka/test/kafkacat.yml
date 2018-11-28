@@ -87,7 +87,7 @@ spec:
         -   "3"
       restartPolicy: Never
 ---
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
   name: kafkacat
