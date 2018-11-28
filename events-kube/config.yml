@@ -1,0 +1,16 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: eventrouter-cm
+  namespace: kube-system
+  annotations:
+    origin: github.com/Yolean/kubernetes-kafka
+data:
+  config.json: |- 
+    {
+      "sink": "kafka",
+      "kafkaBrokers": "bootstrap.kafka:9092",
+      "kafkaTopic": "ops.kube-events.stream.json",
+      "kafkaAsync": false,
+      "kafkaRetryMax": 5
+    }

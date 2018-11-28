@@ -1,0 +1,46 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: avro-rest
+  namespace: kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rest-proxy
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: rest-proxy
+    spec:
+      containers:
+      - name: cp
+        image: solsson/kafka-cp@sha256:2797da107f477ede2e826c29b2589f99f22d9efa2ba6916b63e07c7045e15044
+        env:
+        - name: KAFKAREST_LOG4J_OPTS
+          value: -Dlog4j.configuration=file:/etc/kafka-rest/log4j.properties
+        command:
+        - kafka-rest-start
+        - /etc/kafka-rest/kafka-rest.properties
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: config
+          mountPath: /etc/kafka-rest
+      volumes:
+      - name: config
+        configMap:
+          name: avro-tools-config

@@ -1,0 +1,43 @@
+kind: ConfigMap
+metadata:
+  name: avro-tools-config
+  namespace: kafka
+apiVersion: v1
+data:
+  schema-registry.properties: |-
+    port=80
+    listeners=http://0.0.0.0:80
+    kafkastore.bootstrap.servers=PLAINTEXT://bootstrap.kafka:9092
+    kafkastore.topic=_schemas
+    debug=false
+
+    # https://github.com/Landoop/schema-registry-ui#prerequisites
+    access.control.allow.methods=GET,POST,PUT,OPTIONS
+    access.control.allow.origin=*
+
+  kafka-rest.properties: |-
+    #id=kafka-rest-test-server
+    listeners=http://0.0.0.0:80
+    bootstrap.servers=PLAINTEXT://bootstrap.kafka:9092
+    schema.registry.url=http://avro-schemas.kafka:80
+
+    # https://github.com/Landoop/kafka-topics-ui#common-issues
+    access.control.allow.methods=GET,POST,PUT,DELETE,OPTIONS
+    access.control.allow.origin=*
+
+  log4j.properties: |-
+    log4j.rootLogger=INFO, stdout
+
+    log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+    log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+    log4j.appender.stdout.layout.ConversionPattern=[%d] %p %m (%c:%L)%n
+
+    log4j.logger.kafka=WARN, stdout
+    log4j.logger.org.apache.zookeeper=WARN, stdout
+    log4j.logger.org.apache.kafka=WARN, stdout
+    log4j.logger.org.I0Itec.zkclient=WARN, stdout
+    log4j.additivity.kafka.server=false
+    log4j.additivity.kafka.consumer.ZookeeperConsumerConnector=false
+
+    log4j.logger.org.apache.kafka.clients.Metadata=DEBUG, stdout
+    log4j.logger.org.apache.kafka.clients.consumer.internals.AbstractCoordinator=INFO, stdout

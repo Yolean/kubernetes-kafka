@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: pixy
+  namespace: kafka
+spec:
+  selector:
+    app: pixy
+  ports:
+  - name: web
+    protocol: TCP
+    port: 80

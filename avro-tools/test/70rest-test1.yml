@@ -1,0 +1,43 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: rest-test1
+  namespace: kafka
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      name: rest-test1
+    spec:
+      containers:
+      - name: curl
+        image: solsson/curl@sha256:523319afd39573746e8f5a7c98d4a6cd4b8cbec18b41eb30c8baa13ede120ce3
+        env:
+        - name: REST
+          value: http://rest.kafka.svc.cluster.local
+        - name: TOPIC
+          value: test1
+        command:
+        - /bin/bash
+        - -ce
+        - >
+          curl --retry 10 --retry-delay 30 --retry-connrefused -I $REST;
+
+          curl -H 'Accept: application/vnd.kafka.v2+json' $REST/topics;
+
+          curl --retry 10 -H 'Accept: application/vnd.kafka.v2+json' $REST/topics/test1;
+          curl -X POST -H "Content-Type: application/vnd.kafka.json.v2+json" -H "Accept: application/vnd.kafka.v2+json" --data "{\"records\":[{\"value\":\"Test from $HOSTNAME at $(date)\"}]}" $REST/topics/$TOPIC -v;
+          curl --retry 10 -H 'Accept: application/vnd.kafka.v2+json' $REST/topics/test2;
+
+          curl -X POST -H "Content-Type: application/vnd.kafka.json.v2+json" -H "Accept: application/vnd.kafka.v2+json" --data '{"records":[{"value":{"foo":"bar"}}]}' $REST/topics/$TOPIC -v;
+
+          curl -X POST -H "Content-Type: application/vnd.kafka.v2+json" --data '{"name": "my_consumer_instance", "format": "json", "auto.offset.reset": "earliest"}' $REST/consumers/my_json_consumer -v;
+
+          curl -X POST -H "Content-Type: application/vnd.kafka.v2+json" --data "{\"topics\":[\"$TOPIC\"]}" $REST/consumers/my_json_consumer/instances/my_consumer_instance/subscription -v;
+
+          curl -X GET -H "Accept: application/vnd.kafka.json.v2+json" $REST/consumers/my_json_consumer/instances/my_consumer_instance/records -v;
+
+          curl -X DELETE -H "Content-Type: application/vnd.kafka.v2+json" $REST/consumers/my_json_consumer/instances/my_consumer_instance -v;
+
+          sleep 300
+      restartPolicy: Never
