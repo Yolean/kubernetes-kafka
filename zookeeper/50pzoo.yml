@@ -12,6 +12,7 @@ spec:
   replicas: 3
   updateStrategy:
     type: RollingUpdate
+  podManagementPolicy: Parallel
   template:
     metadata:
       labels:
