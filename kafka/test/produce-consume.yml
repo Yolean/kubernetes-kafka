@@ -55,7 +55,7 @@ spec:
     spec:
       containers:
       - name: topic-create
-        image: solsson/kafka:1.0.2@sha256:7fdb326994bcde133c777d888d06863b7c1a0e80f043582816715d76643ab789
+        image: solsson/kafka:2.1.0@sha256:ac3f06d87d45c7be727863f31e79fbfdcb9c610b51ba9cf03c75a95d602f15e1
         command:
         - ./bin/kafka-topics.sh
         - --zookeeper
@@ -65,9 +65,13 @@ spec:
         - --topic
         -   test-produce-consume
         - --partitions
-        -   "1"
-        - --replication-factor
         -   "3"
+        - --replication-factor
+        -   "2"
+      resources:
+        limits:
+          cpu: 200m
+          memory: 100Mi
       restartPolicy: Never
 ---
 apiVersion: apps/v1beta2
@@ -95,26 +99,35 @@ spec:
     spec:
       containers:
       - name: producer
-        image: solsson/kafka:1.0.2@sha256:7fdb326994bcde133c777d888d06863b7c1a0e80f043582816715d76643ab789
+        image: solsson/kafka:2.1.0@sha256:ac3f06d87d45c7be727863f31e79fbfdcb9c610b51ba9cf03c75a95d602f15e1
         env:
         - name: BOOTSTRAP
           value: bootstrap.kafka:9092
+        - name: ACKS
+          # -1 means use brokers' min.insync.replicas
+          value: "-1"
         command:
         - /bin/bash
         - -cex
         - >
           echo "--- start $HOSTNAME $(date --iso-8601='ns' -u) ---" >> /shared/produce.tmp
           ;
-          tail -f /shared/produce.tmp |
-          ./bin/kafka-console-producer.sh --broker-list $BOOTSTRAP --topic test-produce-consume
+          ./bin/kafka-topics.sh --zookeeper zookeeper.kafka:2181 --describe --topic test-produce-consume
           ;
+          tail -f /shared/produce.tmp |
+          ./bin/kafka-console-producer.sh --broker-list $BOOTSTRAP --topic test-produce-consume --producer-property "acks=$ACKS"
+          ;
+        resources:
+          limits:
+            cpu: 100m
+            memory: 120Mi
         volumeMounts:
         - name: config
           mountPath: /test
         - name: shared
           mountPath: /shared
       - name: consumer
-        image: solsson/kafka:1.0.2@sha256:7fdb326994bcde133c777d888d06863b7c1a0e80f043582816715d76643ab789
+        image: solsson/kafka:2.1.0@sha256:ac3f06d87d45c7be727863f31e79fbfdcb9c610b51ba9cf03c75a95d602f15e1
         env:
         - name: BOOTSTRAP
           value: bootstrap.kafka:9092
@@ -125,13 +138,17 @@ spec:
           ./bin/kafka-console-consumer.sh --bootstrap-server $BOOTSTRAP --topic test-produce-consume |
           tee /shared/consumed.tmp
           ;
+        resources:
+          limits:
+            cpu: 100m
+            memory: 120Mi
         volumeMounts:
         - name: config
           mountPath: /test
         - name: shared
           mountPath: /shared
       - name: testcase
-        image: solsson/kafkacat@sha256:ebebf47061300b14a4b4c2e1e4303ab29f65e4b95d34af1b14bb8f7ec6da7cef
+        image: solsson/kafkacat@sha256:7a5961f861ddad53c25227511b9f36a5c13bc43296470b383be2f3e8e3a506f4
         env:
         - name: BOOTSTRAP
           value: bootstrap.kafka:9092
@@ -153,6 +170,10 @@ spec:
             - /bin/bash
             - -e
             - /test/quit-on-nonzero-exit.sh
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
         volumeMounts:
         - name: config
           mountPath: /test
