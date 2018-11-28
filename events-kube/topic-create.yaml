@@ -21,4 +21,8 @@ spec:
         -   "12"
         - --replication-factor
         -   "2"
+        resources:
+          limits:
+            cpu: 200m
+            memory: 100Mi
       restartPolicy: Never
