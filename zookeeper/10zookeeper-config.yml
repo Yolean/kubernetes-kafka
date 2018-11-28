@@ -6,6 +6,7 @@ apiVersion: v1
 data:
   init.sh: |-
     #!/bin/bash
+    set -e
     set -x
 
     [ -z "$ID_OFFSET" ] && ID_OFFSET=1
