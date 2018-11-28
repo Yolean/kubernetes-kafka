@@ -123,7 +123,7 @@ spec:
           echo "--- start $HOSTNAME $(date --iso-8601='ns' -u) ---" >> /shared/produce.tmp
           ;
           tail -f /shared/produce.tmp |
-          kafkacat -P -b $BOOTSTRAP -t test-kafkacat -v -T -d broker -K ':'
+          kafkacat -P -b $BOOTSTRAP -t test-kafkacat -v -T -d broker -K ':' -X request.required.acks=-1
           ;
         volumeMounts:
         - name: config
