@@ -82,7 +82,7 @@ spec:
         - --topic
         -   test-kafkacat
         - --partitions
-        -   "1"
+        -   "3"
         - --replication-factor
         -   "2"
       resources:
