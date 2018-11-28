@@ -20,7 +20,7 @@ spec:
       terminationGracePeriodSeconds: 30
       initContainers:
       - name: init-config
-        image: solsson/kafka-initutils@sha256:18bf01c2c756b550103a99b3c14f741acccea106072cd37155c6d24be4edd6e2
+        image: solsson/kafka-initutils@sha256:2cdb90ea514194d541c7b869ac15d2d530ca64889f56e270161fe4e5c3d076ea
         env:
         - name: NODE_NAME
           valueFrom:
@@ -42,7 +42,7 @@ spec:
           mountPath: /etc/kafka
       containers:
       - name: broker
-        image: solsson/kafka:1.0.2@sha256:7fdb326994bcde133c777d888d06863b7c1a0e80f043582816715d76643ab789
+        image: solsson/kafka:2.1.0@sha256:ac3f06d87d45c7be727863f31e79fbfdcb9c610b51ba9cf03c75a95d602f15e1
         env:
         - name: KAFKA_LOG4J_OPTS
           value: -Dlog4j.configuration=file:/etc/kafka/log4j.properties
@@ -65,7 +65,12 @@ spec:
         resources:
           requests:
             cpu: 100m
-            memory: 512Mi
+            memory: 100Mi
+          limits:
+            # This limit was intentionally set low as a reminder that
+            # the entire Yolean/kubernetes-kafka is meant to be tweaked
+            # before you run production workloads
+            memory: 600Mi
         readinessProbe:
           tcpSocket:
             port: 9092
