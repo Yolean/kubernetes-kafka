@@ -30,7 +30,7 @@ spec:
         - name: config
           mountPath: /etc/kafka
         - name: data
-          mountPath: /var/lib/zookeeper/data
+          mountPath: /var/lib/zookeeper
       containers:
       - name: zookeeper
         image: solsson/kafka:1.0.2@sha256:7fdb326994bcde133c777d888d06863b7c1a0e80f043582816715d76643ab789
