@@ -29,6 +29,7 @@ If you begin to rely on this kafka setup we recommend you fork, for example to e
 
 | tag   | k8s ≥  | highlights |
 | ----- | ------ | ---------- |
+| v5.0.1 | 1.11+ | Fixes Zookeeper persistence [#227](https://github.com/Yolean/kubernetes-kafka/pull/227) |
 | v5.0  | 1.11+  | Destabilize because in Docker we want Java 11 [#197](https://github.com/Yolean/kubernetes-kafka/pull/197) [#191](https://github.com/Yolean/kubernetes-kafka/pull/191) |
 | v4.3  | 1.9+   | Adds a prpper shutdown hook [207](https://github.com/Yolean/kubernetes-kafka/pull/207) |
 | v4.2  | 1.9+   | Kafka 1.0.2 and tools upgrade |
