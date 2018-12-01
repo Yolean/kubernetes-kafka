@@ -32,7 +32,7 @@ If you begin to rely on this kafka setup we recommend you fork, for example to e
 | v5.0.1 | 1.11+ | Fixes Zookeeper persistence [#227](https://github.com/Yolean/kubernetes-kafka/pull/227) |
 | v5.0  | 1.11+  | Destabilize because in Docker we want Java 11 [#197](https://github.com/Yolean/kubernetes-kafka/pull/197) [#191](https://github.com/Yolean/kubernetes-kafka/pull/191) |
 | v4.3.1 | 1.9+  | Critical Zookeeper persistence fix [#228](https://github.com/Yolean/kubernetes-kafka/pull/228) |
-| v4.3  | 1.9+   | Adds a prpper shutdown hook [207](https://github.com/Yolean/kubernetes-kafka/pull/207) |
+| v4.3  | 1.9+   | Adds a proper shutdown hook [#207](https://github.com/Yolean/kubernetes-kafka/pull/207) |
 | v4.2  | 1.9+   | Kafka 1.0.2 and tools upgrade |
 | v4.1  | 1.9+   | Kafka 1.0.1 new [default](#148) [config](#170) |
 | v3.2  | 1.9.4, 1.8.9, 1.7.14 | Required for read-only ConfigMaps [#162](https://github.com/Yolean/kubernetes-kafka/issues/162) [#163](https://github.com/Yolean/kubernetes-kafka/pull/163) [k8s #58720](https://github.com/kubernetes/kubernetes/pull/58720) |
