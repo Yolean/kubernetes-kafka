@@ -34,7 +34,7 @@ If you begin to rely on this kafka setup we recommend you fork, for example to e
 | v4.3.1 | 1.9+  | Critical Zookeeper persistence fix [#228](https://github.com/Yolean/kubernetes-kafka/pull/228) |
 | v4.3  | 1.9+   | Adds a proper shutdown hook [#207](https://github.com/Yolean/kubernetes-kafka/pull/207) |
 | v4.2  | 1.9+   | Kafka 1.0.2 and tools upgrade |
-... see [releases](https://github.com/Yolean/kubernetes-kafka/releases) for full history ...
+|       |        | ... see [releases](https://github.com/Yolean/kubernetes-kafka/releases) for full history ... |
 | v1.0  | 1      | Stateful? In Kubernetes? In 2016? Yes. |
 
 ## Monitoring
