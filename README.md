@@ -52,12 +52,10 @@ Available for:
 
  * [Brokers](./outside-services/)
 
-## Fewer than three nodes?
+## Minikafka
 
-For [minikube](https://github.com/kubernetes/minikube/), [youkube](https://github.com/Yolean/youkube) etc:
-
- * [Scale 1](https://github.com/Yolean/kubernetes-kafka/pull/44)
- * [Scale 2](https://github.com/Yolean/kubernetes-kafka/pull/118)
+There's a single pod setup in [minikafka](./minikafka/).
+Contributions for making it as lightweight as possible are very welcome.
 
 ## Stream...
 
