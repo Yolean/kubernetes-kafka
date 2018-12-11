@@ -1,47 +1,43 @@
 ---
-kind: Service
 apiVersion: v1
+kind: Service
 metadata:
-  name: zookeeper
+  name: minizoo
 spec:
   selector:
-    app: zookeeper
+    app: minizoo
   ports:
-  - protocol: TCP
-    port: 2181
-    targetPort: 2181
+  - port: 9092
+  clusterIP: None
 ---
-kind: Service
 apiVersion: v1
+kind: Service
 metadata:
-  name: kafka
+  name: minikafka
 spec:
   selector:
-    app: kafka
+    app: minikafka
   ports:
-  - protocol: TCP
-    port: 9092
-    targetPort: 9092
+  - port: 9092
+  clusterIP: None
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: zookeeper
+  name: minizoo
 spec:
-  replicas: 1
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 1
-      maxSurge: 0
   selector:
     matchLabels:
-      app: zookeeper
+      app: minizoo
+  serviceName: "minizoo"
+  replicas: 1
   template:
     metadata:
       labels:
-        app: zookeeper
+        app: minizoo
+      annotations:
     spec:
+      terminationGracePeriodSeconds: 5
       containers:
       - name: zk
         image: solsson/kafka:2.1.0@sha256:ac3f06d87d45c7be727863f31e79fbfdcb9c610b51ba9cf03c75a95d602f15e1
@@ -51,24 +47,22 @@ spec:
         - ./config/zookeeper.properties
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: kafka
+  name: minikafka
 spec:
-  replicas: 1
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxUnavailable: 1
-      maxSurge: 0
   selector:
     matchLabels:
-      app: kafka
+      app: minikafka
+  serviceName: "minikafka"
+  replicas: 1
   template:
     metadata:
       labels:
-        app: kafka
+        app: minikafka
+      annotations:
     spec:
+      terminationGracePeriodSeconds: 5
       containers:
       - name: broker
         image: solsson/kafka:2.1.0@sha256:ac3f06d87d45c7be727863f31e79fbfdcb9c610b51ba9cf03c75a95d602f15e1
@@ -77,7 +71,7 @@ spec:
         args:
         - ./config/server.properties
         - --override
-        -   zookeeper.connect=zookeeper:2181
+        -   zookeeper.connect=minizoo:2181
         - --override
         -   background.threads=1
         - --override
@@ -89,10 +83,10 @@ spec:
         - --override
         -   group.initial.rebalance.delay.ms=0
         - --override
-        -   advertised.listeners=PLAINTEXT://kafka:9092
+        -   listeners=PLAINTEXT://minikafka-0:9092
         ports:
         - containerPort: 9092
         resources:
           limits:
-            cpu: 100m
+            cpu: 200m
             memory: 400Mi
