@@ -1,0 +1,98 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: zookeeper
+spec:
+  selector:
+    app: zookeeper
+  ports:
+  - protocol: TCP
+    port: 2181
+    targetPort: 2181
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: kafka
+spec:
+  selector:
+    app: kafka
+  ports:
+  - protocol: TCP
+    port: 9092
+    targetPort: 9092
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zookeeper
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 0
+  selector:
+    matchLabels:
+      app: zookeeper
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+    spec:
+      containers:
+      - name: zk
+        image: solsson/kafka:2.1.0@sha256:ac3f06d87d45c7be727863f31e79fbfdcb9c610b51ba9cf03c75a95d602f15e1
+        command:
+        - ./bin/zookeeper-server-start.sh
+        args:
+        - ./config/zookeeper.properties
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 0
+  selector:
+    matchLabels:
+      app: kafka
+  template:
+    metadata:
+      labels:
+        app: kafka
+    spec:
+      containers:
+      - name: broker
+        image: solsson/kafka:2.1.0@sha256:ac3f06d87d45c7be727863f31e79fbfdcb9c610b51ba9cf03c75a95d602f15e1
+        command:
+        - ./bin/kafka-server-start.sh
+        args:
+        - ./config/server.properties
+        - --override
+        -   zookeeper.connect=zookeeper:2181
+        - --override
+        -   background.threads=1
+        - --override
+        -   num.io.threads=1
+        - --override
+        -   num.network.threads=1
+        - --override
+        -   log.cleaner.enable=false
+        - --override
+        -   group.initial.rebalance.delay.ms=0
+        - --override
+        -   advertised.listeners=PLAINTEXT://kafka:9092
+        ports:
+        - containerPort: 9092
+        resources:
+          limits:
+            cpu: 100m
+            memory: 400Mi
