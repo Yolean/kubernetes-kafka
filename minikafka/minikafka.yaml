@@ -83,7 +83,7 @@ spec:
         - --override
         -   group.initial.rebalance.delay.ms=0
         - --override
-        -   listeners=PLAINTEXT://minikafka-0:9092
+        -   listeners=PLAINTEXT://minikafka:9092
         ports:
         - containerPort: 9092
         resources:
