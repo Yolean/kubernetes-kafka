@@ -27,7 +27,7 @@ spec:
           mountPath: /opt/cruise-control/config
       containers:
       - name: cruise-control
-        image: pdouble16/kafka-cruise-control:2.0.6
+        image: pdouble16/kafka-cruise-control-docker:2.0.17
         imagePullPolicy: IfNotPresent
         ports:
         - name: api
