@@ -1,6 +1,6 @@
 # meant to be applied using
 # kubectl --namespace kafka patch statefulset kafka --patch "$(cat prometheus/50-kafka-jmx-exporter-patch.yml )"
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: kafka
@@ -14,13 +14,9 @@ spec:
     spec:
       containers:
       - name: metrics
-        image: solsson/kafka-prometheus-jmx-exporter@sha256:a23062396cd5af1acdf76512632c20ea6be76885dfc20cd9ff40fb23846557e8
+        image: solsson/kafka-prometheus-jmx-exporter@sha256:d237a12cc0cde42b539bcb5efc0008ba5e6ca1351b7843ed52bd574d181c5efd
         command:
         - java
-        - -XX:+UnlockExperimentalVMOptions
-        - -XX:+UseCGroupMemoryLimitForHeap
-        - -XX:MaxRAMFraction=1
-        - -XshowSettings:vm
         - -jar
         - jmx_prometheus_httpserver.jar
         - "5556"

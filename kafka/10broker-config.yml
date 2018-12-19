@@ -6,6 +6,7 @@ apiVersion: v1
 data:
   init.sh: |-
     #!/bin/bash
+    set -e
     set -x
     cp /etc/kafka-configmap/log4j.properties /etc/kafka/
 
@@ -56,13 +57,13 @@ data:
     # The default number of log partitions per topic. More partitions allow greater
     # parallelism for consumption, but this will also result in more files across
     # the brokers.
-    num.partitions=1
+    num.partitions=12
 
     default.replication.factor=3
 
     min.insync.replicas=2
 
-    auto.create.topics.enable=true
+    auto.create.topics.enable=false
 
     # The number of threads per data directory to be used for log recovery at startup and flushing at shutdown.
     # This value is recommended to be increased for installations with data dirs located in RAID array.

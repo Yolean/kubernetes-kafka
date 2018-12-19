@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pixy
+  namespace: kafka
+  labels:
+    app: pixy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: pixy
+  template:
+    metadata:
+      labels:
+        app: pixy
+    spec:
+      containers:
+      - name: pixy
+        image: mailgun/kafka-pixy:0.16.0@sha256:2a2d426f9fe17ede9c21b2f8b7418d8787293e39327b638fd6c403f3726597fb
+        ports:
+        - containerPort: 80
+        command:
+        - kafka-pixy
+        - -kafkaPeers
+        - bootstrap.kafka:9092
+        - -zookeeperPeers
+        - zookeeper.kafka:2181
+        - -tcpAddr
+        - 0.0.0.0:80

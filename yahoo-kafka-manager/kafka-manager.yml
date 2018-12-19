@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kafka-manager
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: kafka-manager
-        image: solsson/kafka-manager@sha256:5db7d54cdb642ec5a92f37a869fdcf2aa479b2552e900b2d2b83b38a1806c2de
+        image: solsson/kafka-manager@sha256:28b1a0b355f3972a9e3b5ac82abcbfee9a72b66a2bfe86094f6ea2caad9ce3a7
         ports:
         - containerPort: 80
         env:
