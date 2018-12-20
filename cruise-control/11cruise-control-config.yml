@@ -169,7 +169,7 @@ data:
     # =======================================
 
     # The zookeeper connect of the Kafka cluster
-    zookeeper.connect=zookeeper:2181
+    zookeeper.connect=zookeeper:2181/
 
     # The max number of partitions to move in/out on a given broker at a given time.
     num.concurrent.partition.movements.per.broker=10
@@ -196,6 +196,9 @@ data:
     # The interested metrics for metric anomaly analyzer.
     metric.anomaly.analyzer.metrics=BROKER_PRODUCE_LOCAL_TIME_MS_MAX,BROKER_PRODUCE_LOCAL_TIME_MS_MEAN,BROKER_CONSUMER_FETCH_LOCAL_TIME_MS_MAX,BROKER_CONSUMER_FETCH_LOCAL_TIME_MS_MEAN,BROKER_FOLLOWER_FETCH_LOCAL_TIME_MS_MAX,BROKER_FOLLOWER_FETCH_LOCAL_TIME_MS_MEAN,BROKER_LOG_FLUSH_TIME_MS_MAX,BROKER_LOG_FLUSH_TIME_MS_MEAN
 
+    ## Adjust accordingly if your metrics reporter is an older version and does not produce these metrics.
+    #metric.anomaly.analyzer.metrics=BROKER_PRODUCE_LOCAL_TIME_MS_50TH,BROKER_PRODUCE_LOCAL_TIME_MS_999TH,BROKER_CONSUMER_FETCH_LOCAL_TIME_MS_50TH,BROKER_CONSUMER_FETCH_LOCAL_TIME_MS_999TH,BROKER_FOLLOWER_FETCH_LOCAL_TIME_MS_50TH,BROKER_FOLLOWER_FETCH_LOCAL_TIME_MS_999TH,BROKER_LOG_FLUSH_TIME_MS_50TH,BROKER_LOG_FLUSH_TIME_MS_999TH
+
     # The zk path to store failed broker information.
     failed.brokers.zk.path=/CruiseControlBrokerList
 
@@ -205,8 +208,20 @@ data:
     # The cluster configurations for the KafkaTopicConfigProvider
     cluster.configs.file=config/clusterConfigs.json
 
+    # The maximum time in milliseconds to store the response and access details of a completed user task.
+    completed.user.task.retention.time.ms=21600000
+
+    # The maximum time in milliseconds to retain the demotion history of brokers.
+    demotion.history.retention.time.ms=86400000
+
+    # The maximum number of completed user tasks for which the response and access details will be cached.
+    max.cached.completed.user.tasks=100
+
+    # The maximum number of user tasks for concurrently running in async endpoints across all users.
+    max.active.user.tasks=5
+
     # Enable self healing for all anomaly detectors, unless the particular anomaly detector is explicitly disabled
-    self.healing.enabled=true
+    self.healing.enabled=false
 
     # Enable self healing for broker failure detector
     #self.healing.broker.failure.enabled=true
@@ -216,6 +231,61 @@ data:
 
     # Enable self healing for metric anomaly detector
     #self.healing.metric.anomaly.enabled=true
+
+
+    # configurations for the webserver
+    # ================================
+
+    # HTTP listen port
+    webserver.http.port=9090
+
+    # HTTP listen address
+    webserver.http.address=0.0.0.0
+
+    # Whether CORS support is enabled for API or not
+    webserver.http.cors.enabled=false
+
+    # Value for Access-Control-Allow-Origin
+    webserver.http.cors.origin=http://localhost:8080/
+
+    # Value for Access-Control-Request-Method
+    webserver.http.cors.allowmethods=OPTIONS,GET,POST
+
+    # Headers that should be exposed to the Browser (Webapp)
+    # This is a special header that is used by the
+    # User Tasks subsystem and should be explicitly
+    # Enabled when CORS mode is used as part of the
+    # Admin Interface
+    webserver.http.cors.exposeheaders=User-Task-ID
+
+    # REST API default prefix
+    # (dont forget the ending *)
+    webserver.api.urlprefix=/kafkacruisecontrol/*
+
+    # Location where the Cruise Control frontend is deployed
+    webserver.ui.diskpath=./cruise-control-ui/dist/
+
+    # URL path prefix for UI
+    # (dont forget the ending *)
+    webserver.ui.urlprefix=/*
+
+    # Time After which request is converted to Async
+    webserver.request.maxBlockTimeMs=10000
+
+    # Default Session Expiry Period
+    webserver.session.maxExpiryTimeMs=60000
+
+    # Session cookie path
+    webserver.session.path=/
+
+    # Server Access Logs
+    webserver.accesslog.enabled=true
+
+    # Location of HTTP Request Logs
+    webserver.accesslog.path=access.log
+
+    # HTTP Request Log retention days
+    webserver.accesslog.retention.days=14
 
   capacityJBOD.json: |-
     {
