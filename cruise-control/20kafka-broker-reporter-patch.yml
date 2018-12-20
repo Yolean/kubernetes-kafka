@@ -10,11 +10,14 @@ spec:
     spec:
       initContainers:
       - name: cruise-control-reporter
-        image: hortonworks/alpine-curl:3.1
-        command: ['/bin/sh', '/tmp/cruise-control-reporter-configmap/cruise-control-reporter-init.sh']
+        image: solsson/kafka-cruise-control-jar@sha256:20a26ae1fab5d63592143093e460d06c4d8f1bef666d592b6393a3b41e3743e8
+        command:
+        - /bin/sh
+        - -cex
+        - |
+          cp -v /cruise-control-metrics-reporter.jar /opt/kafka/libs/extensions/cruise-control-metrics-reporter.jar
+          echo -e "\n\nmetric.reporters = com.linkedin.kafka.cruisecontrol.metricsreporter.CruiseControlMetricsReporter" | tee -a /etc/kafka/server.properties
         volumeMounts:
-        - name: cruiseconfigmap
-          mountPath: /tmp/cruise-control-reporter-configmap
         - name: config
           mountPath: /etc/kafka
         - name: extensions
@@ -31,8 +34,5 @@ spec:
         - name: extensions
           mountPath: /opt/kafka/libs/extensions
       volumes:
-      - name: cruiseconfigmap
-        configMap:
-          name: broker-cruise-control-reporter-config
       - name: extensions
         emptyDir: {}
