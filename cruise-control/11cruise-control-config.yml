@@ -352,7 +352,7 @@ data:
 
   clusterConfigs.json: |-
     {
-      "min.insync.replicas": 1,
+      "min.insync.replicas": 2,
       "an.example.cluster.config": false
     }
 
