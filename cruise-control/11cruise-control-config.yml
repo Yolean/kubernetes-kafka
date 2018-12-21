@@ -221,7 +221,7 @@ data:
     max.active.user.tasks=5
 
     # Enable self healing for all anomaly detectors, unless the particular anomaly detector is explicitly disabled
-    self.healing.enabled=false
+    self.healing.enabled=true
 
     # Enable self healing for broker failure detector
     #self.healing.broker.failure.enabled=true
