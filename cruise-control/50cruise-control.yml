@@ -17,7 +17,7 @@ spec:
       terminationGracePeriodSeconds: 30
       initContainers:
       - name: init-config
-        image: alpine:3.8
+        image: busybox@sha256:2a03a6059f21e150ae84b0973863609494aad70f0a80eaeb64bddd8d92465812
         command: ['/bin/sh']
         args: [ '-c', 'cp /etc/cruise-control-configmap/* /opt/cruise-control/config']
         volumeMounts:
@@ -27,7 +27,7 @@ spec:
           mountPath: /opt/cruise-control/config
       containers:
       - name: cruise-control
-        image: pdouble16/kafka-cruise-control-docker:2.0.17
+        image: pdouble16/kafka-cruise-control-docker:2.0.17@sha256:2bf22a47a928689b94f0771cee4be557dff35948269d31a348bc1e3055ea2336
         imagePullPolicy: IfNotPresent
         ports:
         - name: api
