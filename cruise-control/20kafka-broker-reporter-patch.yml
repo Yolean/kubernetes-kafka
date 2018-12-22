@@ -23,14 +23,3 @@ spec:
       $setElementOrder/initContainers:
       - name: init-config
       - name: cruise-control-reporter
-      containers:
-      - name: broker
-        env:
-        - name: CLASSPATH
-          value: /opt/kafka/libs/extensions/cruise-control-metrics-reporter.jar
-        volumeMounts:
-        - name: extensions
-          mountPath: /opt/kafka/libs/extensions
-      volumes:
-      - name: extensions
-        emptyDir: {}
