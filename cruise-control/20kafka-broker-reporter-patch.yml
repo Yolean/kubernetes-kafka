@@ -8,12 +8,12 @@ spec:
     spec:
       initContainers:
       - name: cruise-control-reporter
-        image: solsson/kafka-cruise-control-jar@sha256:20a26ae1fab5d63592143093e460d06c4d8f1bef666d592b6393a3b41e3743e8
+        image: solsson/kafka-cruise-control@sha256:af4af35cd1c44b2256e96246a98350ff3e53f64a3061de1a5b0c2a2e9f8e2d8c
         command:
         - /bin/sh
         - -cex
         - |
-          cp -v /cruise-control-metrics-reporter.jar /opt/kafka/libs/extensions/cruise-control-metrics-reporter.jar
+          cp -v /opt/cruise-control/cruise-control/build/dependant-libs/cruise-control-metrics-reporter.jar /opt/kafka/libs/extensions/cruise-control-metrics-reporter.jar
           echo -e "\n\nmetric.reporters = com.linkedin.kafka.cruisecontrol.metricsreporter.CruiseControlMetricsReporter" | tee -a /etc/kafka/server.properties
         volumeMounts:
         - name: config
