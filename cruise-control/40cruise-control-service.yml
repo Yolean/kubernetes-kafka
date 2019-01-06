@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: cruise-control
+  namespace: kafka
+spec:
+  selector:
+    app: cruise-control
+  ports:
+  - protocol: TCP
+    port: 8090
+    targetPort: 8090

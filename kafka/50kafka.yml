@@ -41,10 +41,14 @@ spec:
           mountPath: /etc/kafka-configmap
         - name: config
           mountPath: /etc/kafka
+        - name: extensions
+          mountPath: /opt/kafka/libs/extensions
       containers:
       - name: broker
         image: solsson/kafka:2.1.0@sha256:ac3f06d87d45c7be727863f31e79fbfdcb9c610b51ba9cf03c75a95d602f15e1
         env:
+        - name: CLASSPATH
+          value: /opt/kafka/libs/extensions/*
         - name: KAFKA_LOG4J_OPTS
           value: -Dlog4j.configuration=file:/etc/kafka/log4j.properties
         - name: JMX_PORT
@@ -81,11 +85,15 @@ spec:
           mountPath: /etc/kafka
         - name: data
           mountPath: /var/lib/kafka/data
+        - name: extensions
+          mountPath: /opt/kafka/libs/extensions
       volumes:
       - name: configmap
         configMap:
           name: broker-config
       - name: config
+        emptyDir: {}
+      - name: extensions
         emptyDir: {}
   volumeClaimTemplates:
   - metadata:

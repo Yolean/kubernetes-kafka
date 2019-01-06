@@ -1,0 +1,25 @@
+# meant to be applied using
+# kubectl --namespace kafka patch statefulset kafka --patch "$(cat cruise-control/20kafka-broker-reporter-patch.yml)"
+metadata:
+  name: kafka
+  namespace: kafka
+spec:
+  template:
+    spec:
+      initContainers:
+      - name: cruise-control-reporter
+        image: solsson/kafka-cruise-control@sha256:af4af35cd1c44b2256e96246a98350ff3e53f64a3061de1a5b0c2a2e9f8e2d8c
+        command:
+        - /bin/sh
+        - -cex
+        - |
+          cp -v /opt/cruise-control/cruise-control/build/dependant-libs/cruise-control-metrics-reporter.jar /opt/kafka/libs/extensions/cruise-control-metrics-reporter.jar
+          echo -e "\n\nmetric.reporters = com.linkedin.kafka.cruisecontrol.metricsreporter.CruiseControlMetricsReporter" | tee -a /etc/kafka/server.properties
+        volumeMounts:
+        - name: config
+          mountPath: /etc/kafka
+        - name: extensions
+          mountPath: /opt/kafka/libs/extensions
+      $setElementOrder/initContainers:
+      - name: init-config
+      - name: cruise-control-reporter
