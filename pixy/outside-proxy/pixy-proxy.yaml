@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pixy-proxy
+  namespace: kafka
+  labels:
+    app: pixy
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: pixy
+  template:
+    metadata:
+      labels:
+        app: pixy
+    spec:
+      containers:
+      - name: routing
+        image: envoyproxy/envoy:v1.9.0@sha256:36fa7662386ed6db1d3fe7bcfab7cdeb9d2aeceabe0f0e96f5af202e9e3db556
+        ports:
+        - containerPort: 80
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 80
+        command:
+        - /usr/local/bin/envoy
+        - --v2-config-only
+        - -l info
+        args:
+        - --config-yaml
+        - |
+          static_resources:
+            listeners:
+            - address:
+                socket_address:
+                  address: 0.0.0.0
+                  port_value: 80
+              filter_chains:
+              - filters:
+                - name: envoy.http_connection_manager
+                  config:
+                    codec_type: auto
+                    stat_prefix: ingress_http
+                    route_config:
+                      name: pixy_route
+                      virtual_hosts:
+                      - name: service
+                        domains:
+                        - "*"
+                        routes:
+                        - match:
+                            prefix: "/"
+                          route:
+                            cluster: pixy-elsewhere
+                    http_filters:
+                    - name: envoy.health_check
+                      config:
+                        pass_through_mode: false
+                        headers:
+                          name: :path
+                          exact_match: /healthz
+                    - name: envoy.router
+                      config: {}
+            clusters:
+            - name: pixy-elsewhere
+              connect_timeout: 2s
+              type: strict_dns
+              lb_policy: round_robin
+              hosts:
+              # Add a couple of node IPs here, with the NodePort from ../outside-services/
+              - socket_address:
+                  address: 
+                  port_value: 32399
+              - socket_address:
+                  address: 
+                  port_value: 32399
+              - socket_address:
+                  address: 
+                  port_value: 32399
+          admin:
+            access_log_path: "/dev/null"
+            address:
+              socket_address:
+                address: 0.0.0.0
+                port_value: 8081
