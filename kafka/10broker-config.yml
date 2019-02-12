@@ -28,7 +28,7 @@ data:
         LABELS="$LABELS kafka-broker-rack=$ZONE"
       fi
 
-      OUTSIDE_HOST=$(kubectl get node "$NODE_NAME" -o jsonpath='{.status.addresses[?(@.type=="InternalIP")].address}')
+      OUTSIDE_HOST=$(kubectl get node "$NODE_NAME" -o jsonpath='{.status.addresses[?(@.type=="ExternalIP")].address}')
       if [ $? -ne 0 ]; then
         echo "Outside (i.e. cluster-external access) host lookup command failed"
       else
