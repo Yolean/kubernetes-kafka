@@ -55,7 +55,7 @@ spec:
     spec:
       containers:
       - name: topic-create
-        image: solsson/kafka:2.1.0@sha256:ac3f06d87d45c7be727863f31e79fbfdcb9c610b51ba9cf03c75a95d602f15e1
+        image: solsson/kafka:2.1.1@sha256:8bc8242c649c395ab79d76cc83b1052e63b4efea7f83547bf11eb3ef5ea6f8e1
         command:
         - ./bin/kafka-topics.sh
         - --zookeeper
@@ -99,7 +99,7 @@ spec:
     spec:
       containers:
       - name: producer
-        image: solsson/kafka:2.1.0@sha256:ac3f06d87d45c7be727863f31e79fbfdcb9c610b51ba9cf03c75a95d602f15e1
+        image: solsson/kafka:2.1.1@sha256:8bc8242c649c395ab79d76cc83b1052e63b4efea7f83547bf11eb3ef5ea6f8e1
         env:
         - name: BOOTSTRAP
           value: bootstrap.kafka:9092
@@ -127,7 +127,7 @@ spec:
         - name: shared
           mountPath: /shared
       - name: consumer
-        image: solsson/kafka:2.1.0@sha256:ac3f06d87d45c7be727863f31e79fbfdcb9c610b51ba9cf03c75a95d602f15e1
+        image: solsson/kafka:2.1.1@sha256:8bc8242c649c395ab79d76cc83b1052e63b4efea7f83547bf11eb3ef5ea6f8e1
         env:
         - name: BOOTSTRAP
           value: bootstrap.kafka:9092

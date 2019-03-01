@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: kafka
-        image: solsson/kafka:1.0.1@sha256:1a4689d49d6274ac59b9b740f51b0408e1c90a9b66d16ad114ee9f7193bab111
+        image: solsson/kafka:2.1.1@sha256:8bc8242c649c395ab79d76cc83b1052e63b4efea7f83547bf11eb3ef5ea6f8e1
         command:
         - /bin/bash
         - -ec
