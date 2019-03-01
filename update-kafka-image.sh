@@ -5,6 +5,6 @@ IMAGE=$1
 
 [[ $IMAGE != solsson/kafka:* ]] && echo "Should be the full image identifier" && exit 1
 
-for F in kafka/ kafka/test/ zookeeper/ avro-tools/test/ maintenance/; do
+for F in kafka/ kafka/test/ zookeeper/ avro-tools/test/ maintenance/ cruise-control/ maintenance/test/; do
   sed -i "s|image: solsson/kafka:.*|image: $IMAGE|" $F*.yml
 done
