@@ -25,6 +25,12 @@ That'll give you client "bootstrap" `bootstrap.kafka.svc.cluster.local:9092`.
 Our only dependency is `kubectl`. Not because we dislike Helm or Operators, but because we think plain manifests make it easier to collaborate.
 If you begin to rely on this kafka setup we recommend you fork, for example to edit [broker config](https://github.com/Yolean/kubernetes-kafka/blob/master/kafka/10broker-config.yml#L47).
 
+## Kustomize
+
+With the introduction of [app customization](https://kubectl.docs.kubernetes.io/pages/app_customization/introduction.html) in `kubectl` 1.14 there's an alternative to forks. We as a community can maintain a set of overlays.
+
+See the [variants](./variants) folder for different overlays. For example to scale to 1 kafka broker try `kubectl apply -k variants/scale-1/`.
+
 ## Version history
 
 | tag    | k8s ≥ | highlights  |

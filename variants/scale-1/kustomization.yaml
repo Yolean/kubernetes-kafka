@@ -1,0 +1,4 @@
+bases:
+- ../../kafka
+patchesStrategicMerge:
+- kafka.yaml
