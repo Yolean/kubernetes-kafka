@@ -1,0 +1,6 @@
+bases:
+- ../../kafka
+- ../../zookeeper
+patchesStrategicMerge:
+- kafka.yaml
+- zookeeper.yaml
