@@ -32,8 +32,8 @@ With the introduction of [app customization](https://kubectl.docs.kubernetes.io/
 See the [variants](./variants) folder for different overlays. For example to scale to 1 kafka broker try `kubectl apply -k variants/scale-1/`.
 
 Currently `apply -k` replaces `apply -f ./zookeeper; apply -f ./kafka`.
-The original applies result in `error: unable to decode "zookeeper/kustomization.yaml": Object 'Kind' is missing in ...`
-and though they still seem to work you can get around that with a v1.14+ kubectl using: `k apply -k variants/as-is/`.
+The original commands now result in `error: unable to decode "zookeeper/kustomization.yaml": Object 'Kind' is missing in ...`
+and though they still seem to work you can get around that with a v1.14+ kubectl using: `kubectl apply -k variants/as-is/`.
 
 ### Maintaining your own kustomization
 
