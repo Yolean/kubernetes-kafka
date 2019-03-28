@@ -14,15 +14,10 @@ data:
     export ZOOKEEPER_SERVER_ID=$((${HOSTNAME##*-} + $ID_OFFSET))
     echo "${ZOOKEEPER_SERVER_ID:-1}" | tee /var/lib/zookeeper/data/myid
     cp -Lur /etc/kafka-configmap/* /etc/kafka/
-    [ ! -z "$PZOO_REPLICAS" ] && {
-      sed -i "s/^server\\.\([0-9]\+\)=pzoo-/#server.\1=pzoo-/" /etc/kafka/zookeeper.properties
+    [ ! -z "$PZOO_REPLICAS" ] && [ ! -z "$ZOO_REPLICAS" ] && {
+      sed -i "s/^server\\./#server./" /etc/kafka/zookeeper.properties
       for N in $(seq $PZOO_REPLICAS); do echo "server.$N=pzoo-$(( $N - 1 )).pzoo:2888:3888:participant" >> /etc/kafka/zookeeper.properties; done
-    }
-    cat /etc/kafka/zookeeper.properties
-    [ ! -z "$ZOO_REPLICAS" ] && {
-      OFF=$PZOO_REPLICAS # TODO require both, or count pzoo lines?
-      sed -i "s/^server\\.\([0-9]\+\)=zoo-/#server.\1=zoo-/" /etc/kafka/zookeeper.properties
-      for N in $(seq $ZOO_REPLICAS); do echo "server.$(( $OFF + $N - 1 ))=zoo-$(( $OFF + $N - 2 )).zoo:2888:3888:participant" >> /etc/kafka/zookeeper.properties; done
+      for N in $(seq $ZOO_REPLICAS); do echo "server.$(( $PZOO_REPLICAS + $N ))=zoo-$(( $N - 1 )).zoo:2888:3888:participant" >> /etc/kafka/zookeeper.properties; done
     }
     cat /etc/kafka/zookeeper.properties
     sed -i "s/server\.$ZOOKEEPER_SERVER_ID\=[a-z0-9.-]*/server.$ZOOKEEPER_SERVER_ID=0.0.0.0/" /etc/kafka/zookeeper.properties
