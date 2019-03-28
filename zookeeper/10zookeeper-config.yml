@@ -19,9 +19,7 @@ data:
       for N in $(seq $PZOO_REPLICAS); do echo "server.$N=pzoo-$(( $N - 1 )).pzoo:2888:3888:participant" >> /etc/kafka/zookeeper.properties; done
       for N in $(seq $ZOO_REPLICAS); do echo "server.$(( $PZOO_REPLICAS + $N ))=zoo-$(( $N - 1 )).zoo:2888:3888:participant" >> /etc/kafka/zookeeper.properties; done
     }
-    cat /etc/kafka/zookeeper.properties
     sed -i "s/server\.$ZOOKEEPER_SERVER_ID\=[a-z0-9.-]*/server.$ZOOKEEPER_SERVER_ID=0.0.0.0/" /etc/kafka/zookeeper.properties
-    cat /etc/kafka/zookeeper.properties
 
   zookeeper.properties: |
     tickTime=2000
