@@ -11,16 +11,16 @@ metadata:
   name: pzoo
   namespace: kafka
 spec:
-  replicas: &replicasPzoo 1
+  replicas: 2
   template:
     spec:
       initContainers:
       - name: init-config
         env:
         - name: PZOO_REPLICAS
-          value: *replicasPzoo
-        #- name: ZOO_REPLICAS
-        #  value: *replicasZoo
+          value: '2'
+        - name: ZOO_REPLICAS
+          value: '1'
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -28,17 +28,13 @@ metadata:
   name: zoo
   namespace: kafka
 spec:
-  replicas: &replicasZoo 1
+  replicas: 1
   template:
     spec:
       initContainers:
       - name: init-config
         env:
         - name: PZOO_REPLICAS
-          value: >
-            ""
-            *replicasPzoo
+          value: '2'
         - name: ZOO_REPLICAS
-          value: >
-            ""
-            *replicasZoo
+          value: '1'
