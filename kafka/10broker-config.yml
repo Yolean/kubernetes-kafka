@@ -28,7 +28,7 @@ data:
 
       OUTSIDE_HOST=$(kubectl get node "$NODE_NAME" -o jsonpath='{.status.addresses[?(@.type=="InternalIP")].address}')
       OUTSIDE_PORT=3240${KAFKA_BROKER_ID}
-      SEDS+=("s|#init#advertised.listeners=OUTSIDE://#init#|advertised.listeners=OUTSIDE://${OUTSIDE_HOST}:${OUTSIDE_PORT}|")
+      SEDS+=("s|#init#advertised.listeners=PLAINTEXT://#init#|advertised.listeners=PLAINTEXT://:9092,OUTSIDE://${OUTSIDE_HOST}:${OUTSIDE_PORT}|")
       ANNOTATIONS="$ANNOTATIONS kafka-listener-outside-host=$OUTSIDE_HOST kafka-listener-outside-port=$OUTSIDE_PORT"
 
       if [ ! -z "$LABELS" ]; then
@@ -79,13 +79,13 @@ data:
     #   EXAMPLE:
     #     listeners = PLAINTEXT://your.host.name:9092
     #listeners=PLAINTEXT://:9092
-    listeners=OUTSIDE://:9094,PLAINTEXT://:9092
+    listeners=PLAINTEXT://:9092,OUTSIDE://:9094
 
     # Hostname and port the broker will advertise to producers and consumers. If not set, 
     # it uses the value for "listeners" if configured.  Otherwise, it will use the value
     # returned from java.net.InetAddress.getCanonicalHostName().
     #advertised.listeners=PLAINTEXT://your.host.name:9092
-    #init#advertised.listeners=OUTSIDE://#init#,PLAINTEXT://:9092
+    #init#advertised.listeners=PLAINTEXT://#init#
 
     # Maps listener names to security protocols, the default is for them to be the same. See the config documentation for more details
     #listener.security.protocol.map=PLAINTEXT:PLAINTEXT,SSL:SSL,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL
