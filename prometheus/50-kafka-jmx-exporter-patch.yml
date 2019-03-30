@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: metrics
-        image: solsson/kafka-prometheus-jmx-exporter@sha256:d237a12cc0cde42b539bcb5efc0008ba5e6ca1351b7843ed52bd574d181c5efd
+        image: solsson/kafka-prometheus-jmx-exporter@sha256:39c8d7cfe925294133c7424b0414e3ac945502176073dccdffc5bfdf47310a73
         command:
         - java
         - -jar
