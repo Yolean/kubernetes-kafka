@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: kafka-manager
-        image: solsson/kafka-manager@sha256:28b1a0b355f3972a9e3b5ac82abcbfee9a72b66a2bfe86094f6ea2caad9ce3a7
+        image: solsson/kafka-manager@sha256:552a4d091f9efa83e40b2a73690cbd1bb33ca2ea4d16af5cbbb7514b3b4e772f
         ports:
         - containerPort: 80
         env:
