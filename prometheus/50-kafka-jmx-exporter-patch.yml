@@ -28,6 +28,7 @@ spec:
             cpu: 0m
             memory: 60Mi
           limits:
+            cpu: 100m
             memory: 120Mi
         volumeMounts:
         - name: jmx-config
