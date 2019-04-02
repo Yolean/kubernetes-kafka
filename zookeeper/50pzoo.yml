@@ -23,7 +23,7 @@ spec:
       terminationGracePeriodSeconds: 10
       initContainers:
       - name: init-config
-        image: solsson/kafka-initutils@sha256:2cdb90ea514194d541c7b869ac15d2d530ca64889f56e270161fe4e5c3d076ea
+        image: solsson/kafka-initutils@sha256:f6d9850c6c3ad5ecc35e717308fddb47daffbde18eb93e98e031128fe8b899ef
         command: ['/bin/bash', '/etc/kafka-configmap/init.sh']
         volumeMounts:
         - name: configmap
