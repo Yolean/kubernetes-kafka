@@ -16,35 +16,32 @@ spec:
     spec:
       containers:
       - name: kafka-minion
-        image: quay.io/google-cloud-tools/kafka-minion@sha256:d96de5cebef39d258241fa49cd972762eeda58a21e94d41fad9de1428b4e2c33
+        image: quay.io/google-cloud-tools/kafka-minion:v0.1.1@sha256:e5b1bcd61fc4e7059b8d55f55e22da981f84da2638d4c4a776046737f7c8fc1f
         env:
         - name: TELEMETRY_HOST
           value: 0.0.0.0
         - name: TELEMETRY_PORT
           value: "8080"
         - name: EXPORTER_IGNORE_SYSTEM_TOPICS
-          value: kafka_minion
+          value: "true"
         - name: EXPORTER_METRICS_PREFIX
           value: kafka_minion
         - name: LOG_LEVEL
           value: info
         - name: KAFKA_BROKERS
-          value: kafka-0.broker:9092, kafka-0.broker:9092
+          value: kafka-0.broker:9092, kafka-1.broker:9092, kafka-2.broker:9092
         - name: KAFKA_CONSUMER_OFFSETS_TOPIC_NAME
           value: __consumer_offsets
         ports:
-        - containerPort: 80
-          name: http
-          protocol: TCP
+        - name: http
+          containerPort: 8080
+        readinessProbe:
+          failureThreshold: 1
+          httpGet:
+            port: http
+            path: /metrics
         livenessProbe:
           failureThreshold: 3
           httpGet:
-            path: /
             port: http
-            scheme: HTTP
-        readinessProbe:
-          failureThreshold: 3
-          httpGet:
-            path: /
-            port: http
-            scheme: HTTP
+            path: /metrics
