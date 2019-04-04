@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metrics-minion
+  namespace: kafka
+  labels: &labels
+    app: kafka-minion
+    type: openmetrics
+spec:
+  replicas: 1
+  selector:
+    matchLabels: *labels
+  template:
+    metadata:
+      labels: *labels
+    spec:
+      containers:
+      - name: kafka-minion
+        image: quay.io/google-cloud-tools/kafka-minion@sha256:d96de5cebef39d258241fa49cd972762eeda58a21e94d41fad9de1428b4e2c33
+        env:
+        - name: TELEMETRY_HOST
+          value: 0.0.0.0
+        - name: TELEMETRY_PORT
+          value: "8080"
+        - name: EXPORTER_IGNORE_SYSTEM_TOPICS
+          value: kafka_minion
+        - name: EXPORTER_METRICS_PREFIX
+          value: kafka_minion
+        - name: LOG_LEVEL
+          value: info
+        - name: KAFKA_BROKERS
+          value: kafka-0.broker:9092, kafka-0.broker:9092
+        - name: KAFKA_CONSUMER_OFFSETS_TOPIC_NAME
+          value: __consumer_offsets
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: http
+            scheme: HTTP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: http
+            scheme: HTTP
