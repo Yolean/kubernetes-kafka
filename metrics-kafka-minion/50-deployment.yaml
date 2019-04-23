@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: kafka-minion
-        image: quay.io/google-cloud-tools/kafka-minion:v0.1.1@sha256:e5b1bcd61fc4e7059b8d55f55e22da981f84da2638d4c4a776046737f7c8fc1f
+        image: quay.io/google-cloud-tools/kafka-minion:v0.1.2@sha256:756faaa4b7ce39b9f7d76c0cf9570ab0cf6a9c921e407acd0f12ca933abe202e
         env:
         - name: TELEMETRY_HOST
           value: 0.0.0.0
