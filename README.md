@@ -37,7 +37,7 @@ and though they still seem to work you can get around that with a v1.14+ kubectl
 
 ### Maintaining your own kustomization
 
-`kubectl apply -k` takes a siungle overlay, meaning that you can't compose different overlays from this repo.
+`kubectl apply -k` takes a single overlay, meaning that you can't compose different overlays from this repo.
 You'll probably want to maintain your own variant.
 One option is to keep kubernets-kafka as a git submodule and edit the relative path from an example variant.
 
