@@ -2,15 +2,20 @@ FROM busybox as entrypoint
 
 RUN printf '#!/bin/sh\
 # Brings up a kubernetes-kafka cluster in local docker. For example: \n\
-#docker run -v /var/run/docker.sock:/var/run/docker.sock:rw --net=host --name kafka-quickstart --rm -ti solsson/kubernetes-kafka:kind \n\
+#docker run -v /var/run/docker.sock:/var/run/docker.sock:rw --net=host --name kafka-quickstart -ti solsson/kubernetes-kafka:kind \n\
 \n\
-#set -e \n\
 kind create cluster --name=$KIND_NAME \n\
 echo KUBECONFIG=$KUBECONFIG \n\
 kubectl cluster-info \n\
+\n\
+echo "To get local kubectl access (with --net=host) run for example:" \n\
+echo "docker cp kafka-quickstart:/root/.kube/kind-config-$KIND_NAME ./kubeconfig-local-kubernetes-kafka" \n\
+echo "export KUBECONFIG=\$(pwd)/kubeconfig-local-kubernetes-kafka" \n\
+\n\
+echo "Will now attempt an automated kafka setup ..." \n\
 sleep 10 \n\
 kubectl -n kube-system get pods \n\
-kubectl wait --for=condition=Ready -n kube-system pod/etcd-$KIND_NAME-control-plane \n\
+kubectl wait --for=condition=Ready --timeout=120s -n kube-system pod --all \n\
 \n\
 kubectl apply -f 00-namespace.yml \n\
 kubectl apply -f rbac-namespace-default/ \n\
@@ -18,18 +23,11 @@ kubectl apply -k variants/scale-1-ephemeral/ \n\
 sleep 10 \n\
 kubectl -n kafka get pods \n\
 kubectl -n kafka wait --for=condition=Ready --timeout=120s pod/kafka-0 \n\
-kubectl -n kafka get pods \n\
 \n\
-echo "To get local kubectl access (with --net=host) run for example:" \n\
-echo "docker cp kafka-quickstart:/root/.kube/kind-config-$KIND_NAME ./kubeconfig-local-kubernetes-kafka" \n\
-echo "export KUBECONFIG=\$(pwd)/kubeconfig-local-kubernetes-kafka" \n\
-\n\
-echo "Then to get kafka access (with a hosts file entry 127.0.0.1  kafka-0.broker.kafka.svc.cluster.local):" \n\
+echo "Local kafka access requires a hosts file entry 127.0.0.1  kafka-0.broker.kafka.svc.cluster.local" \n\
 echo "kubectl -n kafka port-forward kafka-0 9092" \n\
 \n\
 echo "To delete the cluster simply rm this container and $KIND_NAME-control-plane" \n\
-\n\
-tail -f /dev/null \n\
 '\
 >> /entrypoint
 
