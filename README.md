@@ -39,7 +39,7 @@ and though they still seem to work you can get around that with a v1.14+ kubectl
 
 ```
 kubectl create namespace kafka && \
-kubectl apply -k github.com/Yolean/kubernetes-kafka/variants/dev-small/?ref=v6.0.0
+kubectl apply -k github.com/Yolean/kubernetes-kafka/variants/dev-small/?ref=storagclass-kustomize
 ```
 
 When all pods are Ready, test with for example `kafkacat -b localhost:9094 -L` over `kubectl -n kafka port-forward kafka-0 9094`.
