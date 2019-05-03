@@ -29,6 +29,7 @@ If you begin to rely on this kafka setup we recommend you fork, for example to e
 With the introduction of [app customization](https://kubectl.docs.kubernetes.io/pages/app_customization/introduction.html) in `kubectl` 1.14 there's an alternative to forks. We as a community can maintain a set of overlays.
 
 See the [variants](./variants) folder for different overlays. For example to scale to 1 kafka broker try `kubectl apply -k variants/scale-1/`.
+There are also examples of how to configure volumes for GKE, AWS and AKS.
 
 Currently `apply -k` replaces `apply -f ./rbac-namespace-default; apply -f ./zookeeper; apply -f ./kafka`.
 The original commands now result in `error: unable to decode "zookeeper/kustomization.yaml": Object 'Kind' is missing in ...`
@@ -44,6 +45,7 @@ One option is to keep kubernets-kafka as a git submodule and edit the relative p
 
 | tag    | k8s ≥ | highlights  |
 | ------ | ----- | ----------- |
+| v6.0.0 | 1.11+ | Kafka 2.2.0 + `apply -k` (kubectl 1.14+) |
 | v5.1.0 | 1.11+ | Kafka 2.1.1 |
 | v5.0.3 | 1.11+ | Zookeeper fix [#227](https://github.com/Yolean/kubernetes-kafka/pull/227) + [maxClientCnxns=1](https://github.com/Yolean/kubernetes-kafka/pull/230#issuecomment-445953857) |
 | v5.0  | 1.11+  | Destabilize because in Docker we want Java 11 [#197](https://github.com/Yolean/kubernetes-kafka/pull/197) [#191](https://github.com/Yolean/kubernetes-kafka/pull/191) |
