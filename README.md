@@ -38,7 +38,7 @@ and though they still seem to work you can get around that with a v1.14+ kubectl
 ### Quickstart
 
 ```
-kubectl create namespace kafka
+kubectl create namespace kafka && \
 kubectl apply -k github.com/Yolean/kubernetes-kafka/variants/scale-1-ephemeral/?ref=master
 ```
 
