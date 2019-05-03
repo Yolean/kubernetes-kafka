@@ -44,9 +44,16 @@ kubectl apply -k github.com/Yolean/kubernetes-kafka/variants/scale-1-ephemeral/?
 
 ### Maintaining your own kustomization
 
-`kubectl apply -k` takes a single overlay, meaning that you can't compose different overlays from this repo.
-You'll probably want to maintain your own variant.
-One option is to keep kubernets-kafka as a git submodule and edit the relative path from an example variant.
+Start your variant as a new folder in your choice of version control, with a base `kustomization.yaml` pointing to a tag or revision in this repository:
+
+```
+bases:
+- github.com/Yolean/kubernetes-kafka/rbac-namespace-default/?ref=553f327
+- github.com/Yolean/kubernetes-kafka/kafka/?ref=553f327
+- github.com/Yolean/kubernetes-kafka/zookeeper/?ref=553f327
+```
+
+Then pick and chose from patches our [example variants](https://github.com/Yolean/kubernetes-kafka/tree/master/variants) to tailor your Kafka setup.
 
 ## Version history
 
