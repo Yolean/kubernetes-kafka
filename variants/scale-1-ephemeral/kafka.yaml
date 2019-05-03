@@ -4,7 +4,6 @@ metadata:
   name: kafka
   namespace: kafka
 spec:
-  replicas: 1
   template:
     spec:
       volumes:
