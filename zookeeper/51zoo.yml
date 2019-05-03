@@ -83,7 +83,7 @@ spec:
       name: data
     spec:
       accessModes: [ "ReadWriteOnce" ]
-      storageClassName: kafka-zookeeper-regional
+      storageClassName: standard
       resources:
         requests:
           storage: 1Gi
