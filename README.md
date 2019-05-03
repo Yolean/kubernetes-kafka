@@ -12,7 +12,6 @@ To quote [@arthurk](https://github.com/Yolean/kubernetes-kafka/issues/82#issueco
 ## Getting started
 
 We suggest you `apply -f` manifests in the following order:
- * Your choice of storage classes from [./configure](./configure/)
  * [namespace](./00-namespace.yml)
  * [./rbac-namespace-default](./rbac-namespace-default/)
  * [./zookeeper](./zookeeper/)
@@ -31,9 +30,9 @@ With the introduction of [app customization](https://kubectl.docs.kubernetes.io/
 
 See the [variants](./variants) folder for different overlays. For example to scale to 1 kafka broker try `kubectl apply -k variants/scale-1/`.
 
-Currently `apply -k` replaces `apply -f ./zookeeper; apply -f ./kafka`.
+Currently `apply -k` replaces `apply -f ./rbac-namespace-default; apply -f ./zookeeper; apply -f ./kafka`.
 The original commands now result in `error: unable to decode "zookeeper/kustomization.yaml": Object 'Kind' is missing in ...`
-and though they still seem to work you can get around that with a v1.14+ kubectl using: `kubectl apply -k variants/as-is/`.
+and though they still seem to work you can get around that with a v1.14+ kubectl using: `kubectl apply -k variants/scale-3-5/`.
 
 ### Maintaining your own kustomization
 
