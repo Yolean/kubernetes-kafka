@@ -1,0 +1,16 @@
+# With kubectl -n kafka port-forward kafka-0 9094
+bases:
+- ../scale-1-ephemeral
+patchesJson6902:
+- target:
+    group: apps
+    version: v1
+    kind: StatefulSet
+    name: kafka
+  path: listener-localhost.json
+- target:
+    group: apps
+    version: v1
+    kind: StatefulSet
+    name: kafka
+  path: auto-create-topics.json
