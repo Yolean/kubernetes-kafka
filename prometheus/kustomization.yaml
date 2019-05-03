@@ -1,0 +1,8 @@
+bases:
+- ../kafka
+# or any variant with kafka included, such as
+#- ../variants/scale-1
+resources:
+- 10-metrics-config.yml
+patchesStrategicMerge:
+- 50-kafka-jmx-exporter-patch.yml

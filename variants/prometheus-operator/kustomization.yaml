@@ -1,0 +1,9 @@
+bases:
+- ../../prometheus
+- ../../consumers-prometheus
+resources:
+- k8s-kafka-rbac.yaml
+# with base ../../prometheus
+- k8s-kafka-servicemonitor.yaml
+# with base ../../consumers-prometheus
+- k8s-minion-servicemonitor.yaml
