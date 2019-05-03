@@ -35,6 +35,13 @@ Currently `apply -k` replaces `apply -f ./rbac-namespace-default; apply -f ./zoo
 The original commands now result in `error: unable to decode "zookeeper/kustomization.yaml": Object 'Kind' is missing in ...`
 and though they still seem to work you can get around that with a v1.14+ kubectl using: `kubectl apply -k variants/scale-3-5/`.
 
+### Quickstart
+
+```
+kubectl create namespace kafka
+kubectl apply -k github.com/Yolean/kubernetes-kafka/variants/scale-1-ephemeral/?ref=master
+```
+
 ### Maintaining your own kustomization
 
 `kubectl apply -k` takes a single overlay, meaning that you can't compose different overlays from this repo.
