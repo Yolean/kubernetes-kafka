@@ -40,12 +40,10 @@ spec:
         - name: http
           containerPort: 8080
         readinessProbe:
-          failureThreshold: 1
           httpGet:
             port: http
-            path: /metrics
+            path: /readycheck
         livenessProbe:
-          failureThreshold: 3
           httpGet:
             port: http
-            path: /metrics
+            path: /healthcheck
