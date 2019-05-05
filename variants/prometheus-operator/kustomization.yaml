@@ -1,6 +1,9 @@
 bases:
 - ../../prometheus
 - ../../consumers-prometheus
+# Resources won't apply without a prior apply -k with for example one of:
+#- github.com/coreos/prometheus-operator?ref=de9a6e1
+#- ../prometheus-operator-baseexample
 resources:
 - k8s-kafka-rbac.yaml
 # with base ../../prometheus
