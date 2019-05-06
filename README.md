@@ -78,7 +78,7 @@ Have a look at:
  * [./linkedin-burrow](./linkedin-burrow/)
  * [or plain JMX](https://github.com/Yolean/kubernetes-kafka/pull/96)
  * what's happening in the [monitoring](https://github.com/Yolean/kubernetes-kafka/labels/monitoring) label.
- * Note that this repo is intentionally light on [automation](https://github.com/Yolean/kubernetes-kafka/labels/automation). We think every SRE team must build the operational knowledge first.
+ * Note that this repo is intentionally light on [automation](https://github.com/Yolean/kubernetes-kafka/labels/automation). We think every SRE team must build the operational knowledge first. But there is an example of a [Cruise Control](./cruise-control/) setup.
 
 ## Outside (out-of-cluster) access
 
@@ -88,10 +88,13 @@ Available for:
 
 ## Fewer than three nodes?
 
-For [minikube](https://github.com/kubernetes/minikube/), [youkube](https://github.com/Yolean/youkube) etc:
+For [minikube](https://github.com/kubernetes/minikube/) etc:
 
- * [Scale 1](https://github.com/Yolean/kubernetes-kafka/pull/44)
- * [Scale 2](https://github.com/Yolean/kubernetes-kafka/pull/118)
+ * [Scale 1](./variants/scale-1)
+ * [Scale 2](./variants/scale-2)
+ * [An example of automated in-docker setup](https://github.com/Yolean/kubernetes-kafka/pull/267)
+
+There's also an effort underway (i.e. just only started) to minimize the footprint of a [dev Kafka stack](./variants/dev-small/).
 
 ## Stream...
 
