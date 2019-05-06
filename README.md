@@ -59,7 +59,7 @@ Then pick and chose from patches our [example variants](https://github.com/Yolea
 
 | tag    | k8s ≥ | highlights  |
 | ------ | ----- | ----------- |
-| v6.0.0 | 1.11+ | Kafka 2.2.0 + `apply -k` (kubectl 1.14+) |
+| v6.0.0 | 1.11+ | Kafka 2.2.0 + `apply -k` (kubectl 1.14+) + [#270](https://github.com/Yolean/kubernetes-kafka/pull/270) |
 | v5.1.0 | 1.11+ | Kafka 2.1.1 |
 | v5.0.3 | 1.11+ | Zookeeper fix [#227](https://github.com/Yolean/kubernetes-kafka/pull/227) + [maxClientCnxns=1](https://github.com/Yolean/kubernetes-kafka/pull/230#issuecomment-445953857) |
 | v5.0  | 1.11+  | Destabilize because in Docker we want Java 11 [#197](https://github.com/Yolean/kubernetes-kafka/pull/197) [#191](https://github.com/Yolean/kubernetes-kafka/pull/191) |
