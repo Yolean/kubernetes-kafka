@@ -1,4 +1,0 @@
-# Used from ../prometheus-operator as alternative to installing only the operator and its CRDs
-# because we need a stack on which to test monitoring addons
-bases:
-- github.com/coreos/kube-prometheus?ref=3a64636

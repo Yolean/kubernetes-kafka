@@ -1,12 +1,10 @@
 bases:
+# With prometheus-operator only you must add your own Prometheus and Alertmanager resources
+#- github.com/coreos/prometheus-operator?ref=de9a6e1
+- github.com/coreos/kube-prometheus?ref=3a64636
+- ../../consumers-prometheus
 # The ../../prometheus base must be edited to point to the chosen kafka base
 #- ../../prometheus
-- ../../consumers-prometheus
-# Resources won't apply without a prior apply -k with for example one of:
-#- github.com/coreos/prometheus-operator?ref=de9a6e1
-#- ../prometheus-operator-baseexample
-# TEMP:
-- ../../../unhelm/kube-prometheus
 resources:
 - k8s-kafka-rbac.yaml
 # with base ../../prometheus
