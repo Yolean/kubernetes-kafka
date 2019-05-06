@@ -59,6 +59,7 @@ One option is to keep kubernets-kafka as a git submodule and edit the relative p
 Have a look at:
  * [./prometheus](./prometheus/)
  * [./linkedin-burrow](./linkedin-burrow/)
+ * [./consumers-prometheus](./consumers-prometheus/)
  * [or plain JMX](https://github.com/Yolean/kubernetes-kafka/pull/96)
  * what's happening in the [monitoring](https://github.com/Yolean/kubernetes-kafka/labels/monitoring) label.
  * Note that this repo is intentionally light on [automation](https://github.com/Yolean/kubernetes-kafka/labels/automation). We think every SRE team must build the operational knowledge first.
