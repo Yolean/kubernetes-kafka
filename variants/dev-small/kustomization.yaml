@@ -2,6 +2,7 @@
 bases:
 - ../scale-1-ephemeral
 patchesJson6902:
+# Currently these duplicate each others' directives to avoid an apply -k error: found conflict between different patches
 - target:
     group: apps
     version: v1
