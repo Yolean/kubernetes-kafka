@@ -1,12 +1,19 @@
 bases:
-- ../../prometheus
+# The ../../prometheus base must be edited to point to the chosen kafka base
+#- ../../prometheus
 - ../../consumers-prometheus
 # Resources won't apply without a prior apply -k with for example one of:
 #- github.com/coreos/prometheus-operator?ref=de9a6e1
 #- ../prometheus-operator-baseexample
+#- ../../../unhelm/kube-prometheus
 resources:
 - k8s-kafka-rbac.yaml
 # with base ../../prometheus
 - k8s-kafka-servicemonitor.yaml
 # with base ../../consumers-prometheus
 - k8s-minion-servicemonitor.yaml
+patchesStrategicMerge:
+- prometheus-k8s-scale-1.yaml
+- prometheus-k8s-2.9.2.yaml
+- alertmanager-main-scale-1.yaml
+- prometheus-k8s-nodeport.yaml

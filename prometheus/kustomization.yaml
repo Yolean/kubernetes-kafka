@@ -1,6 +1,7 @@
 bases:
-- ../kafka
-# or any variant with kafka included, such as
+# This kustomization needs to depend on one with kafka in it, to add the sidecar,
+# but it needs to be the kafka from the chosen variant, as ../kafka here would override other kustomizations
+#- ../kafka
 #- ../variants/scale-1
 resources:
 - 10-metrics-config.yml
