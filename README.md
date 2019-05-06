@@ -86,16 +86,6 @@ Available for:
 
  * [Brokers](./outside-services/)
 
-## Fewer than three nodes?
-
-For [minikube](https://github.com/kubernetes/minikube/) etc:
-
- * [Scale 1](./variants/scale-1)
- * [Scale 2](./variants/scale-2)
- * [An example of automated in-docker setup](https://github.com/Yolean/kubernetes-kafka/pull/267)
-
-There's also an effort underway (i.e. just only started) to minimize the footprint of a [dev Kafka stack](./variants/dev-small/).
-
 ## Stream...
 
  * [Kubernetes events to Kafka](./events-kube/)
