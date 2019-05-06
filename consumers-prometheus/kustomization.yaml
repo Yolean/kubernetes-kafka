@@ -1,0 +1,3 @@
+resources:
+- kafka-minion-service.yaml
+- kafka-minion.yaml

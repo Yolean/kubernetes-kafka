@@ -1,0 +1,38 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: broker-monitoring
+  namespace: kafka
+  labels:
+    app: kafka
+spec:
+  publishNotReadyAddresses: true
+  ports:
+  - name: fromjmx
+    port: 5556
+  selector:
+    app: kafka
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: kafka
+  namespace: monitoring
+  labels:
+    k8s-app: kafka
+spec:
+  namespaceSelector:
+    matchNames:
+    - kafka
+  selector:
+    matchLabels:
+      app: kafka
+  endpoints:
+  # https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#endpoint
+  - bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    interval: 120s
+    scrapeTimeout: 119s
+    port: fromjmx
+    scheme: http
+    path: /metrics

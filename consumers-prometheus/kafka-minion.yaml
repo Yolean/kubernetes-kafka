@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metrics-minion
+  namespace: kafka
+  labels: &labels
+    app: kafka-minion
+    type: openmetrics
+spec:
+  replicas: 1
+  selector:
+    matchLabels: *labels
+  template:
+    metadata:
+      labels: *labels
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: /metrics
+    spec:
+      containers:
+      - name: kafka-minion
+        image: solsson/kafka-consumers-prometheus@sha256:a005aa02581fa46884b4a4499f7b4d56e889770c64e7e84d0a9ad195935fa59c
+        env:
+        - name: TELEMETRY_HOST
+          value: 0.0.0.0
+        - name: TELEMETRY_PORT
+          value: "8080"
+        - name: EXPORTER_IGNORE_SYSTEM_TOPICS
+          value: "true"
+        - name: EXPORTER_METRICS_PREFIX
+          value: kafka_minion
+        - name: LOG_LEVEL
+          value: info
+        - name: KAFKA_BROKERS
+          value: kafka-0.broker:9092, kafka-1.broker:9092, kafka-2.broker:9092
+        - name: KAFKA_CONSUMER_OFFSETS_TOPIC_NAME
+          value: __consumer_offsets
+        ports:
+        - name: http
+          containerPort: 8080
+        readinessProbe:
+          httpGet:
+            port: http
+            path: /readycheck
+        livenessProbe:
+          httpGet:
+            port: http
+            path: /healthcheck

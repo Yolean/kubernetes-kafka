@@ -1,4 +1,4 @@
-# meant to be applied using
+# meant to be applied using kustomize, or with pre-1.14 kubectl:
 # kubectl --namespace kafka patch statefulset kafka --patch "$(cat prometheus/50-kafka-jmx-exporter-patch.yml )"
 apiVersion: apps/v1
 kind: StatefulSet
