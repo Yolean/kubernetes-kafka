@@ -1,0 +1,8 @@
+bases:
+- ../scale-3-5
+resources:
+- gke-storageclass-broker-pd.yaml
+- gke-storageclass-zookeeper-ssd.yaml
+- gke-storageclass-zookeeper-regional-euwest1cd-ssh.yaml
+patchesStrategicMerge:
+- volume-claims.yaml

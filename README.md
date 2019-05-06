@@ -12,13 +12,14 @@ To quote [@arthurk](https://github.com/Yolean/kubernetes-kafka/issues/82#issueco
 ## Getting started
 
 We suggest you `apply -f` manifests in the following order:
- * Your choice of storage classes from [./configure](./configure/)
  * [namespace](./00-namespace.yml)
  * [./rbac-namespace-default](./rbac-namespace-default/)
  * [./zookeeper](./zookeeper/)
  * [./kafka](./kafka/)
 
 That'll give you client "bootstrap" `bootstrap.kafka.svc.cluster.local:9092`.
+
+With the introduction of [-k](#kustomize) support, apply `-f` will report `error: unable to decode "zookeeper/kustomization.yaml": Object 'Kind' is missing in ...`. With kubectl v1.14+ you can avoid that using: `kubectl apply -k variants/scale-3-5/`.
 
 ## Fork
 
@@ -30,21 +31,35 @@ If you begin to rely on this kafka setup we recommend you fork, for example to e
 With the introduction of [app customization](https://kubectl.docs.kubernetes.io/pages/app_customization/introduction.html) in `kubectl` 1.14 there's an alternative to forks. We as a community can maintain a set of overlays.
 
 See the [variants](./variants) folder for different overlays. For example to scale to 1 kafka broker try `kubectl apply -k variants/scale-1/`.
+Variants also include examples of how to configure volumes for GKE, AWS and AKS with different storage classes.
 
-Currently `apply -k` replaces `apply -f ./zookeeper; apply -f ./kafka`.
-The original commands now result in `error: unable to decode "zookeeper/kustomization.yaml": Object 'Kind' is missing in ...`
-and though they still seem to work you can get around that with a v1.14+ kubectl using: `kubectl apply -k variants/as-is/`.
+### Quickstart
+
+```
+kubectl create namespace kafka && \
+kubectl apply -k github.com/Yolean/kubernetes-kafka/variants/dev-small/?ref=storagclass-kustomize
+```
+
+When all pods are Ready, test with for example `kafkacat -b localhost:9094 -L` over `kubectl -n kafka port-forward kafka-0 9094`.
 
 ### Maintaining your own kustomization
 
-`kubectl apply -k` takes a single overlay, meaning that you can't compose different overlays from this repo.
-You'll probably want to maintain your own variant.
-One option is to keep kubernets-kafka as a git submodule and edit the relative path from an example variant.
+Start your variant as a new folder in your choice of version control, with a base `kustomization.yaml` pointing to a tag or revision in this repository:
+
+```
+bases:
+- github.com/Yolean/kubernetes-kafka/rbac-namespace-default/?ref=553f327
+- github.com/Yolean/kubernetes-kafka/kafka/?ref=553f327
+- github.com/Yolean/kubernetes-kafka/zookeeper/?ref=553f327
+```
+
+Then pick and chose from patches our [example variants](https://github.com/Yolean/kubernetes-kafka/tree/master/variants) to tailor your Kafka setup.
 
 ## Version history
 
 | tag    | k8s ≥ | highlights  |
 | ------ | ----- | ----------- |
+| v6.0.0 | 1.11+ | Kafka 2.2.0 + `apply -k` (kubectl 1.14+) |
 | v5.1.0 | 1.11+ | Kafka 2.1.1 |
 | v5.0.3 | 1.11+ | Zookeeper fix [#227](https://github.com/Yolean/kubernetes-kafka/pull/227) + [maxClientCnxns=1](https://github.com/Yolean/kubernetes-kafka/pull/230#issuecomment-445953857) |
 | v5.0  | 1.11+  | Destabilize because in Docker we want Java 11 [#197](https://github.com/Yolean/kubernetes-kafka/pull/197) [#191](https://github.com/Yolean/kubernetes-kafka/pull/191) |
@@ -62,20 +77,13 @@ Have a look at:
  * [./consumers-prometheus](./consumers-prometheus/)
  * [or plain JMX](https://github.com/Yolean/kubernetes-kafka/pull/96)
  * what's happening in the [monitoring](https://github.com/Yolean/kubernetes-kafka/labels/monitoring) label.
- * Note that this repo is intentionally light on [automation](https://github.com/Yolean/kubernetes-kafka/labels/automation). We think every SRE team must build the operational knowledge first.
+ * Note that this repo is intentionally light on [automation](https://github.com/Yolean/kubernetes-kafka/labels/automation). We think every SRE team must build the operational knowledge first. But there is an example of a [Cruise Control](./cruise-control/) setup.
 
 ## Outside (out-of-cluster) access
 
 Available for:
 
  * [Brokers](./outside-services/)
-
-## Fewer than three nodes?
-
-For [minikube](https://github.com/kubernetes/minikube/), [youkube](https://github.com/Yolean/youkube) etc:
-
- * [Scale 1](https://github.com/Yolean/kubernetes-kafka/pull/44)
- * [Scale 2](https://github.com/Yolean/kubernetes-kafka/pull/118)
 
 ## Stream...
 

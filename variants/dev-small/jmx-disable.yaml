@@ -6,7 +6,8 @@ metadata:
 spec:
   template:
     spec:
-      volumes:
-      - name: data
-        emptyDir: {}
-  volumeClaimTemplates: []
+      containers:
+      - name: broker
+        env:
+        - name: JMX_PORT
+          value: ""
