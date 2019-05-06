@@ -5,7 +5,8 @@ bases:
 # Resources won't apply without a prior apply -k with for example one of:
 #- github.com/coreos/prometheus-operator?ref=de9a6e1
 #- ../prometheus-operator-baseexample
-#- ../../../unhelm/kube-prometheus
+# TEMP:
+- ../../../unhelm/kube-prometheus
 resources:
 - k8s-kafka-rbac.yaml
 # with base ../../prometheus
@@ -17,3 +18,14 @@ patchesStrategicMerge:
 - prometheus-k8s-2.9.2.yaml
 - alertmanager-main-scale-1.yaml
 - prometheus-k8s-nodeport.yaml
+- additional-scrape-configs.yaml
+secretGenerator:
+- name: additional-scrape-configs
+  namespace: monitoring
+  #kvSources:
+  #- name: pods-discovery-by-prometheus-io-annotations.yaml
+    #pluginType: builtin
+    #args:
+    #- scrape-configs/pods-discovery-by-prometheus-io-annotations.yaml
+  files:
+  - scrape-configs/pods-discovery-by-prometheus-io-annotations.yaml
