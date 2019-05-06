@@ -19,6 +19,8 @@ We suggest you `apply -f` manifests in the following order:
 
 That'll give you client "bootstrap" `bootstrap.kafka.svc.cluster.local:9092`.
 
+With the introduction of [-k](#kustomize) support, apply `-f` will report `error: unable to decode "zookeeper/kustomization.yaml": Object 'Kind' is missing in ...`. With kubectl v1.14+ you can avoid that using: `kubectl apply -k variants/scale-3-5/`.
+
 ## Fork
 
 Our only dependency is `kubectl`. Not because we dislike Helm or Operators, but because we think plain manifests make it easier to collaborate.
@@ -29,11 +31,7 @@ If you begin to rely on this kafka setup we recommend you fork, for example to e
 With the introduction of [app customization](https://kubectl.docs.kubernetes.io/pages/app_customization/introduction.html) in `kubectl` 1.14 there's an alternative to forks. We as a community can maintain a set of overlays.
 
 See the [variants](./variants) folder for different overlays. For example to scale to 1 kafka broker try `kubectl apply -k variants/scale-1/`.
-There are also examples of how to configure volumes for GKE, AWS and AKS.
-
-Currently `apply -k` replaces `apply -f ./rbac-namespace-default; apply -f ./zookeeper; apply -f ./kafka`.
-The original commands now result in `error: unable to decode "zookeeper/kustomization.yaml": Object 'Kind' is missing in ...`
-and though they still seem to work you can get around that with a v1.14+ kubectl using: `kubectl apply -k variants/scale-3-5/`.
+Variants also include examples of how to configure volumes for GKE, AWS and AKS with different storage classes.
 
 ### Quickstart
 
