@@ -4,6 +4,8 @@ bases:
 - github.com/coreos/kube-prometheus?ref=3a64636
 - ../../consumers-prometheus
 # The ../../prometheus base must be edited to point to the chosen kafka base
+# Actually to apply the sidecar with apply -k it has to be included with the kafka variant; can't be its own kustomization because you'll get
+# either "failed to find an object with apps_v1_StatefulSet|kafka to apply the patch" or "id 'apps_v1_StatefulSet|kafka|~P|zoo|~S' already used"
 #- ../../prometheus
 resources:
 - k8s-kafka-rbac.yaml
