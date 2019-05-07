@@ -6,7 +6,6 @@ metadata:
   namespace: monitoring
 spec:
   additionalScrapeConfigs:
-    # github.com/kubernetes-sigs/kustomize/blob/master/examples/kvSourceGoPlugin.md is clearly WIP
-    name: additional-scrape-configs-5m4c7m6mc9
+    name: additional-scrape-configs
     # See https://github.com/prometheus/prometheus/pull/4131, and upon disagreement see https://github.com/prometheus/prometheus/issues/4484
     key: pods-discovery-by-prometheus-io-annotations.yaml
