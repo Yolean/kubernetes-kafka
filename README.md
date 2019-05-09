@@ -19,8 +19,6 @@ We suggest you `apply -f` manifests in the following order:
 
 That'll give you client "bootstrap" `bootstrap.kafka.svc.cluster.local:9092`.
 
-With the introduction of [-k](#kustomize) support, apply `-f` will report `error: unable to decode "zookeeper/kustomization.yaml": Object 'Kind' is missing in ...`. With kubectl v1.14+ you can avoid that using: `kubectl apply -k variants/scale-3-5/`.
-
 ## Fork
 
 Our only dependency is `kubectl`. Not because we dislike Helm or Operators, but because we think plain manifests make it easier to collaborate.
