@@ -4,23 +4,25 @@ metadata:
   name: heapster
   namespace: kube-system
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: heapster
   namespace: kube-system
 spec:
   replicas: 1
+  selector:
+    matchLabels: &labels
+      task: monitoring
+      k8s-app: heapster
   template:
     metadata:
-      labels:
-        task: monitoring
-        k8s-app: heapster
+      labels: *labels
     spec:
       serviceAccountName: heapster
       containers:
       - name: heapster
-        image: k8s.gcr.io/heapster-amd64:v1.5.0
+        image: k8s.gcr.io/heapster-amd64:v1.5.4@sha256:dccaabb0c20cf05c29baefa1e9bf0358b083ccc0fab492b9b3b47fb7e4db5472
         imagePullPolicy: IfNotPresent
         command:
         - /heapster

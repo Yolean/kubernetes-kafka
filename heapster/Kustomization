@@ -1,0 +1,3 @@
+resources:
+- heapster-rbac.yaml
+- heapster.yaml
