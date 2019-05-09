@@ -35,7 +35,7 @@ Variants also include examples of how to configure volumes for GKE, AWS and AKS 
 
 ```
 kubectl create namespace kafka && \
-kubectl apply -k github.com/Yolean/kubernetes-kafka/variants/dev-small/?ref=storagclass-kustomize
+kubectl apply -k github.com/Yolean/kubernetes-kafka/variants/dev-small/?ref=v6.0.1
 ```
 
 When all pods are Ready, test with for example `kafkacat -b localhost:9094 -L` over `kubectl -n kafka port-forward kafka-0 9094`.
@@ -46,9 +46,9 @@ Start your variant as a new folder in your choice of version control, with a bas
 
 ```
 bases:
-- github.com/Yolean/kubernetes-kafka/rbac-namespace-default/?ref=553f327
-- github.com/Yolean/kubernetes-kafka/kafka/?ref=553f327
-- github.com/Yolean/kubernetes-kafka/zookeeper/?ref=553f327
+- github.com/Yolean/kubernetes-kafka/rbac-namespace-default/?ref=60d01b5
+- github.com/Yolean/kubernetes-kafka/kafka/?ref=60d01b5
+- github.com/Yolean/kubernetes-kafka/zookeeper/?ref=60d01b5
 ```
 
 Then pick and chose from patches our [example variants](https://github.com/Yolean/kubernetes-kafka/tree/master/variants) to tailor your Kafka setup.
