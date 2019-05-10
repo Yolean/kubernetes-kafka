@@ -25,4 +25,4 @@ spec:
         - name: ZOO_REPLICAS
           value: '5'
         - name: ID_OFFSET
-          value: '0'
+          value: '1'
