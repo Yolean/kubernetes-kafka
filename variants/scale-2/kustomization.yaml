@@ -5,3 +5,10 @@ bases:
 patchesStrategicMerge:
 - kafka.yaml
 - zookeeper.yaml
+patchesJson6902:
+- target:
+    group: apps
+    version: v1
+    kind: StatefulSet
+    name: kafka
+  path: kafka-scale2-overrides.json
