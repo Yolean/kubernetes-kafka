@@ -1,0 +1,4 @@
+bases:
+- ../scale-3-5
+patchesStrategicMerge:
+- ./only-zoo-5.yaml
