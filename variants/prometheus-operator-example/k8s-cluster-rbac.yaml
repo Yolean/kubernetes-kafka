@@ -1,10 +1,9 @@
 # Allows the "k8s" prometheus from Prometheus Operator contrib to do service discovery in the kafka namespace
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
+kind: ClusterRole
 metadata:
   name: prometheus-k8s
-  namespace: kafka
 rules:
 - apiGroups:
   - ""
@@ -18,13 +17,12 @@ rules:
   - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
+kind: ClusterRoleBinding
 metadata:
   name: prometheus-k8s
-  namespace: kafka
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: Role
+  kind: ClusterRole
   name: prometheus-k8s
 subjects:
 - kind: ServiceAccount

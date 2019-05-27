@@ -9,6 +9,8 @@ bases:
 #- ../../prometheus
 resources:
 - k8s-kafka-rbac.yaml
+# or, to scrape all namespaces
+#- k8s-cluster-rbac.yaml
 # with base ../../prometheus
 #- k8s-kafka-servicemonitor.yaml
 # with base ../../consumers-prometheus
