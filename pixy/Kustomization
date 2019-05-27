@@ -1,0 +1,3 @@
+resources:
+- pixy-service.yml
+- pixy.yml
