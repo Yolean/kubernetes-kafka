@@ -10,7 +10,7 @@ spec:
     spec:
       containers:
       - name: kafka
-        image: solsson/kafka:2.2.1@sha256:450c6fdacae3f89ca28cecb36b2f120aad9b19583d68c411d551502ee8d0b09b
+        image: solsson/kafka:latest@sha256:9f1f0e769cd10e0503bc5649f9fcb0fc2c28aaf8e3b9b30ef2e6da67655bb3f6
         env:
         - name: ZOOKEEPER
           value: zookeeper.kafka:2181
