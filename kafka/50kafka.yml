@@ -35,6 +35,22 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: NODE_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.hostIP
+        - name: NODE_ZONE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.labels['failure-domain.beta.kubernetes.io/zone']
+        - name: NODE_REGION
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.labels['failure-domain.beta.kubernetes.io/region']
         command: ['/bin/bash', '/etc/kafka-configmap/init.sh']
         volumeMounts:
         - name: configmap
