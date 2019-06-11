@@ -5,7 +5,9 @@ metadata:
   name: bootstrap
   namespace: kafka
 spec:
+  type: NodePort
   ports:
   - port: 9092
+    nodePort: 32492
   selector:
     app: kafka
