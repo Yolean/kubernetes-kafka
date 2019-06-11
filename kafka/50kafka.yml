@@ -43,14 +43,10 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: status.hostIP
-        - name: NODE_ZONE
+        - name: CONTROLLER_REVISION_HASH
           valueFrom:
             fieldRef:
-              fieldPath: metadata.labels['failure-domain.beta.kubernetes.io/zone']
-        - name: NODE_REGION
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.labels['failure-domain.beta.kubernetes.io/region']
+              fieldPath: metadata.labels['controller-revision-hash']
         command: ['/bin/bash', '/etc/kafka-configmap/init.sh']
         volumeMounts:
         - name: configmap
