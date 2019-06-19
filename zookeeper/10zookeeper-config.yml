@@ -26,7 +26,7 @@ data:
     dataDir=/var/lib/zookeeper/data
     dataLogDir=/var/lib/zookeeper/log
     clientPort=2181
-    maxClientCnxns=1
+    maxClientCnxns=2
     initLimit=5
     syncLimit=2
     server.1=pzoo-0.pzoo:2888:3888:participant
