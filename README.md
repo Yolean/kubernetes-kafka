@@ -35,7 +35,7 @@ Variants also include examples of how to configure volumes for GKE, AWS and AKS 
 
 ```
 kubectl create namespace kafka && \
-kubectl apply -k github.com/Yolean/kubernetes-kafka/variants/dev-small/?ref=v6.0.1
+kubectl apply -k github.com/Yolean/kubernetes-kafka/variants/dev-small/?ref=v6.0.3
 ```
 
 When all pods are Ready, test with for example `kafkacat -b localhost:9094 -L` over `kubectl -n kafka port-forward kafka-0 9094`.
