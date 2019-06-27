@@ -55,7 +55,7 @@ spec:
     spec:
       containers:
       - name: topic-create
-        image: solsson/kafka:2.2.1@sha256:450c6fdacae3f89ca28cecb36b2f120aad9b19583d68c411d551502ee8d0b09b
+        image: solsson/kafka-cli@sha256:9fa3306e9f5d18283d10e01f7c115d8321eedc682f262aff784bd0126e1f2221
         command:
         - ./bin/kafka-topics.sh
         - --zookeeper
