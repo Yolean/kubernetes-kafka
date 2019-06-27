@@ -1,6 +1,6 @@
 # With kubectl -n kafka port-forward kafka-0 9094
 bases:
-- ../scale-1-ephemeral
+- ../scale-1
 patchesStrategicMerge:
 - jmx-disable.yaml
 patchesJson6902:
