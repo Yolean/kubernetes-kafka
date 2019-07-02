@@ -40,7 +40,7 @@ kubectl apply -k github.com/Yolean/kubernetes-kafka/variants/dev-small/?ref=v6.0
 
 When all pods are Ready, test with for example `kafkacat -b localhost:9094 -L` over `kubectl -n kafka port-forward kafka-0 9094`.
 
-Alternatively, you can run a one time container in your cluster with the command below. This will give you a shell where you can access kubernetes' local DNS. Note that this pod will exit after you disconnect due to the `--rm` flag.
+Alternatively, you can run a one time pod in your cluster with the command below. This will give you a shell where you can access kubernetes' local DNS. Note that this pod will exit after you disconnect due to the `--rm` flag.
 ```bash
 kubectl run -i --tty --rm debug --image=confluentinc/cp-kafkacat:5.2.2 --restart=Never -- bash
 # If you don't see a command prompt, try pressing enter.
