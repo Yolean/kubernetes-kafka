@@ -40,6 +40,19 @@ kubectl apply -k github.com/Yolean/kubernetes-kafka/variants/dev-small/?ref=v6.0
 
 When all pods are Ready, test with for example `kafkacat -b localhost:9094 -L` over `kubectl -n kafka port-forward kafka-0 9094`.
 
+Alternatively, you can run a one time container in your cluster with the command below. This will give you a shell where you can access kubernetes' local DNS. Note that this pod will exit after you disconnect due to the `--rm` flag.
+```bash
+kubectl run -i --tty --rm debug --image=confluentinc/cp-kafkacat:5.2.2 --restart=Never -- bash
+# If you don't see a command prompt, try pressing enter.
+```
+
+```bash
+# If you are in the same namespace as your kafka cluster
+kafkacat -b broker:9092 -L
+# If you are not in the same name namespace
+kafkacat -b broker.kafka:9092 -L 
+```
+
 ### Maintaining your own kustomization
 
 Start your variant as a new folder in your choice of version control, with a base `kustomization.yaml` pointing to a tag or revision in this repository:
