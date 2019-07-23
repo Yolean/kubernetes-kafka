@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: pixy
-        image: mailgun/kafka-pixy:0.16.0@sha256:2a2d426f9fe17ede9c21b2f8b7418d8787293e39327b638fd6c403f3726597fb
+        image: mailgun/kafka-pixy:0.17.0@sha256:0b5f4795c0b0d80729fa7415ec70ae4d411e152c6149656dddf01b18184792e0
         ports:
         - containerPort: 80
         command:
