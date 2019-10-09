@@ -4,7 +4,6 @@ bases:
 patchesStrategicMerge:
 - jmx-disable.yaml
 patchesJson6902:
-# Currently these duplicate each others' directives to avoid an apply -k error: found conflict between different patches
 - target:
     group: apps
     version: v1
@@ -16,4 +15,4 @@ patchesJson6902:
     version: v1
     kind: StatefulSet
     name: kafka
-  path: auto-create-topics.json
+  path: num-partitions-1.json

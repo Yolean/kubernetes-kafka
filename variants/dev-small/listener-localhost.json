@@ -1,8 +1,4 @@
 [
-  {"op": "add", "path": "/spec/template/spec/containers/0/command/-", "value": "--override"},
-  {"op": "add", "path": "/spec/template/spec/containers/0/command/-", "value": "advertised.listeners=PLAINTEXT://:9092,OUTSIDE://localhost:9094"},
-  {"op": "add", "path": "/spec/template/spec/containers/0/command/-", "value": "--override"},
-  {"op": "add", "path": "/spec/template/spec/containers/0/command/-", "value": "auto.create.topics.enable=true"},
-  {"op": "add", "path": "/spec/template/spec/containers/0/command/-", "value": "--override"},
-  {"op": "add", "path": "/spec/template/spec/containers/0/command/-", "value": "num.partitions=1"}
+  {"op": "add", "path": "/spec/template/spec/containers/0/command/2", "value": "--override"},
+  {"op": "add", "path": "/spec/template/spec/containers/0/command/3", "value": "advertised.listeners=PLAINTEXT://:9092,OUTSIDE://localhost:9094"}
 ]
