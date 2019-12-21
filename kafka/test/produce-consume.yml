@@ -99,7 +99,7 @@ spec:
     spec:
       containers:
       - name: producer
-        image: solsson/kafka:2.3.0@sha256:b59603a8c0645f792fb54e9571500e975206352a021d6a116b110945ca6c3a1d
+        image: solsson/kafka:latest@sha256:bc6aa2962c772733a07ed9ccbc48c8b218f8c42889c83e251665d193015a2a2f
         env:
         - name: BOOTSTRAP
           value: bootstrap.kafka:9092
@@ -127,7 +127,7 @@ spec:
         - name: shared
           mountPath: /shared
       - name: consumer
-        image: solsson/kafka:2.3.0@sha256:b59603a8c0645f792fb54e9571500e975206352a021d6a116b110945ca6c3a1d
+        image: solsson/kafka:latest@sha256:bc6aa2962c772733a07ed9ccbc48c8b218f8c42889c83e251665d193015a2a2f
         env:
         - name: BOOTSTRAP
           value: bootstrap.kafka:9092
