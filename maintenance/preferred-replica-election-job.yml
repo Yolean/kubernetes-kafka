@@ -10,7 +10,7 @@ spec:
     spec:
       containers:
       - name: kafka
-        image: solsson/kafka:latest@sha256:bc6aa2962c772733a07ed9ccbc48c8b218f8c42889c83e251665d193015a2a2f
+        image: solsson/kafka:2.4.0@sha256:17f35e6dc3b5687107e0dae4cc0f3fc30d6613724e7b75fc1ed4d1a6f0744965
         command:
         - ./bin/kafka-preferred-replica-election.sh
         - --zookeeper
