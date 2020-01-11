@@ -22,6 +22,7 @@ data:
     sed -i "s/server\.$ZOOKEEPER_SERVER_ID\=[a-z0-9.-]*/server.$ZOOKEEPER_SERVER_ID=0.0.0.0/" /etc/kafka/zookeeper.properties
 
   zookeeper.properties: |
+    4lw.commands.whitelist=ruok
     tickTime=2000
     dataDir=/var/lib/zookeeper/data
     dataLogDir=/var/lib/zookeeper/log
