@@ -9,10 +9,12 @@ patchesJson6902:
     version: v1
     kind: StatefulSet
     name: kafka
+    namespace: kafka
   path: listener-localhost.json
 - target:
     group: apps
     version: v1
     kind: StatefulSet
     name: kafka
+    namespace: kafka
   path: num-partitions-1.json
