@@ -18,6 +18,10 @@ spec:
         app: kafka
       annotations:
     spec:
+      securityContext:
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
       terminationGracePeriodSeconds: 30
       initContainers:
       - name: init-config
@@ -85,6 +89,8 @@ spec:
           mountPath: /etc/kafka
         - name: data
           mountPath: /var/lib/kafka/data
+        - name: logs
+          mountPath: /opt/kafka/logs
         - name: extensions
           mountPath: /opt/kafka/libs/extensions
       volumes:
@@ -92,6 +98,8 @@ spec:
         configMap:
           name: broker-config
       - name: config
+        emptyDir: {}
+      - name: logs
         emptyDir: {}
       - name: extensions
         emptyDir: {}
