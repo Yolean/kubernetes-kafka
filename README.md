@@ -57,6 +57,7 @@ Then pick and chose from patches our [example variants](https://github.com/Yolea
 
 | tag    | k8s ≥ | highlights  |
 | ------ | ----- | ----------- |
+|  TBD   | 1.13+ | Kafka [2.4.0](https://github.com/Yolean/kubernetes-kafka/pull/297) + [standard storage class](https://github.com/Yolean/kubernetes-kafka/pull/294) |
 | v6.0.0 | 1.11+ | Kafka 2.2.0 + `apply -k` (kubectl 1.14+) + [#270](https://github.com/Yolean/kubernetes-kafka/pull/270) |
 | v5.1.0 | 1.11+ | Kafka 2.1.1 |
 | v5.0.3 | 1.11+ | Zookeeper fix [#227](https://github.com/Yolean/kubernetes-kafka/pull/227) + [maxClientCnxns=1](https://github.com/Yolean/kubernetes-kafka/pull/230#issuecomment-445953857) |

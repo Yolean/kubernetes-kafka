@@ -1,0 +1,14 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: kafka
+spec:
+  template:
+    spec:
+      initContainers:
+      - name: init-config
+        env:
+        - name: ADVERTISE_ADDR
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP

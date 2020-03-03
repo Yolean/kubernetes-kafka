@@ -81,10 +81,6 @@ spec:
         - --if-not-exists
         - --topic
         -   test-kafkacat
-        - --partitions
-        -   "3"
-        - --replication-factor
-        -   "2"
         resources:
           limits:
             cpu: 200m
