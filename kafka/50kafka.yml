@@ -19,8 +19,6 @@ spec:
       annotations:
     spec:
       securityContext:
-        runAsUser: 65534
-        runAsGroup: 65534
         fsGroup: 65534
       terminationGracePeriodSeconds: 30
       initContainers:
