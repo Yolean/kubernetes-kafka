@@ -47,12 +47,7 @@ spec:
           mountPath: /opt/kafka/libs/extensions
       containers:
       - name: broker
-        image: solsson/kafka:kafka-server-start-latest@sha256:ef2f4036af1a065b43783997ed54153671f19a7c094d24f6ac73fccc2a733751
-        env:
-        - name: CLASSPATH
-          value: /opt/kafka/libs/extensions/*
-        - name: KAFKA_LOG4J_OPTS
-          value: -Dlog4j.configuration=file:/etc/kafka/log4j.properties
+        image: solsson/kafka:kafka-server-start-latest@sha256:2fdef5d3ce393cbfdd2df8adb866a33442ebae3610cf6cb590ca2fdb90e1d391
         ports:
         - name: inside
           containerPort: 9092
