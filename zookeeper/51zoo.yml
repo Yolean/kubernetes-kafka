@@ -41,7 +41,7 @@ spec:
           mountPath: /var/lib/zookeeper
       containers:
       - name: zookeeper
-        image: solsson/kafka:2.4.0@sha256:201a1c7fd378405b6b1bfd801127c8a530ed7a971282bfcee4ec731bc0c50ad2
+        image: solsson/kafka:zookeeper-server-start-latest@sha256:15d3f87e5865b338b83b9567efed68952194342982d3b46ff4ef27ae80a8bf1f
         env:
         - name: KAFKA_LOG4J_OPTS
           value: -Dlog4j.configuration=file:/etc/kafka/log4j.properties
@@ -76,15 +76,11 @@ spec:
           mountPath: /etc/kafka
         - name: data
           mountPath: /var/lib/zookeeper
-        - name: logs
-          mountPath: /opt/kafka/logs
       volumes:
       - name: configmap
         configMap:
           name: zookeeper-config
       - name: config
-        emptyDir: {}
-      - name: logs
         emptyDir: {}
   volumeClaimTemplates:
   - metadata:
