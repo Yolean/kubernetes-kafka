@@ -1,4 +1,2 @@
 bases:
-- ../../rbac-namespace-default
-- ../../kafka
-- ../../zookeeper
+- ../../nonroot
