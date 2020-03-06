@@ -41,6 +41,7 @@ data:
     }
     printf '%s\n' "${SEDS[@]}" | sed -f - /etc/kafka-configmap/server.properties > /etc/kafka/server.properties.tmp
     [ $? -eq 0 ] && mv /etc/kafka/server.properties.tmp /etc/kafka/server.properties
+    ln -s /etc/kafka/server.properties /etc/kafka/server.properties.$POD_NAME
 
   server.properties: |-
     ############################# Log Basics #############################

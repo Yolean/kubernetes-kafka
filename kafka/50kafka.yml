@@ -47,6 +47,10 @@ spec:
       - name: broker
         image: solsson/kafka:2.4.0@sha256:201a1c7fd378405b6b1bfd801127c8a530ed7a971282bfcee4ec731bc0c50ad2
         env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
         - name: CLASSPATH
           value: /opt/kafka/libs/extensions/*
         - name: KAFKA_LOG4J_OPTS
@@ -62,7 +66,7 @@ spec:
           containerPort: 5555
         command:
         - ./bin/kafka-server-start.sh
-        - /etc/kafka/server.properties
+        - /etc/kafka/server.properties.$(POD_NAME)
         lifecycle:
           preStop:
             exec:

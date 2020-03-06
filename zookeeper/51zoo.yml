@@ -26,6 +26,10 @@ spec:
         image: solsson/kafka-initutils@sha256:f6d9850c6c3ad5ecc35e717308fddb47daffbde18eb93e98e031128fe8b899ef
         command: ['/bin/bash', '/etc/kafka-configmap/init.sh']
         env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
         - name: ID_OFFSET
           value: "4"
         volumeMounts:
@@ -39,11 +43,15 @@ spec:
       - name: zookeeper
         image: solsson/kafka:2.4.0@sha256:201a1c7fd378405b6b1bfd801127c8a530ed7a971282bfcee4ec731bc0c50ad2
         env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
         - name: KAFKA_LOG4J_OPTS
           value: -Dlog4j.configuration=file:/etc/kafka/log4j.properties
         command:
         - ./bin/zookeeper-server-start.sh
-        - /etc/kafka/zookeeper.properties
+        - /etc/kafka/zookeeper.properties.$(POD_NAME)
         lifecycle:
           preStop:
             exec:
