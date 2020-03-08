@@ -1,7 +1,5 @@
 bases:
-- ../../rbac-namespace-default
-- ../../kafka
-- ../../zookeeper
+- ../../nonroot
 patchesStrategicMerge:
 - kafka.yaml
 - zookeeper.yaml

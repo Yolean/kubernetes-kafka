@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: pzoo
+spec:
+  template:
+    spec:
+      containers:
+      - name: zookeeper
+        image: solsson/kafka:nonroot-2.4.0@sha256:b7dbda9f1941711239fbc3095ea49ba74715a9b2e2e8ce9185106c2e878c06aa
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: zoo
+spec:
+  template:
+    spec:
+      containers:
+      - name: zookeeper
+        image: solsson/kafka:nonroot-2.4.0@sha256:b7dbda9f1941711239fbc3095ea49ba74715a9b2e2e8ce9185106c2e878c06aa

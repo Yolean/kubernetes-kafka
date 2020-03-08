@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: kafka
+spec:
+  template:
+    spec:
+      containers:
+      - name: broker
+        image: solsson/kafka:nonroot-2.4.0@sha256:b7dbda9f1941711239fbc3095ea49ba74715a9b2e2e8ce9185106c2e878c06aa
