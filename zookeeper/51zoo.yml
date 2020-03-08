@@ -65,7 +65,7 @@ spec:
           name: leader-election
         resources:
           requests:
-            cpu: 10m
+            cpu: 30m
             memory: 100Mi
           limits:
             memory: 120Mi
