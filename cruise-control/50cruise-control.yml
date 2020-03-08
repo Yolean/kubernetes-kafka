@@ -27,7 +27,7 @@ spec:
           mountPath: /opt/cruise-control/config
       containers:
       - name: cruise-control
-        image: solsson/kafka-cruise-control@sha256:f3f3775f3b5e2a5ae2da6fdae60ed118793ac32c80f13fba31be8f025a57f6ac
+        image: solsson/kafka-cruise-control@sha256:2c2d113ec3d960bfa75e8e51d1fed6a2f2818e329990f61c895e611403ba64d0
         imagePullPolicy: IfNotPresent
         ports:
         - name: api
