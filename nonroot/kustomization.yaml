@@ -21,7 +21,24 @@ patchesJson6902:
     kind: StatefulSet
     name: zoo
   path: fsgroup-65534.yaml
-# https://github.com/kubernetes-sigs/kustomize/issues/915#issuecomment-477808963
+- target:
+    group: apps
+    version: v1
+    kind: StatefulSet
+    name: kafka
+  path: entrypoint-from-image.yaml
+- target:
+    group: apps
+    version: v1
+    kind: StatefulSet
+    name: pzoo
+  path: entrypoint-from-image.yaml
+- target:
+    group: apps
+    version: v1
+    kind: StatefulSet
+    name: zoo
+  path: entrypoint-from-image.yaml
 patchesStrategicMerge:
 - nonroot-image-kafka.yaml
 - nonroot-image-zookeeper.yaml
