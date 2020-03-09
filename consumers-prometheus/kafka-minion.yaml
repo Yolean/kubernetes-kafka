@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: kafka-minion
-        image: solsson/kafka-consumers-prometheus@sha256:039d0bc0c1bdfa8b2e515e4c05ab8490492c65b43830579ce76d36278f33d447
+        image: solsson/kafka-consumers-prometheus@sha256:b5f5b8672397f94379a5a3e8b4bf41cf12b64ff1c4fc7f84684edca4beb37c16
         env:
         - name: TELEMETRY_HOST
           value: 0.0.0.0
