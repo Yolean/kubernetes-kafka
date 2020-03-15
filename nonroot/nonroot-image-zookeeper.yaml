@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
       - name: zookeeper
-        image: solsson/kafka:zookeeper-server-start-2.4.0@sha256:6037e1b5c103a638ef3e8fdd4c052527afb5cebbf13b005f5309a71fb2354c4e
+        image: solsson/kafka:zookeeper-server-start-2.4.1@sha256:ad92d8e93b369a4c6a9df7b8a198081dfcdcda52e218b1e707b39d63e1897cfb
         args:
         - /etc/kafka/zookeeper.properties.$(POD_NAME)
 ---
@@ -20,6 +20,6 @@ spec:
     spec:
       containers:
       - name: zookeeper
-        image: solsson/kafka:zookeeper-server-start-2.4.0@sha256:6037e1b5c103a638ef3e8fdd4c052527afb5cebbf13b005f5309a71fb2354c4e
+        image: solsson/kafka:zookeeper-server-start-2.4.1@sha256:ad92d8e93b369a4c6a9df7b8a198081dfcdcda52e218b1e707b39d63e1897cfb
         args:
         - /etc/kafka/zookeeper.properties.$(POD_NAME)

@@ -7,6 +7,6 @@ spec:
     spec:
       containers:
       - name: broker
-        image: solsson/kafka:kafka-server-start-2.4.0@sha256:48a80cb0a5600ef5621a4c2c42ceab2c210e52619100a7bfe62f8bd871c38f2a
+        image: solsson/kafka:kafka-server-start-2.4.1@sha256:d7fb916c23fb6a7ad3f9cb9036eb8092a7667e31ce47cee216536566ca35c607
         args:
         - /etc/kafka/server.properties.$(POD_NAME)
