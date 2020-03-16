@@ -34,7 +34,7 @@ spec:
           mountPath: /var/lib/zookeeper
       containers:
       - name: zookeeper
-        image: solsson/kafka:2.4.0@sha256:201a1c7fd378405b6b1bfd801127c8a530ed7a971282bfcee4ec731bc0c50ad2
+        image: solsson/kafka:2.4.1@sha256:c6205d213c0ec3c37a8294cca48273860d5a42e42620530eaf7217d31e3205c6
         env:
         - name: KAFKA_LOG4J_OPTS
           value: -Dlog4j.configuration=file:/etc/kafka/log4j.properties
