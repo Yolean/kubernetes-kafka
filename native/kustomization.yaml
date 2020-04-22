@@ -1,0 +1,4 @@
+bases:
+- ../nonroot
+patchesStrategicMerge:
+- native-image-zookeeper.yaml

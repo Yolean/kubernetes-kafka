@@ -1,0 +1,33 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: pzoo
+  namespace: kafka
+spec:
+  replicas: 0
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: zoo
+  namespace: kafka
+spec:
+  replicas: 9
+  template:
+    spec:
+      initContainers:
+      - name: init-config
+        env:
+        # There's no validation on these numbers adding up to a coherent zk config, so watch out
+        - name: PZOO_REPLICAS
+          value: '0'
+        - name: REPLICAS
+          value: '9'
+        - name: ID_OFFSET
+          value: '1'
+      containers:
+      - name: zookeeper
+        env:
+        - name: REPLICAS
+          value: '9'
