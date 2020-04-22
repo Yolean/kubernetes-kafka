@@ -7,4 +7,4 @@ spec:
     spec:
       containers:
       - name: broker
-        image: solsson/kafka:nonroot-2.4.0@sha256:b7dbda9f1941711239fbc3095ea49ba74715a9b2e2e8ce9185106c2e878c06aa
+        image: solsson/kafka:2.4.1-nonroot@sha256:ddfdd23081c075b86132f3e5d8e15389c78c4334dbb22166d9ad1d57f362007f
