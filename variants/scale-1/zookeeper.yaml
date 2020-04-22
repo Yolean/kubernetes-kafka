@@ -19,8 +19,8 @@ spec:
         env:
         - name: PZOO_REPLICAS
           value: '1'
-        - name: ZOO_REPLICAS
-          value: '0'
+        - name: REPLICAS
+          value: '1'
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -37,7 +37,12 @@ spec:
         # There's no validation on these numbers adding up to a coherent zk config, so watch out
         - name: PZOO_REPLICAS
           value: '1'
-        - name: ZOO_REPLICAS
-          value: '0'
+        - name: REPLICAS
+          value: '1'
         - name: ID_OFFSET
           value: '2'
+      containers:
+      - name: zookeeper
+        env:
+        - name: REPLICAS
+          value: '1'
