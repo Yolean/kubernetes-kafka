@@ -51,7 +51,7 @@ spec:
           value: -Dlog4j.configuration=file:/etc/kafka/log4j.properties
         command:
         - ./bin/zookeeper-server-start.sh
-        - /etc/kafka/zookeeper.properties.$(POD_NAME)
+        - /etc/kafka/zookeeper.properties.scale-5.$(POD_NAME)
         lifecycle:
           preStop:
             exec:
