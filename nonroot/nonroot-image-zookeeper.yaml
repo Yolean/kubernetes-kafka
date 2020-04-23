@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
       - name: zookeeper
-        image: solsson/kafka:zookeeper-server-start-2.4.1@sha256:ad92d8e93b369a4c6a9df7b8a198081dfcdcda52e218b1e707b39d63e1897cfb
+        image: solsson/kafka:2.4.1-zookeeper-server-start@sha256:b348f5cc2660a0ad885f24eaa28c1d6186cca86f1e30d33983e46712a3fab2f9
         args:
         - /etc/kafka/zookeeper.properties.scale-$(REPLICAS).$(POD_NAME)
 ---
@@ -20,6 +20,6 @@ spec:
     spec:
       containers:
       - name: zookeeper
-        image: solsson/kafka:zookeeper-server-start-2.4.1@sha256:ad92d8e93b369a4c6a9df7b8a198081dfcdcda52e218b1e707b39d63e1897cfb
+        image: solsson/kafka:2.4.1-zookeeper-server-start@sha256:b348f5cc2660a0ad885f24eaa28c1d6186cca86f1e30d33983e46712a3fab2f9
         args:
         - /etc/kafka/zookeeper.properties.scale-$(REPLICAS).$(POD_NAME)
