@@ -31,6 +31,8 @@ data:
     maxClientCnxns=2
     initLimit=5
     syncLimit=2
+    tcpKeepAlive=true
+    electionPortBindRetry=0
     server.1=pzoo-0.pzoo:2888:3888:participant
     server.2=pzoo-1.pzoo:2888:3888:participant
     server.3=pzoo-2.pzoo:2888:3888:participant
