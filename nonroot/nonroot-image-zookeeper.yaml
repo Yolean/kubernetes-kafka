@@ -7,7 +7,26 @@ spec:
     spec:
       containers:
       - name: zookeeper
-        image: solsson/kafka:2.5.0-zookeeper-server-start@sha256:4f9c68ff762c1419270dd72d38450f58cf130aa0c66f8359441075b4fe04de85
+        image: solsson/kafka:2.5.0-nonroot@sha256:f2a8fd8eeffbbf21233a65f697a3e02fc3e9d88dfe1c67f08f0d805c1bdbad3e
+        #image: solsson/kafka:2.5.0-zookeeper-server-start@sha256:4f9c68ff762c1419270dd72d38450f58cf130aa0c66f8359441075b4fe04de85
+        # docker inspect <image>
+        command: [
+          "/opt/java/openjdk/bin/java",
+          "-Xmx512M",
+          "-Xms512M",
+          "-server",
+          "-XX:+UseG1GC",
+          "-XX:MaxGCPauseMillis=20",
+          "-XX:InitiatingHeapOccupancyPercent=35",
+          "-XX:+ExplicitGCInvokesConcurrent",
+          "-XX:MaxInlineLevel=15",
+          "-Djava.awt.headless=true",
+          "-Dkafka.logs.dir=/opt/kafka/bin/../logs",
+          "-Dlog4j.configuration=file:/etc/kafka/log4j.properties",
+          "-cp",
+          "/opt/kafka/libs/extensions/*:/opt/kafka/libs/*",
+          "org.apache.zookeeper.server.quorum.QuorumPeerMain"
+        ]
         args:
         - /etc/kafka/zookeeper.properties.scale-$(REPLICAS).$(POD_NAME)
 ---
@@ -20,6 +39,25 @@ spec:
     spec:
       containers:
       - name: zookeeper
-        image: solsson/kafka:2.5.0-zookeeper-server-start@sha256:4f9c68ff762c1419270dd72d38450f58cf130aa0c66f8359441075b4fe04de85
+        image: solsson/kafka:2.5.0-nonroot@sha256:f2a8fd8eeffbbf21233a65f697a3e02fc3e9d88dfe1c67f08f0d805c1bdbad3e
+        #image: solsson/kafka:2.5.0-zookeeper-server-start@sha256:4f9c68ff762c1419270dd72d38450f58cf130aa0c66f8359441075b4fe04de85
+        # docker inspect <image>
+        command: [
+          "/opt/java/openjdk/bin/java",
+          "-Xmx512M",
+          "-Xms512M",
+          "-server",
+          "-XX:+UseG1GC",
+          "-XX:MaxGCPauseMillis=20",
+          "-XX:InitiatingHeapOccupancyPercent=35",
+          "-XX:+ExplicitGCInvokesConcurrent",
+          "-XX:MaxInlineLevel=15",
+          "-Djava.awt.headless=true",
+          "-Dkafka.logs.dir=/opt/kafka/bin/../logs",
+          "-Dlog4j.configuration=file:/etc/kafka/log4j.properties",
+          "-cp",
+          "/opt/kafka/libs/extensions/*:/opt/kafka/libs/*",
+          "org.apache.zookeeper.server.quorum.QuorumPeerMain"
+        ]
         args:
         - /etc/kafka/zookeeper.properties.scale-$(REPLICAS).$(POD_NAME)
