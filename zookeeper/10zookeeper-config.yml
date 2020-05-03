@@ -31,6 +31,9 @@ data:
     maxClientCnxns=2
     initLimit=5
     syncLimit=2
+    metricsProvider.className=org.apache.zookeeper.metrics.prometheus.PrometheusMetricsProvider
+    metricsProvider.httpPort=7000
+    metricsProvider.exportJvmInfo=true
     tcpKeepAlive=true
     electionPortBindRetry=0
     server.1=pzoo-0.pzoo:2888:3888:participant

@@ -63,6 +63,8 @@ spec:
           name: peer
         - containerPort: 3888
           name: leader-election
+        - containerPort: 7000
+          name: metrics
         resources:
           requests:
             cpu: 10m
