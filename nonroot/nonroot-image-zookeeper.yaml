@@ -1,34 +1,3 @@
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: pzoo
-spec:
-  template:
-    spec:
-      containers:
-      - name: zookeeper
-        image: solsson/kafka:2.5.0-nonroot@sha256:f2a8fd8eeffbbf21233a65f697a3e02fc3e9d88dfe1c67f08f0d805c1bdbad3e
-        #image: solsson/kafka:2.5.0-zookeeper-server-start@sha256:4f9c68ff762c1419270dd72d38450f58cf130aa0c66f8359441075b4fe04de85
-        # docker inspect <image>
-        command: [
-          "/opt/java/openjdk/bin/java",
-          "-Xmx512M",
-          "-Xms512M",
-          "-server",
-          "-XX:+UseG1GC",
-          "-XX:MaxGCPauseMillis=20",
-          "-XX:InitiatingHeapOccupancyPercent=35",
-          "-XX:+ExplicitGCInvokesConcurrent",
-          "-XX:MaxInlineLevel=15",
-          "-Djava.awt.headless=true",
-          "-Dkafka.logs.dir=/opt/kafka/bin/../logs",
-          "-Dlog4j.configuration=file:/etc/kafka/log4j.properties",
-          "-cp",
-          "/opt/kafka/libs/extensions/*:/opt/kafka/libs/*",
-          "org.apache.zookeeper.server.quorum.QuorumPeerMain"
-        ]
-        args:
-        - /etc/kafka/zookeeper.properties.scale-$(REPLICAS).$(POD_NAME)
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -39,8 +8,37 @@ spec:
     spec:
       containers:
       - name: zookeeper
-        image: solsson/kafka:2.5.0-nonroot@sha256:f2a8fd8eeffbbf21233a65f697a3e02fc3e9d88dfe1c67f08f0d805c1bdbad3e
-        #image: solsson/kafka:2.5.0-zookeeper-server-start@sha256:4f9c68ff762c1419270dd72d38450f58cf130aa0c66f8359441075b4fe04de85
+        # https://github.com/solsson/zookeeper-docker/commit/17d3cc48ce757b5374892d0172775163237696e4
+        #image: solsson/zookeeper-native@sha256:2f9b0abc6e2cc65d9eae61d451e886e6645bcf2a47e1ef97872d8fdde6f64373
+        # https://github.com/solsson/zookeeper-docker/commit/0831d9897d7d1036620685fe12deccb6272d5124
+        image: solsson/zookeeper-native@sha256:4407bfe9116c2578db9d2880314f29a960db5a38b9cfae5b4ae3edf00777c7ff
+        # docker inspect <image>
+        command:
+        - /opt/java/openjdk/bin/java
+        - -Dzookeeper.log.dir=/logs
+        - -Dzookeeper.log.file=zookeeper--server-881e74270731.log
+        - -Dzookeeper.root.logger=INFO,CONSOLE
+        - -XX:+HeapDumpOnOutOfMemoryError
+        - -XX:OnOutOfMemoryError=kill
+        - -cp
+        - ./lib/zookeeper-prometheus-metrics-3.6.1.jar:./lib/zookeeper-jute-3.6.1.jar:./lib/zookeeper-3.6.1.jar:./lib/snappy-java-1.1.7.jar:./lib/slf4j-log4j12-1.7.25.jar:./lib/slf4j-api-1.7.25.jar:./lib/simpleclient_servlet-0.6.0.jar:./lib/simpleclient_hotspot-0.6.0.jar:./lib/simpleclient_common-0.6.0.jar:./lib/simpleclient-0.6.0.jar:./lib/netty-transport-native-unix-common-4.1.48.Final.jar:./lib/netty-transport-native-epoll-4.1.48.Final.jar:./lib/netty-transport-4.1.48.Final.jar:./lib/netty-resolver-4.1.48.Final.jar:./lib/netty-handler-4.1.48.Final.jar:./lib/netty-common-4.1.48.Final.jar:./lib/netty-codec-4.1.48.Final.jar:./lib/netty-buffer-4.1.48.Final.jar:./lib/metrics-core-3.2.5.jar:./lib/log4j-1.2.17.jar:./lib/json-simple-1.1.1.jar:./lib/jline-2.11.jar:./lib/jetty-util-9.4.24.v20191120.jar:./lib/jetty-servlet-9.4.24.v20191120.jar:./lib/jetty-server-9.4.24.v20191120.jar:./lib/jetty-security-9.4.24.v20191120.jar:./lib/jetty-io-9.4.24.v20191120.jar:./lib/jetty-http-9.4.24.v20191120.jar:./lib/javax.servlet-api-3.1.0.jar:./lib/jackson-databind-2.10.3.jar:./lib/jackson-core-2.10.3.jar:./lib/jackson-annotations-2.10.3.jar:./lib/commons-lang-2.6.jar:./lib/commons-cli-1.2.jar:./lib/audience-annotations-0.5.0.jar:./zookeeper-*.jar:./zookeeper-server/src/main/resources/lib/*.jar
+        - -Xmx1000m
+        - -Dcom.sun.management.jmxremote
+        - -Dcom.sun.management.jmxremote.local.only=false
+        - org.apache.zookeeper.server.quorum.QuorumPeerMain
+        args:
+        - /etc/kafka/zookeeper.properties.scale-$(REPLICAS).$(POD_NAME)
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: pzoo
+spec:
+  template:
+    spec:
+      containers:
+      - name: zookeeper
+        image: solsson/zookeeper-native@sha256:4407bfe9116c2578db9d2880314f29a960db5a38b9cfae5b4ae3edf00777c7ff
         # docker inspect <image>
         command: [
           "/opt/java/openjdk/bin/java",
