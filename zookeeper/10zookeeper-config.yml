@@ -28,7 +28,7 @@ data:
     dataDir=/var/lib/zookeeper/data
     dataLogDir=/var/lib/zookeeper/log
     clientPort=2181
-    maxClientCnxns=2
+    maxClientCnxns=3
     initLimit=5
     syncLimit=2
     metricsProvider.className=org.apache.zookeeper.metrics.prometheus.PrometheusMetricsProvider
