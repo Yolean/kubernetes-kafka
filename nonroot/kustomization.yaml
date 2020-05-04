@@ -27,18 +27,30 @@ patchesJson6902:
     kind: StatefulSet
     name: kafka
   path: entrypoint-from-image.yaml
-- target:
-    group: apps
-    version: v1
-    kind: StatefulSet
-    name: pzoo
-  path: entrypoint-from-image.yaml
 # - target:
 #     group: apps
 #     version: v1
 #     kind: StatefulSet
 #     name: zoo
 #   path: entrypoint-from-image.yaml
+- target:
+    group: apps
+    version: v1
+    kind: StatefulSet
+    name: pzoo
+  path: entrypoint-from-image.yaml
+- target:
+    group: apps
+    version: v1
+    kind: StatefulSet
+    name: zoo
+  path: readiness-zookeeper-http.yaml
+- target:
+    group: apps
+    version: v1
+    kind: StatefulSet
+    name: pzoo
+  path: readiness-zookeeper-http.yaml
 patchesStrategicMerge:
 - nonroot-image-kafka.yaml
 - nonroot-image-zookeeper.yaml

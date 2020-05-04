@@ -1,0 +1,6 @@
+- op: replace
+  path: /spec/template/spec/containers/0/readinessProbe
+  value:
+    httpGet:
+      path: /metrics
+      port: 7000
