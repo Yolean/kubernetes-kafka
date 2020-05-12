@@ -16,10 +16,9 @@ data:
     cp -Lur /etc/kafka-configmap/* /etc/kafka/
     [ ! -z "$PZOO_REPLICAS" ] && [ ! -z "$REPLICAS" ] && {
       sed -i "s/^server\\./#server./" /etc/kafka/zookeeper.properties
-      for N in $(seq $PZOO_REPLICAS); do echo "server.$N=pzoo-$(( $N - 1 )).pzoo:2888:3888:participant" >> /etc/kafka/zookeeper.properties; done
-      for N in $(seq $(( $REPLICAS - $PZOO_REPLICAS ))); do echo "server.$(( $PZOO_REPLICAS + $N ))=zoo-$(( $N - 1 )).zoo:2888:3888:participant" >> /etc/kafka/zookeeper.properties; done
+      for N in $(seq $PZOO_REPLICAS); do echo "server.$N=pzoo-$(( $N - 1 )).pzoo.$POD_NAMESPACE.svc.cluster.local:2888:3888:participant" >> /etc/kafka/zookeeper.properties; done
+      for N in $(seq $(( $REPLICAS - $PZOO_REPLICAS ))); do echo "server.$(( $PZOO_REPLICAS + $N ))=zoo-$(( $N - 1 )).$POD_NAMESPACE.svc.cluster.local:2888:3888:participant" >> /etc/kafka/zookeeper.properties; done
     }
-    sed -i "s/server\.$ZOOKEEPER_SERVER_ID\=[a-z0-9.-]*/server.$ZOOKEEPER_SERVER_ID=0.0.0.0/" /etc/kafka/zookeeper.properties
     ln -s /etc/kafka/zookeeper.properties /etc/kafka/zookeeper.properties.scale-$REPLICAS.$POD_NAME
 
   zookeeper.properties: |
