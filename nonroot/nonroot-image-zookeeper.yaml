@@ -21,7 +21,7 @@ spec:
         #- -Dcom.sun.management.jmxremote
         #- -Dcom.sun.management.jmxremote.local.only=false
         - -Dlog4j.configuration=file:/etc/kafka/log4j.properties
-        - -Dzookeeper.datadir.autocreate=false
+        - -Dzookeeper.datadir.autocreate=true
         - -Dzookeeper.db.autocreate=false
         - org.apache.zookeeper.server.quorum.QuorumPeerMain
         args:
