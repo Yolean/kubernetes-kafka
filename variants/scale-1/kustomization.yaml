@@ -1,5 +1,5 @@
 bases:
-- ../../nonroot
+- ../../native
 patchesStrategicMerge:
 - kafka.yaml
 - zookeeper.yaml
