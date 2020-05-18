@@ -5,6 +5,9 @@ metadata:
 spec:
   template:
     spec:
+      initContainers:
+      - name: init-config
+        image: solsson/kafka:initutils-nonroot@sha256:87f6bb39fd47a6f382018a2dc55a484d1b71eee48a58019c7e65a9bc53e8dca2
       containers:
       - name: zookeeper
         image: solsson/kafka:2.5.0-zookeeper-server-start@sha256:4f9c68ff762c1419270dd72d38450f58cf130aa0c66f8359441075b4fe04de85
@@ -18,6 +21,9 @@ metadata:
 spec:
   template:
     spec:
+      initContainers:
+      - name: init-config
+        image: solsson/kafka:initutils-nonroot@sha256:87f6bb39fd47a6f382018a2dc55a484d1b71eee48a58019c7e65a9bc53e8dca2
       containers:
       - name: zookeeper
         image: solsson/kafka:2.5.0-zookeeper-server-start@sha256:4f9c68ff762c1419270dd72d38450f58cf130aa0c66f8359441075b4fe04de85
