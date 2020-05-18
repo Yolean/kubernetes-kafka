@@ -2,6 +2,9 @@ bases:
 - ../rbac-namespace-default
 - ../kafka
 - ../zookeeper
+patchesStrategicMerge:
+- nonroot-image-kafka.yaml
+- nonroot-image-zookeeper.yaml
 patchesJson6902:
 - target:
     group: apps
@@ -39,6 +42,3 @@ patchesJson6902:
     kind: StatefulSet
     name: zoo
   path: entrypoint-from-image.yaml
-patchesStrategicMerge:
-- nonroot-image-kafka.yaml
-- nonroot-image-zookeeper.yaml
