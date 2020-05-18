@@ -21,6 +21,11 @@ spec:
           value: '1'
         - name: REPLICAS
           value: '1'
+      containers:
+      - name: zookeeper
+        env:
+        - name: REPLICAS
+          value: '1'
 ---
 apiVersion: apps/v1
 kind: StatefulSet
