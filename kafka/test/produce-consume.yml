@@ -63,6 +63,8 @@ spec:
         - --create
         - --topic
         -   test-produce-consume
+        - --config
+        -   compression.type=uncompressed
         resources:
           limits:
             cpu: 100m
