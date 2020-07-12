@@ -167,7 +167,7 @@ data:
     zookeeper.connect=zookeeper:2181
 
     # Timeout in ms for connecting to zookeeper
-    #zookeeper.connection.timeout.ms=6000
+    #zookeeper.connection.timeout.ms=18000
 
 
     ############################# Group Coordinator Settings #############################
