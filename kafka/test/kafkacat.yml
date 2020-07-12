@@ -72,7 +72,7 @@ spec:
     spec:
       containers:
       - name: topic-create
-        image: solsson/kafka-cli@sha256:9fa3306e9f5d18283d10e01f7c115d8321eedc682f262aff784bd0126e1f2221
+        image: solsson/kafka:native-cli@sha256:7a4cc4ef875aea50b8d4dbb525cbac0ef3a5c6e611fcafc2c415ca432ebe5601
         command:
         - ./bin/kafka-topics.sh
         - --zookeeper
@@ -83,8 +83,8 @@ spec:
         -   test-kafkacat
         resources:
           limits:
-            cpu: 200m
-            memory: 100Mi
+            cpu: 100m
+            memory: 20Mi
       restartPolicy: Never
 ---
 apiVersion: apps/v1
