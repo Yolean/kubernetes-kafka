@@ -1,7 +1,7 @@
 bases:
 - ../scale-3-5
 patchesStrategicMerge:
-- ./only-zoo-5.yaml
+- ./only-zoo-3.yaml
 patchesJson6902:
 - target:
     group: apps

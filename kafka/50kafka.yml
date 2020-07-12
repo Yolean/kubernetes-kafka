@@ -7,7 +7,7 @@ spec:
   selector:
     matchLabels:
       app: kafka
-  serviceName: "broker"
+  serviceName: "kafka"
   replicas: 3
   updateStrategy:
     type: RollingUpdate
@@ -47,6 +47,14 @@ spec:
       - name: broker
         image: solsson/kafka:2.4.1@sha256:79761e15919b4fe9857ec00313c9df799918ad0340b684c0163ab7035907bb5a
         env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
         - name: CLASSPATH
           value: /opt/kafka/libs/extensions/*
         - name: KAFKA_LOG4J_OPTS
@@ -62,7 +70,7 @@ spec:
           containerPort: 5555
         command:
         - ./bin/kafka-server-start.sh
-        - /etc/kafka/server.properties
+        - /etc/kafka/server.properties.$(POD_NAME)
         lifecycle:
           preStop:
             exec:

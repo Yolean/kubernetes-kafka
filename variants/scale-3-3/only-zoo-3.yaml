@@ -13,7 +13,7 @@ metadata:
   name: zoo
   namespace: kafka
 spec:
-  replicas: 2
+  replicas: 3
   template:
     spec:
       initContainers:
@@ -23,11 +23,11 @@ spec:
         - name: PZOO_REPLICAS
           value: '0'
         - name: REPLICAS
-          value: '2'
+          value: '3'
         - name: ID_OFFSET
           value: '1'
       containers:
       - name: zookeeper
         env:
         - name: REPLICAS
-          value: '2'
+          value: '3'

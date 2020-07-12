@@ -1,0 +1,6 @@
+- path: /spec/template/spec/containers/0/readinessProbe
+  # op: replace
+  # value:
+  #   tcpSocket:
+  #     port: 2181
+  op: remove

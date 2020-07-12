@@ -1,0 +1,9 @@
+# The more specific removes are to make sure that there was a shell that we're removing
+- op: remove
+  path: /spec/template/spec/containers/0/readinessProbe/exec
+- op: remove
+  path: /spec/template/spec/containers/0/readinessProbe
+- op: remove
+  path: /spec/template/spec/containers/0/lifecycle/preStop/exec
+- op: remove
+  path: /spec/template/spec/containers/0/lifecycle/preStop

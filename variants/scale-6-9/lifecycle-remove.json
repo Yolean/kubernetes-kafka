@@ -1,0 +1,4 @@
+[
+  {"op": "remove", "path": "/spec/template/spec/containers/0/lifecycle"}
+]
+  

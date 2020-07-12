@@ -1,0 +1,17 @@
+bases:
+- ../nonroot
+patchesStrategicMerge:
+- native-image-zookeeper.yaml
+patchesJson6902:
+- target:
+    group: apps
+    version: v1
+    kind: StatefulSet
+    name: pzoo
+  path: distroless.yaml
+- target:
+    group: apps
+    version: v1
+    kind: StatefulSet
+    name: zoo
+  path: distroless.yaml

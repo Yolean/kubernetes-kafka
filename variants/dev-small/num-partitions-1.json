@@ -1,4 +1,4 @@
 [
-  {"op": "add", "path": "/spec/template/spec/containers/0/command/-", "value": "--override"},
-  {"op": "add", "path": "/spec/template/spec/containers/0/command/-", "value": "num.partitions=1"}
+  {"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--override"},
+  {"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "num.partitions=1"}
 ]

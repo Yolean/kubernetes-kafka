@@ -1,10 +1,10 @@
 [
-  {"op": "add", "path": "/spec/template/spec/containers/0/command/-", "value": "--override"},
-  {"op": "add", "path": "/spec/template/spec/containers/0/command/-", "value": "default.replication.factor=1"},
-  {"op": "add", "path": "/spec/template/spec/containers/0/command/-", "value": "--override"},
-  {"op": "add", "path": "/spec/template/spec/containers/0/command/-", "value": "min.insync.replicas=1"},
-  {"op": "add", "path": "/spec/template/spec/containers/0/command/-", "value": "--override"},
-  {"op": "add", "path": "/spec/template/spec/containers/0/command/-", "value": "offsets.topic.replication.factor=1"},
-  {"op": "add", "path": "/spec/template/spec/containers/0/command/-", "value": "--override"},
-  {"op": "add", "path": "/spec/template/spec/containers/0/command/-", "value": "offsets.topic.num.partitions=1"}
+  {"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--override"},
+  {"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "default.replication.factor=1"},
+  {"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--override"},
+  {"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "min.insync.replicas=1"},
+  {"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--override"},
+  {"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "offsets.topic.replication.factor=1"},
+  {"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--override"},
+  {"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "offsets.topic.num.partitions=1"}
 ]

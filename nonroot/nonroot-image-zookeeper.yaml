@@ -5,9 +5,14 @@ metadata:
 spec:
   template:
     spec:
+      initContainers:
+      - name: init-config
+        image: solsson/kafka:initutils-nonroot@sha256:87f6bb39fd47a6f382018a2dc55a484d1b71eee48a58019c7e65a9bc53e8dca2
       containers:
       - name: zookeeper
-        image: solsson/kafka:2.4.1-nonroot@sha256:ddfdd23081c075b86132f3e5d8e15389c78c4334dbb22166d9ad1d57f362007f
+        image: solsson/kafka:zookeeper-server-start@sha256:c34a9928fcc5ac15b2243ee2994cf09f5a3608b6090de378f39f89ad12320276
+        args:
+        - /etc/kafka/zookeeper.properties.scale-$(REPLICAS).$(POD_NAME)
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -16,6 +21,11 @@ metadata:
 spec:
   template:
     spec:
+      initContainers:
+      - name: init-config
+        image: solsson/kafka:initutils-nonroot@sha256:87f6bb39fd47a6f382018a2dc55a484d1b71eee48a58019c7e65a9bc53e8dca2
       containers:
       - name: zookeeper
-        image: solsson/kafka:2.4.1-nonroot@sha256:ddfdd23081c075b86132f3e5d8e15389c78c4334dbb22166d9ad1d57f362007f
+        image: solsson/kafka:zookeeper-server-start@sha256:c34a9928fcc5ac15b2243ee2994cf09f5a3608b6090de378f39f89ad12320276
+        args:
+        - /etc/kafka/zookeeper.properties.scale-$(REPLICAS).$(POD_NAME)

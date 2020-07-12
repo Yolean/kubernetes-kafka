@@ -1,4 +1,4 @@
 [
-  {"op": "add", "path": "/spec/template/spec/containers/0/command/2", "value": "--override"},
-  {"op": "add", "path": "/spec/template/spec/containers/0/command/3", "value": "advertised.listeners=PLAINTEXT://:9092,OUTSIDE://localhost:9094"}
+  {"op": "add", "path": "/spec/template/spec/containers/0/args/1", "value": "--override"},
+  {"op": "add", "path": "/spec/template/spec/containers/0/args/2", "value": "advertised.listeners=PLAINTEXT://:9092,OUTSIDE://localhost:9094"}
 ]

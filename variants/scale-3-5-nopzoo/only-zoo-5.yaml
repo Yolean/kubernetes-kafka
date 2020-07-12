@@ -22,7 +22,12 @@ spec:
         # There's no validation on these numbers adding up to a coherent zk config, so watch out
         - name: PZOO_REPLICAS
           value: '0'
-        - name: ZOO_REPLICAS
+        - name: REPLICAS
           value: '5'
         - name: ID_OFFSET
           value: '1'
+      containers:
+      - name: zookeeper
+        env:
+        - name: REPLICAS
+          value: '5'

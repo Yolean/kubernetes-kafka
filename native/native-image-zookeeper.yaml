@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: pzoo
+spec:
+  template:
+    spec:
+      containers:
+      - name: zookeeper
+        image: solsson/kafka:native-zookeeper-server-start@sha256:ba3a0632240b8906a3b5bb6441e98ad9d9de73cb716b156ca68f1b435c819e8b
+        resources:
+          requests:
+            cpu: 10m
+            memory: 25Mi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: zoo
+spec:
+  template:
+    spec:
+      containers:
+      - name: zookeeper
+        image: solsson/kafka:native-zookeeper-server-start@sha256:ba3a0632240b8906a3b5bb6441e98ad9d9de73cb716b156ca68f1b435c819e8b
+        resources:
+          requests:
+            cpu: 10m
+            memory: 25Mi

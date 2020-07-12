@@ -1,0 +1,6 @@
+[
+  {"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--override"},
+  {"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value":
+    "zookeeper.connect=zoo-0.zoo.$(POD_NAMESPACE).svc.cluster.local:2181,zoo-1.zoo.$(POD_NAMESPACE).svc.cluster.local:2181,zoo-2.zoo.$(POD_NAMESPACE).svc.cluster.local:2181"
+  }
+]
