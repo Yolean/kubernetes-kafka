@@ -1,4 +1,0 @@
-bases:
-- ../scale-3-5
-patchesStrategicMerge:
-- kafka.yaml
