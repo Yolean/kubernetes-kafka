@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
       - name: zookeeper
-        image: solsson/kafka:native-zookeeper-server-start@sha256:0047f1ab4c7b79062c44e9bd2ad02aaf1124d8a0ed3309229e627cdd11a37c2a
+        image: solsson/kafka:native-zookeeper-server-start@sha256:ba3a0632240b8906a3b5bb6441e98ad9d9de73cb716b156ca68f1b435c819e8b
         resources:
           requests:
             cpu: 10m
@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: zookeeper
-        image: solsson/kafka:native-zookeeper-server-start@sha256:0047f1ab4c7b79062c44e9bd2ad02aaf1124d8a0ed3309229e627cdd11a37c2a
+        image: solsson/kafka:native-zookeeper-server-start@sha256:ba3a0632240b8906a3b5bb6441e98ad9d9de73cb716b156ca68f1b435c819e8b
         resources:
           requests:
             cpu: 10m
