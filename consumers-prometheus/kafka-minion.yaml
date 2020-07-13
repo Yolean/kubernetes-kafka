@@ -33,7 +33,7 @@ spec:
         - name: LOG_LEVEL
           value: info
         - name: KAFKA_BROKERS
-          value: kafka-0.broker:9092, kafka-1.broker:9092, kafka-2.broker:9092
+          value: bootstrap:9092
         - name: KAFKA_CONSUMER_OFFSETS_TOPIC_NAME
           value: __consumer_offsets
         ports:
