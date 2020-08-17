@@ -7,7 +7,7 @@ spec:
     spec:
       initContainers:
       - name: init-config
-        image: solsson/kafka:initutils-nonroot@sha256:87f6bb39fd47a6f382018a2dc55a484d1b71eee48a58019c7e65a9bc53e8dca2
+        image: solsson/kafka:2.6.0-initutils-nonroot@sha256:cae9390de5380a4a1cd88976b37161ecf32fd70cde347a1db458b17ffa7743b8
       containers:
       - name: zookeeper
         image: solsson/kafka:zookeeper-server-start@sha256:c34a9928fcc5ac15b2243ee2994cf09f5a3608b6090de378f39f89ad12320276
@@ -23,7 +23,7 @@ spec:
     spec:
       initContainers:
       - name: init-config
-        image: solsson/kafka:initutils-nonroot@sha256:87f6bb39fd47a6f382018a2dc55a484d1b71eee48a58019c7e65a9bc53e8dca2
+        image: solsson/kafka:2.6.0-initutils-nonroot@sha256:cae9390de5380a4a1cd88976b37161ecf32fd70cde347a1db458b17ffa7743b8
       containers:
       - name: zookeeper
         image: solsson/kafka:zookeeper-server-start@sha256:c34a9928fcc5ac15b2243ee2994cf09f5a3608b6090de378f39f89ad12320276

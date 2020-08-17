@@ -7,9 +7,9 @@ spec:
     spec:
       initContainers:
       - name: init-config
-        image: solsson/kafka:initutils-nonroot@sha256:87f6bb39fd47a6f382018a2dc55a484d1b71eee48a58019c7e65a9bc53e8dca2
+        image: solsson/kafka:2.6.0-initutils-nonroot@sha256:cae9390de5380a4a1cd88976b37161ecf32fd70cde347a1db458b17ffa7743b8
       containers:
       - name: broker
-        image: solsson/kafka:2.5.0-kafka-server-start@sha256:c6d43d1240c358d9ab8bb60de61a0b9578f04fd727ee4016f7706800998e5351
+        image: solsson/kafka:2.6.0-kafka-server-start@sha256:97623a66ed7a245af8e12947d99f723d983fbfc83cae4f60febc0526235e1548
         args:
         - /etc/kafka/server.properties.$(POD_NAME)
