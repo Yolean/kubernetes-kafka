@@ -8,18 +8,21 @@ patchesJson6902:
     version: v1
     kind: StatefulSet
     name: kafka
+    namespace: kafka
   path: fsgroup-65534.yaml
 - target:
     group: apps
     version: v1
     kind: StatefulSet
     name: pzoo
+    namespace: kafka
   path: fsgroup-65534.yaml
 - target:
     group: apps
     version: v1
     kind: StatefulSet
     name: zoo
+    namespace: kafka
   path: fsgroup-65534.yaml
 # https://github.com/kubernetes-sigs/kustomize/issues/915#issuecomment-477808963
 patchesStrategicMerge:
