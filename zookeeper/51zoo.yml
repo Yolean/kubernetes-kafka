@@ -25,6 +25,13 @@ spec:
       - name: init-config
         image: solsson/kafka-initutils@sha256:f6d9850c6c3ad5ecc35e717308fddb47daffbde18eb93e98e031128fe8b899ef
         command: ['/bin/bash', '/etc/kafka-configmap/init.sh']
+        resources:
+          requests:
+            cpu: 10m
+            memory: 100Mi
+          limits:
+            cpu: 20m
+            memory: 120Mi
         env:
         - name: POD_NAME
           valueFrom:
