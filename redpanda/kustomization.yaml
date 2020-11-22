@@ -1,0 +1,4 @@
+resources:
+- redpanda-hostnames.yaml
+- redpanda-root.yaml
+- redpanda-statefulset.yaml
