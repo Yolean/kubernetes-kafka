@@ -74,6 +74,7 @@ spec:
           limits:
             memory: 120Mi
         readinessProbe:
+          timeoutSeconds: 10
           exec:
             command:
             - /bin/sh
