@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: kafka-minion
-        image: solsson/kafka-consumers-prometheus@sha256:4fb3e8bd5e70f14cbb9168d3259f7a7b601a1cf9af29f88ad239bc5d7e43ee30
+        image: quay.io/cloudhut/kminion:v2.0.0@sha256:f0688ff2d6956eef1589d848964ef67f75dcd2c581f2144d2a6b64b251a67c92
         env:
         - name: TELEMETRY_HOST
           value: 0.0.0.0
@@ -28,8 +28,8 @@ spec:
           value: "8080"
         - name: EXPORTER_IGNORE_SYSTEM_TOPICS
           value: "true"
-        - name: EXPORTER_METRICS_PREFIX
-          value: kafka_minion
+        - name: EXPORTER_NAMESPACE
+          value: kminion
         - name: LOG_LEVEL
           value: info
         - name: KAFKA_BROKERS
