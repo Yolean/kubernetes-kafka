@@ -77,6 +77,8 @@ spec:
             - /bin/sh
             - -c
             - '[ "imok" = "$(echo ruok | nc -w 1 -q 1 127.0.0.1 2181)" ]'
+          timeoutSeconds: 2
+          periodSeconds: 30
         volumeMounts:
         - name: config
           mountPath: /etc/kafka
