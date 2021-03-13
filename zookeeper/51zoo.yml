@@ -45,7 +45,7 @@ spec:
           mountPath: /var/lib/zookeeper
       containers:
       - name: zookeeper
-        image: solsson/kafka:2.4.1@sha256:79761e15919b4fe9857ec00313c9df799918ad0340b684c0163ab7035907bb5a
+        image: solsson/kafka:2.5.1@sha256:5c52620bd8e1bcd47805eb8ca285843168e1684aa27f1ae11ce330c3e12f6b0c
         env:
         - name: POD_NAME
           valueFrom:
