@@ -2,7 +2,6 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: rest-test1
-  namespace: kafka
 spec:
   backoffLimit: 1
   template:

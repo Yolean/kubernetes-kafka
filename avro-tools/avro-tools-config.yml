@@ -1,7 +1,6 @@
 kind: ConfigMap
 metadata:
   name: avro-tools-config
-  namespace: kafka
 apiVersion: v1
 data:
   schema-registry.properties: |-

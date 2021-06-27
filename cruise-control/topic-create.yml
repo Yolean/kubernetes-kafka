@@ -2,7 +2,6 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: topic-cruise-control-metrics
-  namespace: kafka
 spec:
   template:
     spec:

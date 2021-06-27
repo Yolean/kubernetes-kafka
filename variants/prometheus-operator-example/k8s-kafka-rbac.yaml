@@ -4,7 +4,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: prometheus-k8s
-  namespace: kafka
 rules:
 - apiGroups:
   - ""
@@ -21,7 +20,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: prometheus-k8s
-  namespace: kafka
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role

@@ -2,7 +2,6 @@
 # kubectl --namespace kafka patch statefulset kafka --patch "$(cat cruise-control/20kafka-broker-reporter-patch.yml)"
 metadata:
   name: kafka
-  namespace: kafka
 spec:
   template:
     spec:
