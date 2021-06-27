@@ -1,7 +1,6 @@
 kind: ConfigMap
 metadata:
   name: jmx-config
-  namespace: kafka
 apiVersion: v1
 data:
 

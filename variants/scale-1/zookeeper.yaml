@@ -3,13 +3,11 @@ apiVersion: v1
 kind: Service
 metadata:
   name: pzoo
-  namespace: kafka
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: pzoo
-  namespace: kafka
 spec:
   replicas: 0
 ---
@@ -17,7 +15,6 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: zoo
-  namespace: kafka
 spec:
   replicas: 1
   template:

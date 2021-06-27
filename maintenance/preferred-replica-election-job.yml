@@ -2,7 +2,6 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: preferred-replica-election
-  namespace: kafka
 spec:
   template:
     metadata:

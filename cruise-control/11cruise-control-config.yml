@@ -1,7 +1,6 @@
 kind: ConfigMap
 metadata:
   name: broker-cruise-control-config
-  namespace: kafka
 apiVersion: v1
 data:
   cruisecontrol.properties: |-
