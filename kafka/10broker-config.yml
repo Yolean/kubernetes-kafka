@@ -14,7 +14,9 @@ data:
     LABELS="kafka-broker-id=$KAFKA_BROKER_ID"
     ANNOTATIONS=""
 
-    [ -z "$ADVERTISE_ADDR" ] && echo "ADVERTISE_ADDR is empty, will advertise detected DNS name"
+    # A custom ADVERTISE_ADDR can be set as env on the init container using for example value: $(POD_NAME).kafka.$(POD_NAMESPACE).custom.cluster.dns
+    [ -n "$ADVERTISE_ADDR" ] && echo "ADVERTISE_ADDR=$ADVERTISE_ADDR" || echo "ADVERTISE_ADDR is empty, Kafka will detect a hostname to advertise"
+
     OUTSIDE_HOST=$(kubectl get node "$NODE_NAME" -o jsonpath='{.status.addresses[?(@.type=="InternalIP")].address}')
     OUTSIDE_PORT=$((32400 + ${KAFKA_BROKER_ID}))
     SEDS+=("s|#init#advertised.listeners=PLAINTEXT://#init#|advertised.listeners=PLAINTEXT://${ADVERTISE_ADDR}:9092,CONTROLLER://${ADVERTISE_ADDR}:9093,OUTSIDE://${OUTSIDE_HOST}:${OUTSIDE_PORT}|")
