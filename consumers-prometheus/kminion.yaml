@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: kminion
-        image: quay.io/cloudhut/kminion:v2.1.0@sha256:99e3217ec4a6a61a0eb68da86d3f2c16fa9847a6db8498fea74044935096353b
+        image: solsson/kafka-consumers-prometheus@sha256:3d902ed8fa9e2cee7f44ff8a5567a5562a21d6bbfb11fe12faea49e85bd65059
         env:
         - name: TELEMETRY_HOST
           value: 0.0.0.0
