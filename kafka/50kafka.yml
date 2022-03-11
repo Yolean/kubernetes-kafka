@@ -44,6 +44,18 @@ spec:
           mountPath: /etc/kafka
         - name: extensions
           mountPath: /opt/kafka/libs/extensions
+      - name: init-kraft
+        image: yolean/kafka:latest
+        command: ['/bin/bash', '/etc/kafka-configmap/init-kraft.sh']
+        volumeMounts:
+        - name: configmap
+          mountPath: /etc/kafka-configmap
+        - name: config
+          mountPath: /etc/kafka
+        - name: data
+          mountPath: /var/lib/kafka/data
+        - name: extensions
+          mountPath: /opt/kafka/libs/extensions
       containers:
       - name: broker
         image: yolean/kafka:latest
@@ -65,6 +77,8 @@ spec:
         ports:
         - name: inside
           containerPort: 9092
+        - name: controller
+          containerPort: 9093
         - name: outside
           containerPort: 9094
         - name: jmx

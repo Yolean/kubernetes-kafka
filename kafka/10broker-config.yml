@@ -10,7 +10,6 @@ data:
     cp /etc/kafka-configmap/log4j.properties /etc/kafka/
 
     KAFKA_BROKER_ID=${HOSTNAME##*-}
-    SEDS=("s/#init#broker.id=#init#/broker.id=$KAFKA_BROKER_ID/")
     LABELS="kafka-broker-id=$KAFKA_BROKER_ID"
     ANNOTATIONS=""
 
@@ -24,7 +23,19 @@ data:
     [ -n "$OUTSIDE_PORT" ] || OUTSIDE_PORT=$((32400 + ${KAFKA_BROKER_ID}))
     [ -z "$OUTSITE_HOST" ] || ADVERTISED_LISTENERS="$ADVERTISED_LISTENERS,OUTSIDE://${OUTSIDE_HOST}:${OUTSIDE_PORT}"
 
-    SEDS+=("s|#init#advertised.listeners=PLAINTEXT://#init#|advertised.listeners=PLAINTEXT://${ADVERTISE_ADDR}:9092,CONTROLLER://${ADVERTISE_ADDR}:9093,OUTSIDE://${OUTSIDE_HOST}:${OUTSIDE_PORT}|")
+    if grep 'node.id' /etc/kafka-configmap/server.properties; then
+      echo "KRaft config detected"
+      SEDS=("s/#init#node.id=#init#/node.id=$KAFKA_BROKER_ID/")
+      SEDS+=("s/#init#controller.quorum.voters=#init#/controller.quorum.voters=$KAFKA_BROKER_ID@${ADVERTISE_ADDR}:9093/")
+      # We don't need to, actually should not, advertise controllers
+      # ADVERTISED_LISTENERS="$ADVERTISED_LISTENERS,CONTROLLER://${ADVERTISE_ADDR}:9093"
+    else
+      SEDS=("s/#init#broker.id=#init#/broker.id=$KAFKA_BROKER_ID/")
+    fi
+
+    [ -n "$OUTSIDE_HOST" ] || SEDS+=("s|,OUTSIDE://:9094||")
+
+    SEDS+=("s|#init#advertised.listeners=PLAINTEXT://#init#|advertised.listeners=$ADVERTISED_LISTENERS|")
     ANNOTATIONS="$ANNOTATIONS kafka-listener-outside-host=$OUTSIDE_HOST kafka-listener-outside-port=$OUTSIDE_PORT"
 
     if ! command -v kubectl >/dev/null; then
@@ -49,12 +60,26 @@ data:
     [ $? -eq 0 ] && mv /etc/kafka/server.properties.tmp /etc/kafka/server.properties
     ln -s /etc/kafka/server.properties /etc/kafka/server.properties.$POD_NAME
 
+  init-kraft.sh: |-
+    #!/bin/bash
+    set -e
+    set -x
+    if [ -f /var/lib/kafka/data/kraft-combined/meta.properties ]; then
+      echo "Storage dir appears initialized already"
+    elif [ ! -f ./bin/kafka-storage.sh ]; then
+      echo "./bin/kafka-storage.sh not found, unable to set up KRaft storage directories"
+    else
+      echo "See https://github.com/apache/kafka/tree/trunk/config/kraft#format-storage-directories"
+      UUID=$(./bin/kafka-storage.sh random-uuid)
+      ./bin/kafka-storage.sh format -t $UUID -c /etc/kafka/server.properties
+    fi
+
   server.properties: |-
     ############################# Log Basics #############################
 
     # A comma seperated list of directories under which to store log files
     # Overrides log.dir
-    log.dirs=/var/lib/kafka/data/topics
+    log.dirs=/var/lib/kafka/data/kraft-combined
 
     # The default number of log partitions per topic. More partitions allow greater
     # parallelism for consumption, but this will also result in more files across
@@ -73,8 +98,12 @@ data:
 
     ############################# Server Basics #############################
 
+    # The role of this server. Setting this puts us in KRaft mode
+    process.roles=broker,controller
+
     # The id of the broker. This must be set to a unique integer for each broker.
-    #init#broker.id=#init#
+    #init#node.id=#init#
+    #init#controller.quorum.voters=#init#
 
     #init#broker.rack=#init#
 
@@ -87,17 +116,21 @@ data:
     #   EXAMPLE:
     #     listeners = PLAINTEXT://your.host.name:9092
     #listeners=PLAINTEXT://:9092
-    listeners=PLAINTEXT://:9092,OUTSIDE://:9094
+    listeners=PLAINTEXT://:9092,CONTROLLER://:9093,OUTSIDE://:9094
 
     # Hostname and port the broker will advertise to producers and consumers. If not set,
     # it uses the value for "listeners" if configured.  Otherwise, it will use the value
     # returned from java.net.InetAddress.getCanonicalHostName().
-    #advertised.listeners=PLAINTEXT://your.host.name:9092
+    #advertised.listeners=PLAINTEXT://your.host.name:9092,CONTROLLER://:9093
     #init#advertised.listeners=PLAINTEXT://#init#
 
+    # Listener, host name, and port for the controller to advertise to the brokers. If
+    # this server is a controller, this listener must be configured.
+    controller.listener.names=CONTROLLER
+
     # Maps listener names to security protocols, the default is for them to be the same. See the config documentation for more details
-    #listener.security.protocol.map=PLAINTEXT:PLAINTEXT,SSL:SSL,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL
-    listener.security.protocol.map=PLAINTEXT:PLAINTEXT,SSL:SSL,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL,OUTSIDE:PLAINTEXT
+    #listener.security.protocol.map=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,SSL:SSL,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL
+    listener.security.protocol.map=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,SSL:SSL,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL,OUTSIDE:PLAINTEXT
     inter.broker.listener.name=PLAINTEXT
 
     # The number of threads that the server uses for receiving requests from the network and sending responses to the network
@@ -162,19 +195,6 @@ data:
     # The interval at which log segments are checked to see if they can be deleted according
     # to the retention policies
     #log.retention.check.interval.ms=300000
-
-    ############################# Zookeeper #############################
-
-    # Zookeeper connection string (see zookeeper docs for details).
-    # This is a comma separated host:port pairs, each corresponding to a zk
-    # server. e.g. "127.0.0.1:3000,127.0.0.1:3001,127.0.0.1:3002".
-    # You can also append an optional chroot string to the urls to specify the
-    # root directory for all kafka znodes.
-    zookeeper.connect=zookeeper:2181
-
-    # Timeout in ms for connecting to zookeeper
-    #zookeeper.connection.timeout.ms=18000
-
 
     ############################# Group Coordinator Settings #############################
 

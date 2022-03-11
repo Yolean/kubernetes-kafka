@@ -1,8 +1,7 @@
 bases:
-- ../../native
+- ../../kafka
 patchesStrategicMerge:
 - kafka.yaml
-- zookeeper.yaml
 patchesJson6902:
 - target:
     group: apps
