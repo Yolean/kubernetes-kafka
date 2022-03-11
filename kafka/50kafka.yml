@@ -18,9 +18,11 @@ spec:
       annotations:
     spec:
       terminationGracePeriodSeconds: 30
+      securityContext:
+        fsGroup: 65534
       initContainers:
       - name: init-config
-        image: solsson/kafka:initutils@sha256:0cd27e24dea0b27e17e72cd05259a4de394d527473c6707e89f26b87e356a04d
+        image: docker.io/yolean/toil:ab798035e825381728daffe35ade7c9c836021aa@sha256:eb1dd353e46270d7cdc69a118198bfafa9c2861520680276421c34f1d2b5c1a2
         env:
         - name: NODE_NAME
           valueFrom:
@@ -34,6 +36,8 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+        - name: OUTSIDE_HOST_JSONPATH
+          value: '{.status.addresses[?(@.type=="InternalIP")].address}'
         command: ['/bin/bash', '/etc/kafka-configmap/init.sh']
         volumeMounts:
         - name: configmap
@@ -42,9 +46,21 @@ spec:
           mountPath: /etc/kafka
         - name: extensions
           mountPath: /opt/kafka/libs/extensions
+      - name: init-kraft
+        image: yolean/kafka:3.1.0-java11
+        command: ['/bin/bash', '/etc/kafka-configmap/init-kraft.sh']
+        volumeMounts:
+        - name: configmap
+          mountPath: /etc/kafka-configmap
+        - name: config
+          mountPath: /etc/kafka
+        - name: data
+          mountPath: /var/lib/kafka/data
+        - name: extensions
+          mountPath: /opt/kafka/libs/extensions
       containers:
       - name: broker
-        image: solsson/kafka:2.8.0@sha256:69274245ad16fba37e5b277335502a02e41c0efeae3ccbc3374f6cf624b58347
+        image: yolean/kafka:3.1.0-java11
         env:
         - name: POD_NAME
           valueFrom:
@@ -63,6 +79,8 @@ spec:
         ports:
         - name: inside
           containerPort: 9092
+        - name: controller
+          containerPort: 9093
         - name: outside
           containerPort: 9094
         - name: jmx
@@ -70,6 +88,7 @@ spec:
         command:
         - ./bin/kafka-server-start.sh
         - /etc/kafka/server.properties.$(POD_NAME)
+        args: []
         lifecycle:
           preStop:
             exec:

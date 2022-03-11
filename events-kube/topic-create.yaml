@@ -7,15 +7,14 @@ spec:
     spec:
       containers:
       - name: topic-create
-        image: solsson/kafka:native-cli@sha256:fbf29c59182fb87921c5199783d2d5796856ecbfe34a9c03eca658b3cf50f3c4
+        image: vectorized/redpanda:v21.11.10@sha256:0841e5a06ee5ee60385121aa2e766ceee5964c359a4ab42e73475f6d25fdd057
         command:
-        - ./bin/kafka-topics.sh
-        - --zookeeper
-        -   zookeeper.kafka.svc.cluster.local:2181
-        - --create
-        - --if-not-exists
-        - --topic
-        -   ops.kube-events.stream.json
+        - rpk
+        - topic
+        - create
+        - --brokers
+        -   bootstrap:9092
+        - ops.kube-events.stream.json
         resources:
           limits:
             cpu: 100m
