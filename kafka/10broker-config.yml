@@ -21,7 +21,7 @@ data:
     # OUTSIDE_HOST and OUTSIDE_PORT can be set as envs, or set OUTSIDE_NODE_JSONPATH to get the value from the node, for example: '{.status.addresses[?(@.type=="InternalIP")].address}'
     [ -z "$OUTSIDE_HOST_JSONPATH" ] || OUTSIDE_HOST=$(kubectl get node "$NODE_NAME" -o jsonpath="$OUTSIDE_HOST_JSONPATH")
     [ -n "$OUTSIDE_PORT" ] || OUTSIDE_PORT=$((32400 + ${KAFKA_BROKER_ID}))
-    [ -z "$OUTSITE_HOST" ] || ADVERTISED_LISTENERS="$ADVERTISED_LISTENERS,OUTSIDE://${OUTSIDE_HOST}:${OUTSIDE_PORT}"
+    [ -z "$OUTSIDE_HOST" ] || ADVERTISED_LISTENERS="$ADVERTISED_LISTENERS,OUTSIDE://${OUTSIDE_HOST}:${OUTSIDE_PORT}"
 
     if grep 'node.id' /etc/kafka-configmap/server.properties; then
       echo "KRaft config detected"
@@ -33,7 +33,8 @@ data:
       SEDS=("s/#init#broker.id=#init#/broker.id=$KAFKA_BROKER_ID/")
     fi
 
-    [ -n "$OUTSIDE_HOST" ] || SEDS+=("s|,OUTSIDE://:9094||")
+    # Note how the outside-N services have a fixed target port
+    [ -z "$OUTSIDE_HOST" ] || SEDS+=("s|^listeners=\(.*\)|listeners=\1,OUTSIDE://:9094|")
 
     SEDS+=("s|#init#advertised.listeners=PLAINTEXT://#init#|advertised.listeners=$ADVERTISED_LISTENERS|")
     ANNOTATIONS="$ANNOTATIONS kafka-listener-outside-host=$OUTSIDE_HOST kafka-listener-outside-port=$OUTSIDE_PORT"
@@ -116,7 +117,7 @@ data:
     #   EXAMPLE:
     #     listeners = PLAINTEXT://your.host.name:9092
     #listeners=PLAINTEXT://:9092
-    listeners=PLAINTEXT://:9092,CONTROLLER://:9093,OUTSIDE://:9094
+    listeners=PLAINTEXT://:9092,CONTROLLER://:9093
 
     # Hostname and port the broker will advertise to producers and consumers. If not set,
     # it uses the value for "listeners" if configured.  Otherwise, it will use the value

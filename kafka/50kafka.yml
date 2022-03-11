@@ -22,7 +22,7 @@ spec:
         fsGroup: 65534
       initContainers:
       - name: init-config
-        image: yolean/kafka:latest
+        image: docker.io/yolean/toil:ab798035e825381728daffe35ade7c9c836021aa@sha256:eb1dd353e46270d7cdc69a118198bfafa9c2861520680276421c34f1d2b5c1a2
         env:
         - name: NODE_NAME
           valueFrom:
@@ -36,6 +36,8 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+        - name: OUTSIDE_HOST_JSONPATH
+          value: '{.status.addresses[?(@.type=="InternalIP")].address}'
         command: ['/bin/bash', '/etc/kafka-configmap/init.sh']
         volumeMounts:
         - name: configmap
@@ -45,7 +47,7 @@ spec:
         - name: extensions
           mountPath: /opt/kafka/libs/extensions
       - name: init-kraft
-        image: yolean/kafka:latest
+        image: yolean/kafka:3.1.0-java11
         command: ['/bin/bash', '/etc/kafka-configmap/init-kraft.sh']
         volumeMounts:
         - name: configmap
@@ -58,7 +60,7 @@ spec:
           mountPath: /opt/kafka/libs/extensions
       containers:
       - name: broker
-        image: yolean/kafka:latest
+        image: yolean/kafka:3.1.0-java11
         env:
         - name: POD_NAME
           valueFrom:
