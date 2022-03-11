@@ -17,8 +17,13 @@ data:
     # A custom ADVERTISE_ADDR can be set as env on the init container using for example value: $(POD_NAME).kafka.$(POD_NAMESPACE).custom.cluster.dns
     [ -n "$ADVERTISE_ADDR" ] && echo "ADVERTISE_ADDR=$ADVERTISE_ADDR" || echo "ADVERTISE_ADDR is empty, Kafka will detect a hostname to advertise"
 
-    OUTSIDE_HOST=$(kubectl get node "$NODE_NAME" -o jsonpath='{.status.addresses[?(@.type=="InternalIP")].address}')
-    OUTSIDE_PORT=$((32400 + ${KAFKA_BROKER_ID}))
+    ADVERTISED_LISTENERS="PLAINTEXT://${ADVERTISE_ADDR}:9092"
+
+    # OUTSIDE_HOST and OUTSIDE_PORT can be set as envs, or set OUTSIDE_NODE_JSONPATH to get the value from the node, for example: '{.status.addresses[?(@.type=="InternalIP")].address}'
+    [ -z "$OUTSIDE_HOST_JSONPATH" ] || OUTSIDE_HOST=$(kubectl get node "$NODE_NAME" -o jsonpath="$OUTSIDE_HOST_JSONPATH")
+    [ -n "$OUTSIDE_PORT" ] || OUTSIDE_PORT=$((32400 + ${KAFKA_BROKER_ID}))
+    [ -z "$OUTSITE_HOST" ] || ADVERTISED_LISTENERS="$ADVERTISED_LISTENERS,OUTSIDE://${OUTSIDE_HOST}:${OUTSIDE_PORT}"
+
     SEDS+=("s|#init#advertised.listeners=PLAINTEXT://#init#|advertised.listeners=PLAINTEXT://${ADVERTISE_ADDR}:9092,CONTROLLER://${ADVERTISE_ADDR}:9093,OUTSIDE://${OUTSIDE_HOST}:${OUTSIDE_PORT}|")
     ANNOTATIONS="$ANNOTATIONS kafka-listener-outside-host=$OUTSIDE_HOST kafka-listener-outside-port=$OUTSIDE_PORT"
 
