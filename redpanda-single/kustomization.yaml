@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- redpanda-service.yaml
+- bootstrap-service.yaml
+- redpanda-statefulset.yaml
+
+images:
+- name: vectorized/redpanda
+  newName: docker.io/vectorized/redpanda
+  newTag: v22.1.3

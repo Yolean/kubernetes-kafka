@@ -1,0 +1,113 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redpanda
+  labels:
+    app.kubernetes.io/component: redpanda
+    app.kubernetes.io/instance: redpanda
+    app.kubernetes.io/name: redpanda
+    app.kubernetes.io/part-of: redpanda
+spec:
+  podManagementPolicy: Parallel
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: redpanda
+      app.kubernetes.io/instance: redpanda
+      app.kubernetes.io/name: redpanda
+  serviceName: redpanda
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: redpanda
+        app.kubernetes.io/instance: redpanda
+        app.kubernetes.io/name: redpanda
+    spec:
+      containers:
+      - args:
+        - redpanda
+        - start
+        - --check=false
+        - --overprovisioned
+        - --kernel-page-cache=true
+        - --default-log-level=info
+        - --smp=1
+        - --memory=$(MEMORY_LIMIT)
+        - --reserve-memory=0M
+        - --advertise-rpc-addr=$(POD_NAME).redpanda.$(POD_NAMESPACE).svc.cluster.local.:33145
+        - --kafka-addr=PLAINTEXT://0.0.0.0:9092
+        - --advertise-kafka-addr=PLAINTEXT://$(POD_NAME).redpanda.$(POD_NAMESPACE).svc.cluster.local.:9092
+        - --set
+        -   redpanda.enable_idempotence=true
+        - --set
+        -   redpanda.enable_transactions=true
+        - --set
+        -   redpanda.auto_create_topics_enabled=true
+        command:
+        - /usr/bin/rpk
+        env:
+        - name: REDPANDA_ENVIRONMENT
+          value: kubernetes
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.podIP
+        - name: MEMORY_LIMIT
+          valueFrom:
+            resourceFieldRef:
+              containerName: redpanda
+              resource: limits.memory
+        image: vectorized/redpanda
+        imagePullPolicy: Always
+        name: redpanda
+        ports:
+        - containerPort: 33145
+          name: rpc
+          protocol: TCP
+        - containerPort: 9644
+          name: admin
+          protocol: TCP
+        - containerPort: 9092
+          name: kafka
+          protocol: TCP
+        - containerPort: 8082
+          name: proxy
+          protocol: TCP
+        resources:
+          limits:
+            cpu: "1"
+            memory: 1Gi
+          requests:
+            cpu: 10m
+            memory: 20Mi
+        volumeMounts:
+        - mountPath: /var/lib/redpanda/data
+          name: datadir
+  volumeClaimTemplates:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      labels:
+        app.kubernetes.io/component: redpanda
+        app.kubernetes.io/instance: redpanda
+        app.kubernetes.io/name: redpanda
+        app.kubernetes.io/part-of: redpanda
+      name: datadir
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+      volumeMode: Filesystem

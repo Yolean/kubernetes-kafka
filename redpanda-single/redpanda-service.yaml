@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: redpanda
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+  - name: admin
+    port: 9644
+    protocol: TCP
+    targetPort: 9644
+  - name: kafka
+    port: 9092
+    protocol: TCP
+    targetPort: 9092
+  - name: proxy
+    port: 8082
+    protocol: TCP
+    targetPort: 8082
+  publishNotReadyAddresses: true
+  selector:
+    app.kubernetes.io/component: redpanda
+    app.kubernetes.io/instance: redpanda
+    app.kubernetes.io/name: redpanda
+  sessionAffinity: None
