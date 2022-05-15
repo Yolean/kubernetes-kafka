@@ -23,6 +23,8 @@ spec:
         app.kubernetes.io/instance: redpanda
         app.kubernetes.io/name: redpanda
     spec:
+      securityContext:
+        fsGroup: 101
       containers:
       - args:
         - redpanda
