@@ -92,7 +92,7 @@ spec:
             memory: 1Gi
           requests:
             cpu: 10m
-            memory: 20Mi
+            memory: 150Mi
         volumeMounts:
         - mountPath: /var/lib/redpanda/data
           name: datadir
