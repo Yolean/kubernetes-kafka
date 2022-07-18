@@ -8,7 +8,7 @@ spec:
     matchLabels:
       app: kafka
   serviceName: "kafka"
-  replicas: 3
+  replicas: 5
   updateStrategy:
     type: RollingUpdate
   podManagementPolicy: Parallel
