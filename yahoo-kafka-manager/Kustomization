@@ -1,3 +1,0 @@
-resources:
-- kafka-manager-service.yml
-- kafka-manager.yml
