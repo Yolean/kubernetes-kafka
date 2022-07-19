@@ -6,31 +6,27 @@ apiVersion: v1
 data:
   burrow.toml: |-
     [zookeeper]
-    servers=[ "pzoo-0:2181", "pzoo-1:2181","pzoo-2:2181","pzoo-3:2181","pzoo-4:2181" ]
+    servers=[ "zookeeper:2181" ]
     timeout=6
     root-path="/burrow"
-
     [cluster.local]
     class-name="kafka"
-    servers=[ "kafka-0", "kafka-1:9092", "kafka-2:9092", "kafka-3:9092", "kafka-4:9092", "kafka-5:9092", "kafka-6:9092" ]
+    servers=[ "bootstrap:9092" ]
     topic-refresh=60
     offset-refresh=30
-
     [consumer.local]
     class-name="kafka"
     cluster="local"
-    servers=[ "kafka-0:9092", "kafka-1:9092", "kafka-2:9092", "kafka-3:9092", "kafka-4:9092", "kafka-5:9092", "kafka-6:9092" ]
+    servers=[ "bootstrap:9092" ]
     group-blacklist=""
     group-whitelist=""
-
     [consumer.local_zk]
     class-name="kafka_zk"
     cluster="local"
-    servers=[ pzoo-0:2181", "pzoo-1:2181","pzoo-2:2181","pzoo-3:2181","pzoo-4:2181" ]
+    servers=[ "zookeeper:2181" ]
     zookeeper-path="/local"
     zookeeper-timeout=30
     group-blacklist=""
     group-whitelist=""
-
     [httpserver.default]
     address=":8000"
