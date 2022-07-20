@@ -1,5 +1,5 @@
 resources:
 - zoo-config.yml
-- pzoo-service.yml
-- dns.yml
+- pzoo-svc.yml
+- zoo-headless.yml
 - pzoo.yml

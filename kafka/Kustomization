@@ -1,5 +1,5 @@
 resources:
 - broker-config.yml
-- dns.yml
-- bootstrap-service.yml
+- kafka-headless.yml
+- bootstrap-svc.yml
 - kafka.yml

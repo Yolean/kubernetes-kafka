@@ -6,7 +6,10 @@ metadata:
   labels: &labels
     app: kminion
 spec:
+  type: NodePort
   selector: *labels
   ports:
   - name: http
     port: 8080
+    targetPort: 8080
+    nodePort: 30077

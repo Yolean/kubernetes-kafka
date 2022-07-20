@@ -7,6 +7,7 @@ data:
 
   jmx-kafka-prometheus.yml: |+
     lowercaseOutputName: true
+      #hostPort: 127.0.0.1: 5555
     jmxUrl: service:jmx:rmi:///jndi/rmi://127.0.0.1:5555/jmxrmi
     ssl: false
     whitelistObjectNames: ["kafka.server:*","kafka.controller:*","java.lang:*"]
