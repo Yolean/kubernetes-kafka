@@ -4,6 +4,6 @@ bases:
 #- ../kafka
 #- ../variants/scale-1
 resources:
-- 10-metrics-config.yml
+- metrics-config.yml
 patchesStrategicMerge:
-- 50-kafka-jmx-exporter-patch.yml
+- kafka-jmx-exporter-patch.yml

@@ -19,15 +19,15 @@ data:
       for N in $(seq $PZOO_REPLICAS); do echo "server.$N=pzoo-$(( $N - 1 )).pzoo.$POD_NAMESPACE.svc.cluster.local:2888:3888:participant" >> /etc/kafka/zookeeper.properties; done
       for N in $(seq $(( $REPLICAS - $PZOO_REPLICAS ))); do echo "server.$(( $PZOO_REPLICAS + $N ))=zoo-$(( $N - 1 )).zoo.$POD_NAMESPACE.svc.cluster.local:2888:3888:participant" >> /etc/kafka/zookeeper.properties; done
     }
-    ln -s /etc/kafka/zookeeper.properties /etc/kafka/zookeeper.properties.scale-$REPLICAS.$POD_NAME
+    ln -s /etc/kafka/zookeeper.properties /etc/kafka/zookeeper.properties.scale-5.$POD_NAME
 
   zookeeper.properties: |
-    4lw.commands.whitelist=ruok
+    4lw.commands.whitelist=stat,ruok,conf,isro,mntr
     tickTime=2000
     dataDir=/var/lib/zookeeper/data
     dataLogDir=/var/lib/zookeeper/log
     clientPort=2181
-    maxClientCnxns=3
+    maxClientCnxns=0
     initLimit=5
     syncLimit=2
     tcpKeepAlive=true
@@ -35,8 +35,11 @@ data:
     server.1=pzoo-0.pzoo:2888:3888:participant
     server.2=pzoo-1.pzoo:2888:3888:participant
     server.3=pzoo-2.pzoo:2888:3888:participant
-    server.4=zoo-0.zoo:2888:3888:participant
-    server.5=zoo-1.zoo:2888:3888:participant
+    server.4=pzoo-3.pzoo:2888:3888:participant
+    server.5=pzoo-4.pzoo:2888:3888:participant
+    admin.enableServer=false
+    autopurge.snapRetainCount=3
+    autopurge.purgeInterval=24
 
   log4j.properties: |-
     log4j.rootLogger=INFO, stdout

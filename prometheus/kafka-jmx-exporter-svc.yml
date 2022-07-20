@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    k8s-app: kafka-jmx-exporter
+  name: meteric
+  namespace: kafka
+spec:
+  ports:
+  - name: http
+    port: 5556
+    nodePort: 30001
+    protocol: TCP
+  type: NodePort
+  selector:
+    k8s-app: kafka-jmx-exporter
