@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-exporter
+  namespace: kafka
+  labels:
+    app: node-exporter
+spec:
+  selector:
+    matchLabels:
+      app: node-exporter
+  template:
+    metadata:
+      labels:
+        app: node-exporter
+    spec:
+      hostNetwork: true
+      hostIPC: true
+      hostPID: true
+      containers:
+        - name: node-exporter
+          image: prom/node-exporter:v1.0.1
+          imagePullPolicy: IfNotPresent
+          args:
+            - --path.procfs=/host/proc
+            - --path.sysfs=/host/sys
+          resources:
+            requests:
+              cpu: 10m
+              memory: 100Mi
+            limits:
+              cpu: 100m
+              memory: 100Mi
+          ports:
+            - name: scrape
+              containerPort: 9100
+              hostPort: 9100
+          volumeMounts:
+            - mountPath: /host/proc
+              name: proc
+              readOnly: true
+            - mountPath: /host/sys
+              name: sys
+              readOnly: true
+      volumes:
+        - name: proc
+          hostPath:
+            path: /proc
+            type: ""
+        - name: sys
+          hostPath:
+            path: /sys
+            type: ""

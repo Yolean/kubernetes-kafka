@@ -20,7 +20,7 @@ spec:
         - containerPort: 80
         env:
         - name: ZK_HOSTS
-          value: zookeeper.kafka:2181
+          value: zookeeper:2181
         command:
         - ./bin/kafka-manager
         - -Dhttp.port=80

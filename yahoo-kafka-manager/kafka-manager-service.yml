@@ -4,9 +4,11 @@ metadata:
   name: kafka-manager
   namespace: kafka
 spec:
+  type: NodePort
   selector:
     app: kafka-manager
   ports:
   - protocol: TCP
     port: 80
     targetPort: 80
+    nodePort: 30010
