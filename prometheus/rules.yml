@@ -1,0 +1,71 @@
+---
+apiVersion: v1
+data:
+  cpu-usage.rules: |
+    ALERT NodeCPUUsage
+      IF (100 - (avg by (instance) (irate(node_cpu{name="node-exporter",mode="idle"}[5m])) * 100)) > 75
+      FOR 2m
+      LABELS {
+        severity="page"
+      }
+      ANNOTATIONS {
+        SUMMARY = "{{$labels.instance}}: High CPU usage detected",
+        DESCRIPTION = "{{$labels.instance}}: CPU usage is above 75% (current value is: {{ $value }})"
+      }
+  instance-availability.rules: |
+    ALERT InstanceDown
+      IF up == 0
+      FOR 1m
+      LABELS { severity = "page" }
+      ANNOTATIONS {
+        summary = "Instance {{ $labels.instance }} down",
+        description = "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minute.",
+      }
+  low-disk-space.rules: |
+    ALERT NodeLowRootDisk
+      IF ((node_filesystem_size{mountpoint="/root-disk"} - node_filesystem_free{mountpoint="/root-disk"} ) / node_filesystem_size{mountpoint="/root-disk"} * 100) > 75
+      FOR 2m
+      LABELS {
+        severity="page"
+      }
+      ANNOTATIONS {
+        SUMMARY = "{{$labels.instance}}: Low root disk space",
+        DESCRIPTION = "{{$labels.instance}}: Root disk usage is above 75% (current value is: {{ $value }})"
+      }
+    ALERT NodeLowDataDisk
+      IF ((node_filesystem_size{mountpoint="/data-disk"} - node_filesystem_free{mountpoint="/data-disk"} ) / node_filesystem_size{mountpoint="/data-disk"} * 100) > 75
+      FOR 2m
+      LABELS {
+        severity="page"
+      }
+      ANNOTATIONS {
+        SUMMARY = "{{$labels.instance}}: Low data disk space",
+        DESCRIPTION = "{{$labels.instance}}: Data disk usage is above 75% (current value is: {{ $value }})"
+      }
+  mem-usage.rules: |
+    ALERT NodeSwapUsage
+      IF (((node_memory_SwapTotal-node_memory_SwapFree)/node_memory_SwapTotal)*100) > 75
+      FOR 2m
+      LABELS {
+        severity="page"
+      }
+      ANNOTATIONS {
+        SUMMARY = "{{$labels.instance}}: Swap usage detected",
+        DESCRIPTION = "{{$labels.instance}}: Swap usage usage is above 75% (current value is: {{ $value }})"
+      }
+    ALERT NodeMemoryUsage
+      IF (((node_memory_MemTotal-node_memory_MemAvailable)/(node_memory_MemTotal)*100)) > 75
+      FOR 2m
+      LABELS {
+        severity="page"
+      }
+      ANNOTATIONS {
+        SUMMARY = "{{$labels.instance}}: High memory usage detected",
+        DESCRIPTION = "{{$labels.instance}}: Memory usage is above 75% (current value is: {{ $value }})"
+      }
+
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: prometheus-rules
+  namespace: monitoring
