@@ -1,7 +1,0 @@
-bases:
-- ../scale-3-5
-resources:
-- aws-storageclass-broker-gp2.yaml
-- aws-storageclass-zookeeper-gp2.yaml 
-patchesStrategicMerge:
-- volume-claims.yaml

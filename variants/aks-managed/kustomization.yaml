@@ -1,7 +1,0 @@
-bases:
-- ../scale-3-5
-resources:
-- aks-storageclass-broker-managed.yaml
-- aks-storageclass-zookeeper-managed.yaml
-patchesStrategicMerge:
-- volume-claims.yaml

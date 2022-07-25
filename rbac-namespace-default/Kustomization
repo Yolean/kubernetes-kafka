@@ -1,3 +1,5 @@
 resources:
 - node-reader.yml
 - pod-labler.yml
+- prometheus.yml
+- namespace.yml
