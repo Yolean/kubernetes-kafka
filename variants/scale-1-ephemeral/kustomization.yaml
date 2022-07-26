@@ -1,5 +1,0 @@
-bases:
-- ../scale-1
-patchesStrategicMerge:
-- kafka.yaml
-- zookeeper.yaml

@@ -4,15 +4,19 @@ metadata:
   name: burrow
   namespace: kafka
 spec:
+  type: NodePort
   selector:
     app: burrow
   ports:
   - name: web
     protocol: TCP
     port: 80
+    nodePort: 30031
   - name: api
     protocol: TCP
     port: 8000
+    nodePort: 30032
   - name: prometheus
     protocol: TCP
     port: 8080
+    nodePort: 30033

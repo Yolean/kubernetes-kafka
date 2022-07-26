@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: pzoo
+  namespace: kafka
+spec:
+  selector:
+    matchLabels:
+      app: zookeeper
+      storage: persistent
+  serviceName: "pzoo"
+  replicas: 5
+  updateStrategy:
+    type: RollingUpdate
+  podManagementPolicy: Parallel
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+        storage: persistent
+      annotations:
+    spec:
+      terminationGracePeriodSeconds: 10
+      initContainers:
+      - name: init-config
+        image: solsson/kafka:initutils@sha256:8988aca5b34feabe8d7d4e368f74b2ede398f692c7e99a38b262a938d475812c
+        command: ['/bin/bash', '/etc/kafka-configmap/init.sh']
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        volumeMounts:
+        - name: configmap
+          mountPath: /etc/kafka-configmap
+        - name: config
+          mountPath: /etc/kafka
+        - name: data
+          mountPath: /var/lib/zookeeper
+      containers:
+      - name: zookeeper
+        image: solsson/kafka:2.5.1@sha256:5c52620bd8e1bcd47805eb8ca285843168e1684aa27f1ae11ce330c3e12f6b0c
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: KAFKA_LOG4J_OPTS
+          value: -Dlog4j.configuration=file:/etc/kafka/log4j.properties
+        command:
+        - ./bin/zookeeper-server-start.sh
+        - /etc/kafka/zookeeper.properties.scale-5.$(POD_NAME)
+        lifecycle:
+          preStop:
+            exec:
+             command: ["sh", "-ce", "kill -s TERM 1; while $(kill -0 1 2>/dev/null); do sleep 1; done"]
+        ports:
+        - containerPort: 2181
+          name: client
+        - containerPort: 2888
+          name: peer
+        - containerPort: 3888
+          name: leader-election
+        resources:
+          requests:
+            cpu: 10m
+            memory: 100Mi
+          limits:
+            memory: 120Mi
+        readinessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - '[ "imok" = "$(echo ruok | nc -w 1 -q 1 127.0.0.1 2181)" ]'
+          timeoutSeconds: 2
+          periodSeconds: 30
+        volumeMounts:
+        - name: config
+          mountPath: /etc/kafka
+        - name: data
+          mountPath: /var/lib/zookeeper
+      volumes:
+      - name: configmap
+        configMap:
+          name: zookeeper-config
+      - name: config
+        emptyDir: {}
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
