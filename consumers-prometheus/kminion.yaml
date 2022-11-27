@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: kminion
-        image: quay.io/cloudhut/kminion:v2.2.0@sha256:216c5383168b60f0797dbeb06bd6601d41ed52eb970d597492f3b1fbf944c7bd
+        image: docker.io/vectorized/kminion:v2.2.1@sha256:eceaaa6cec49b94006619196e2318549099b68bc5a406d665c9929c5369f91c7
         env:
         - name: TELEMETRY_HOST
           value: 0.0.0.0
