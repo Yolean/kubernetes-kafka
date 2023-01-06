@@ -9,4 +9,4 @@ resources:
 images:
 - name: vectorized/redpanda
   newName: docker.io/vectorized/redpanda
-  newTag: v22.3.1
+  newTag: v22.3.9
