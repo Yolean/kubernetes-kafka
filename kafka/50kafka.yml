@@ -78,11 +78,6 @@ spec:
           requests:
             cpu: 100m
             memory: 100Mi
-          limits:
-            # This limit was intentionally set low as a reminder that
-            # the entire Yolean/kubernetes-kafka is meant to be tweaked
-            # before you run production workloads
-            memory: 600Mi
         readinessProbe:
           tcpSocket:
             port: 9092

@@ -4,3 +4,13 @@ metadata:
   name: kafka
 spec:
   replicas: 1
+  template:
+    spec:
+      containers:
+      - name: broker
+        resources:
+          limits:
+            # This limit was intentionally set low as a reminder that
+            # the entire Yolean/kubernetes-kafka is meant to be tweaked
+            # before you run production workloads
+            memory: 600Mi

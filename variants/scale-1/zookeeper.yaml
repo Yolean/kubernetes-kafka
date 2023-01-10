@@ -10,6 +10,13 @@ metadata:
   name: pzoo
 spec:
   replicas: 0
+  template:
+    spec:
+      containers:
+      - name: zookeeper
+        resources:
+          limits:
+            memory: 120Mi
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -33,3 +40,6 @@ spec:
         env:
         - name: REPLICAS
           value: '1'
+        resources:
+          limits:
+            memory: 120Mi
