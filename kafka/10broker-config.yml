@@ -58,7 +58,7 @@ data:
 
     min.insync.replicas=2
 
-    auto.create.topics.enable=false
+    auto.create.topics.enable=true
 
     # The number of threads per data directory to be used for log recovery at startup and flushing at shutdown.
     # This value is recommended to be increased for installations with data dirs located in RAID array.
