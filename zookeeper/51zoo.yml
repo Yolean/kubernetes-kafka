@@ -22,7 +22,7 @@ spec:
       terminationGracePeriodSeconds: 10
       initContainers:
       - name: init-config
-        image: solsson/kafka:initutils@sha256:8988aca5b34feabe8d7d4e368f74b2ede398f692c7e99a38b262a938d475812c
+        image: solsson/kafka:initutils@sha256:0cd27e24dea0b27e17e72cd05259a4de394d527473c6707e89f26b87e356a04d
         command: ['/bin/bash', '/etc/kafka-configmap/init.sh']
         env:
         - name: POD_NAME
@@ -44,7 +44,7 @@ spec:
           mountPath: /var/lib/zookeeper
       containers:
       - name: zookeeper
-        image: solsson/kafka:2.5.1@sha256:5c52620bd8e1bcd47805eb8ca285843168e1684aa27f1ae11ce330c3e12f6b0c
+        image: solsson/kafka:2.8.0@sha256:69274245ad16fba37e5b277335502a02e41c0efeae3ccbc3374f6cf624b58347
         env:
         - name: POD_NAME
           valueFrom:
