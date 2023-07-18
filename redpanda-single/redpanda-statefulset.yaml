@@ -70,7 +70,7 @@ spec:
             resourceFieldRef:
               containerName: redpanda
               resource: limits.memory
-        image: vectorized/redpanda
+        image: redpandadata/redpanda
         imagePullPolicy: Always
         name: redpanda
         ports:

@@ -7,6 +7,6 @@ resources:
 - redpanda-statefulset.yaml
 
 images:
-- name: vectorized/redpanda
-  newName: docker.io/vectorized/redpanda
-  newTag: v22.3.10@sha256:9ff18ef80836181c774a6a4b61b85a459951eeb74b7abc22558463b7c2e4583b
+- name: redpandadata/redpanda
+  newName: docker.io/redpandadata/redpanda
+  newTag: v22.3.13@sha256:955620233046b2760b732e0bd18c8a7cfd7fabcddcb84b505c4b66d6371988b8
