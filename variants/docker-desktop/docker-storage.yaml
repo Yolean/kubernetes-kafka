@@ -1,0 +1,9 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata: 
+  name: standard
+  namespace: kafka
+provisioner: docker.io/hostpath
+reclaimPolicy: Retain
+allowVolumeExpansion: true
+volumeBindingMode: Immediate
