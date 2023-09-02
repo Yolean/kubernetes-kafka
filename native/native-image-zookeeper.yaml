@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: pzoo
+  namespace: kafka
 spec:
   template:
     spec:
@@ -17,6 +18,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: zoo
+  namespace: kafka
 spec:
   template:
     spec:
