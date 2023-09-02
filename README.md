@@ -2,6 +2,7 @@
 
 This community seeks to provide:
  * Production-worthy Kafka setup for persistent (domain- and ops-) data at small scale.
+   * Small scale simply means that it is not validated for "larger scale".
  * Operational knowledge, biased towards resilience over throughput, as Kubernetes manifest.
  * A platform for event-driven (streaming!) microservices design using Kubernetes.
 
