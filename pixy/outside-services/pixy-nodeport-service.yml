@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: pixy-nodeport
+  namespace: kafka
+spec:
+  selector:
+    app: pixy
+  ports:
+  - name: web
+    protocol: TCP
+    port: 80
+    nodePort: 32399
+  type: NodePort
