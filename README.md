@@ -90,3 +90,25 @@ Available for:
  * [Kubernetes events to Kafka](./events-kube/)
  * [Container logs to Kafka](https://github.com/Yolean/kubernetes-kafka/pull/131)
  * [Heapster metrics to Kafka](https://github.com/Yolean/kubernetes-kafka/pull/120)
+
+## Awesome Streaming?
+
+Kafka should only be the means to an end. How do you actually make things happen?
+
+At Yolean we have a feeling we're reinventing a lot, but Schema Registry and Kafka Streams - as great as they are - fit few of our use cases because: a) Java only + b) not the kind of unix philosophy microservice-ish lightweight tool a small devops team like us is most productive with.
+
+Instead of an "awesome" "curated list", let's start with labelled issues in this repo. Anyone can create them without a PR, and it facilitates discussion.
+
+Suggested categories:
+
+ * [howto-topics](https://github.com/Yolean/kubernetes-kafka/issues?q=label%3Ahowto-topics): Topic naming and schema management, strategies and tools. We look for parity with the REST space's API documentation (Swagger etc) and service discovery (DNS SRV etc).
+ * [howto-streaming](https://github.com/Yolean/kubernetes-kafka/issues?q=label%3Ahowto-streaming): Lightweight streaming abstractions for different languages. Or as container images.
+   - filter, like bash + [kafkacat](https://github.com/edenhill/kafkacat) `|` [jq](https://github.com/stedolan/jq)
+   - split topic by field x, the value of x used for dynamic topic names
+   - join topics (consume using regex, write to single topic)
+   - count occurences based on regex or jq, export to [Prometheus](https://prometheus.io/docs/concepts/metric_types/#counter)
+   - stream-table joins in non-JVM languages
+ * [howto-frontend](https://github.com/Yolean/kubernetes-kafka/issues?q=label%3Ahowto-frontend): At-leat-once transport over HTTP. Reactive front-ends are as great a paradigm as event-driven services, but the tooling tends to be low-level ([socket.io](https://socket.io/) etc) or require us to emulate pubsub over request-response ([graphql](http://graphql.org/) etc).
+ * [howto-frontend](https://github.com/Yolean/kubernetes-kafka/issues?q=label%3Ahowto-frontend): Lightweight state cache, based on resolving events to state, for different languages. We felt we had to write [kafka-cache](https://github.com/Yolean/kafka-cache) for Node.js. Again Kafka Streams does such things, but not really as "do one thing and do it well".
+
+Please share your ideas and observactions.
