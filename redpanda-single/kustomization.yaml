@@ -9,4 +9,4 @@ resources:
 images:
 - name: redpandadata/redpanda
   newName: docker.io/redpandadata/redpanda
-  newTag: v22.3.13@sha256:955620233046b2760b732e0bd18c8a7cfd7fabcddcb84b505c4b66d6371988b8
+  newTag: v23.2.12@sha256:cd4d56c5859216698dd7083d4f9f1dcaebdbf0a6453f6972520a52f70c2a3f09
